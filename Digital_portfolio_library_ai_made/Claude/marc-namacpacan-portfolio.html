@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marc D. Namacpacan — Web, System &amp; Game Developer</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230F1419'/%3E%3Ctext x='16' y='22' font-family='monospace' font-size='16' fill='%23D4A24C' text-anchor='middle'%3EM%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0F1419;
+    --bg-raise:#131A22;
+    --panel:#161D26;
+    --panel-border:rgba(212,162,76,0.16);
+    --grid-line:rgba(232,237,242,0.05);
+    --text:#E9EEF3;
+    --text-dim:#94A2B0;
+    --text-faint:#5B6773;
+    --accent:#D4A24C;
+    --accent-strong:#E8BE6E;
+    --accent-soft:rgba(212,162,76,0.12);
+    --serif-line:rgba(212,162,76,0.35);
+    --font-display:'Space Grotesk', 'Segoe UI', sans-serif;
+    --font-body:'Inter', 'Segoe UI', sans-serif;
+    --font-mono:'IBM Plex Mono', 'Courier New', monospace;
+    --maxw:1120px;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+    position:relative;
+  }
+
+  /* faint fixed grid, PCB / graph-paper reference */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size:48px 48px;
+    pointer-events:none;
+    z-index:0;
+    mask-image:radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 85%);
+  }
+
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+
+  a:focus-visible,
+  button:focus-visible{
+    outline:2px solid var(--accent);
+    outline-offset:3px;
+    border-radius:2px;
+  }
+
+  .wrap{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:0 32px;
+    position:relative;
+    z-index:1;
+  }
+
+  section{padding:96px 0;position:relative;z-index:1;}
+  section + section{border-top:1px solid rgba(232,237,242,0.06);}
+
+  h1,h2,h3{
+    font-family:var(--font-display);
+    font-weight:600;
+    margin:0;
+    color:var(--text);
+  }
+
+  p{margin:0 0 1em 0;color:var(--text-dim);max-width:62ch;}
+  p:last-child{margin-bottom:0;}
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:24px;
+    margin-bottom:44px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:clamp(1.6rem, 2.4vw, 2.1rem);
+    letter-spacing:-0.01em;
+  }
+  .section-index{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    color:var(--text-faint);
+    white-space:nowrap;
+  }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:sticky;
+    top:0;
+    z-index:50;
+    backdrop-filter:blur(10px);
+    background:rgba(15,20,25,0.78);
+    border-bottom:1px solid rgba(232,237,242,0.07);
+  }
+  .nav-inner{
+    max-width:var(--maxw);
+    margin:0 auto;
+    padding:18px 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:1.05rem;
+    letter-spacing:0.01em;
+    text-decoration:none;
+    color:var(--text);
+  }
+  .logo span{color:var(--accent);}
+  nav.links{
+    display:flex;
+    gap:28px;
+  }
+  nav.links a{
+    font-size:0.92rem;
+    text-decoration:none;
+    color:var(--text-dim);
+    transition:color .15s ease;
+  }
+  nav.links a:hover{color:var(--accent);}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    padding:88px 0 104px;
+    border-top:none;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.1fr 1fr;
+    gap:56px;
+    align-items:center;
+  }
+  .hero-copy .eyebrow{
+    font-family:var(--font-mono);
+    font-size:0.82rem;
+    color:var(--accent);
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:clamp(2.3rem, 4.2vw, 3.4rem);
+    line-height:1.14;
+    letter-spacing:-0.015em;
+  }
+  .hero p.lead{
+    margin-top:22px;
+    font-size:1.08rem;
+    color:var(--text-dim);
+    max-width:46ch;
+  }
+  .hero-meta{
+    display:flex;
+    gap:28px;
+    margin-top:32px;
+    flex-wrap:wrap;
+  }
+  .hero-meta div{font-size:0.86rem;color:var(--text-faint);}
+  .hero-meta strong{
+    display:block;
+    color:var(--text);
+    font-family:var(--font-display);
+    font-weight:500;
+    font-size:1rem;
+    margin-bottom:2px;
+  }
+
+  /* terminal mock */
+  .terminal-wrap{position:relative;}
+  .terminal{
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    border-radius:6px;
+    overflow:hidden;
+    box-shadow:0 0 0 1px rgba(0,0,0,0.2);
+  }
+  .terminal-bar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 16px;
+    border-bottom:1px solid rgba(232,237,242,0.06);
+    background:rgba(232,237,242,0.02);
+  }
+  .terminal-bar .tab{
+    font-family:var(--font-mono);
+    font-size:0.78rem;
+    color:var(--text-faint);
+  }
+  .terminal-bar .dot{
+    width:7px;height:7px;border-radius:50%;
+    background:var(--accent-soft);
+    border:1px solid var(--panel-border);
+  }
+  .terminal-body{
+    padding:22px 20px 26px;
+    font-family:var(--font-mono);
+    font-size:0.87rem;
+    line-height:1.85;
+  }
+  .terminal-body .prompt{color:var(--accent);}
+  .terminal-line{color:var(--text-dim);white-space:pre;}
+  .terminal-line.name{color:var(--text);font-weight:500;}
+  .cursor{
+    display:inline-block;
+    width:7px;height:1em;
+    background:var(--accent);
+    vertical-align:text-bottom;
+    margin-left:2px;
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink{50%{opacity:0;}}
+
+  .corner{position:absolute;width:14px;height:14px;border-color:var(--accent);border-style:solid;border-width:0;opacity:.75;}
+  .corner.tl{top:-7px;left:-7px;border-top-width:2px;border-left-width:2px;}
+  .corner.tr{top:-7px;right:-7px;border-top-width:2px;border-right-width:2px;}
+  .corner.bl{bottom:-7px;left:-7px;border-bottom-width:2px;border-left-width:2px;}
+  .corner.br{bottom:-7px;right:-7px;border-bottom-width:2px;border-right-width:2px;}
+
+  /* ---------- ABOUT ---------- */
+  .about-grid{
+    display:grid;
+    grid-template-columns:1fr 260px;
+    gap:64px;
+  }
+  .about-facts{
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+    border-left:1px solid var(--panel-border);
+    padding-left:24px;
+  }
+  .about-facts .fact-label{
+    font-family:var(--font-mono);
+    font-size:0.76rem;
+    color:var(--accent);
+    margin-bottom:4px;
+  }
+  .about-facts .fact-value{
+    font-size:0.94rem;
+    color:var(--text);
+  }
+
+  /* ---------- WHAT I DO — module grid ---------- */
+  .module-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    border-top:1px solid rgba(232,237,242,0.08);
+    border-left:1px solid rgba(232,237,242,0.08);
+  }
+  .module{
+    padding:28px 26px;
+    border-right:1px solid rgba(232,237,242,0.08);
+    border-bottom:1px solid rgba(232,237,242,0.08);
+  }
+  .module.wide{
+    grid-column:1 / -1;
+    display:flex;
+    align-items:baseline;
+    gap:32px;
+  }
+  .module.wide .module-copy{flex:1;}
+  .module.wide .file{margin-bottom:0;flex-shrink:0;width:180px;}
+  .module .file{
+    font-family:var(--font-mono);
+    font-size:0.86rem;
+    color:var(--accent);
+    margin-bottom:10px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .module .file::before{
+    content:"";
+    width:6px;height:6px;
+    background:var(--accent);
+    display:inline-block;
+    flex-shrink:0;
+  }
+  .module h3{
+    font-size:1.02rem;
+    font-weight:500;
+    margin-bottom:8px;
+    color:var(--text);
+  }
+  .module p{font-size:0.92rem;margin:0;}
+
+  /* ---------- PROJECTS — repo rows ---------- */
+  .repo-list{border-top:1px solid rgba(232,237,242,0.08);}
+  .repo-row{
+    display:grid;
+    grid-template-columns:22px 1.4fr 2fr auto;
+    gap:20px;
+    align-items:center;
+    padding:22px 4px;
+    border-bottom:1px solid rgba(232,237,242,0.08);
+    transition:background .15s ease;
+  }
+  .repo-row:hover{background:rgba(232,237,242,0.02);}
+  .repo-icon{color:var(--text-faint);}
+  .repo-icon svg{width:16px;height:16px;display:block;}
+  .repo-name{
+    font-family:var(--font-mono);
+    font-size:0.95rem;
+    color:var(--text);
+  }
+  .repo-desc{font-size:0.9rem;color:var(--text-dim);margin:0;max-width:52ch;}
+  .repo-tag{
+    font-family:var(--font-mono);
+    font-size:0.74rem;
+    color:var(--accent);
+    border:1px solid var(--panel-border);
+    padding:4px 10px;
+    border-radius:20px;
+    white-space:nowrap;
+    justify-self:end;
+  }
+
+  /* ---------- SKILLS ---------- */
+  .skill-groups{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(220px,1fr));
+    gap:36px 48px;
+  }
+  .skill-group h3{
+    font-size:0.98rem;
+    font-weight:500;
+    color:var(--text);
+    margin-bottom:14px;
+  }
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{
+    font-size:0.83rem;
+    color:var(--text-dim);
+    border:1px solid rgba(232,237,242,0.12);
+    padding:6px 12px;
+    border-radius:20px;
+  }
+
+  /* ---------- MINDSET ---------- */
+  .mindset{
+    text-align:left;
+    background:var(--bg-raise);
+  }
+  .mindset .mantra{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(2rem, 5vw, 3.6rem);
+    letter-spacing:-0.01em;
+    line-height:1.08;
+    color:var(--text);
+    margin-bottom:28px;
+  }
+  .mindset .mantra span{color:var(--accent);}
+  .mindset p{font-size:1.02rem;max-width:58ch;}
+
+  /* ---------- PERSONAL PROFILE ---------- */
+  .profile-grid{
+    display:grid;
+    grid-template-columns:220px 1fr;
+    gap:56px;
+    align-items:start;
+  }
+  .profile-photo{
+    position:relative;
+    width:100%;
+    aspect-ratio:1/1;
+    background:var(--panel);
+    border:1px solid var(--panel-border);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .profile-photo .mono{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:2.6rem;
+    color:var(--accent);
+    letter-spacing:0.02em;
+  }
+  .profile-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+  }
+  .id-table{width:100%;border-collapse:collapse;}
+  .id-table tr{border-bottom:1px solid rgba(232,237,242,0.08);}
+  .id-table tr:last-child{border-bottom:none;}
+  .id-table td{padding:14px 0;vertical-align:top;}
+  .id-table td.k{
+    font-family:var(--font-mono);
+    font-size:0.8rem;
+    color:var(--text-faint);
+    width:140px;
+    padding-right:20px;
+  }
+  .id-table td.v{font-size:0.96rem;color:var(--text);}
+
+  /* ---------- VISION ---------- */
+  .vision{
+    background:var(--bg-raise);
+    text-align:left;
+  }
+  .vision p.intro{font-size:1.05rem;max-width:56ch;margin-bottom:44px;}
+  .vision .stack{display:flex;flex-direction:column;gap:6px;}
+  .vision .stack div{
+    font-family:var(--font-display);
+    color:var(--text-faint);
+    font-size:1.15rem;
+    letter-spacing:-0.01em;
+  }
+  .vision .stack div:nth-child(2){font-size:1.5rem;color:var(--text-dim);font-weight:500;}
+  .vision .stack div:nth-child(3){font-size:clamp(1.9rem,4vw,2.7rem);color:var(--text);font-weight:700;margin-top:4px;}
+
+  footer{
+    padding:44px 0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-size:0.85rem;
+    color:var(--text-faint);
+    flex-wrap:wrap;
+    gap:12px;
+    position:relative;
+    z-index:1;
+  }
+  footer .fmark{font-family:var(--font-mono);color:var(--accent);}
+
+  @media (max-width:860px){
+    .hero-grid{grid-template-columns:1fr;gap:48px;}
+    .about-grid{grid-template-columns:1fr;gap:36px;}
+    .about-facts{border-left:none;padding-left:0;border-top:1px solid var(--panel-border);padding-top:24px;flex-direction:row;flex-wrap:wrap;}
+    .about-facts > div{min-width:160px;}
+    .profile-grid{grid-template-columns:1fr;}
+    .profile-photo{max-width:200px;}
+    .module-grid{grid-template-columns:1fr;}
+    .module.wide{flex-direction:column;gap:8px;}
+    .module.wide .file{width:auto;}
+    .repo-row{grid-template-columns:20px 1fr;column-gap:10px;row-gap:8px;padding:20px 4px;}
+    .repo-icon{grid-column:1;grid-row:1;}
+    .repo-name{grid-column:2;grid-row:1;}
+    .repo-desc{grid-column:1/-1;grid-row:2;}
+    .repo-tag{grid-column:1/-1;grid-row:3;justify-self:start;}
+  }
+  @media (max-width:600px){
+    .wrap{padding:0 20px;}
+    section{padding:64px 0;}
+    .nav-inner{padding:16px 20px;flex-wrap:wrap;row-gap:10px;}
+    nav.links{gap:14px;width:100%;}
+    nav.links a{font-size:0.82rem;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto;}
+    .cursor{animation:none;opacity:1;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo">marc<span>.</span>dev</a>
+    <nav class="links">
+      <a href="#about">About</a>
+      <a href="#what-i-do">What I Do</a>
+      <a href="#projects">Projects</a>
+      <a href="#skills">Skills</a>
+      <a href="#profile">Profile</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow">Web · System · Game Developer</div>
+        <h1>I build dreams into reality.</h1>
+        <p class="lead">Every project starts as an idea. I turn those ideas into working software, playable games, and interactive stories through programming, problem-solving, and design.</p>
+        <div class="hero-meta">
+          <div><strong>Based in</strong>Maramag, Bukidnon, Philippines</div>
+          <div><strong>Focus</strong>Web, systems &amp; game development</div>
+          <div><strong>Also into</strong>Networking &amp; IT support</div>
+        </div>
+      </div>
+      <div class="terminal-wrap">
+        <div class="terminal">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <div class="terminal-bar">
+            <span class="tab">build.log</span>
+            <span class="dot"></span>
+          </div>
+          <div class="terminal-body" id="termBody">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>About Me</h2>
+        <span class="section-index">01 / about</span>
+      </div>
+      <div class="about-grid">
+        <div>
+          <p>I'm an aspiring IT professional with a strong interest in software development, computer systems, networking, game development, animation, and digital creativity. I enjoy building things from the ground up — whether it's a website, a management system, a game, or a solution to a technical problem.</p>
+          <p>I also have hands-on experience with computer troubleshooting and maintenance, including diagnosing hardware problems, assembling computers, installing operating systems, and configuring networks. Beyond development, I explore game creation, animation, video editing, and interactive storytelling — ways of combining technology with creativity.</p>
+          <p>I use GitHub to manage, showcase, and launch my projects, keeping my work organized while continuously learning modern development practices.</p>
+        </div>
+        <div class="about-facts">
+          <div>
+            <div class="fact-label">Learning</div>
+            <div class="fact-value">Software &amp; systems development</div>
+          </div>
+          <div>
+            <div class="fact-label">Building</div>
+            <div class="fact-value">Games, tools &amp; interactive stories</div>
+          </div>
+          <div>
+            <div class="fact-label">Maintaining</div>
+            <div class="fact-value">Hardware, OS &amp; networks</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="what-i-do">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>What I Do</h2>
+        <span class="section-index">02 / capabilities</span>
+      </div>
+      <div class="module-grid">
+        <div class="module">
+          <div class="file">web-development</div>
+          <h3>Web Development</h3>
+          <p>Creating responsive, functional, user-friendly websites and web applications.</p>
+        </div>
+        <div class="module">
+          <div class="file">system-development</div>
+          <h3>System Development</h3>
+          <p>Designing systems that solve real-world problems and make processes easier.</p>
+        </div>
+        <div class="module">
+          <div class="file">game-development</div>
+          <h3>Game Development</h3>
+          <p>Building small games and interactive experiences — mechanics, code, and design.</p>
+        </div>
+        <div class="module">
+          <div class="file">computer-tech</div>
+          <h3>Computer Tech &amp; Troubleshooting</h3>
+          <p>Building, maintaining, upgrading, and troubleshooting hardware and software.</p>
+        </div>
+        <div class="module">
+          <div class="file">networking</div>
+          <h3>Networking</h3>
+          <p>Configuring LAN connections, routers, DHCP, DNS, and basic network troubleshooting.</p>
+        </div>
+        <div class="module">
+          <div class="file">editing-animation</div>
+          <h3>Editing &amp; Animation</h3>
+          <p>Exploring digital editing, animation, visual design, and multimedia projects.</p>
+        </div>
+        <div class="module wide">
+          <div class="file">interactive-storytelling</div>
+          <div class="module-copy">
+            <h3>Interactive Storytelling</h3>
+            <p>Creating visual-novel-style experiences and interactive stories using Ren'Py.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Projects</h2>
+        <span class="section-index">03 / repositories</span>
+      </div>
+      <div class="repo-list">
+        <div class="repo-row">
+          <span class="repo-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="3.2" r="1.6"/><circle cx="4" cy="12.8" r="1.6"/><circle cx="12" cy="8" r="1.6"/><path d="M4 4.8V11.2M4 8h6.4"/></svg></span>
+          <span class="repo-name">tetris</span>
+          <p class="repo-desc">A classic block-stacking game recreated through programming — logic, controls, and scoring.</p>
+          <span class="repo-tag">game</span>
+        </div>
+        <div class="repo-row">
+          <span class="repo-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="3.2" r="1.6"/><circle cx="4" cy="12.8" r="1.6"/><circle cx="12" cy="8" r="1.6"/><path d="M4 4.8V11.2M4 8h6.4"/></svg></span>
+          <span class="repo-name">snake</span>
+          <p class="repo-desc">A simple but challenging Snake build exploring movement, collision detection, and scoring.</p>
+          <span class="repo-tag">game</span>
+        </div>
+        <div class="repo-row">
+          <span class="repo-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="3.2" r="1.6"/><circle cx="4" cy="12.8" r="1.6"/><circle cx="12" cy="8" r="1.6"/><path d="M4 4.8V11.2M4 8h6.4"/></svg></span>
+          <span class="repo-name">web-system-projects</span>
+          <p class="repo-desc">Web-based and system projects designed to organize information and solve practical problems.</p>
+          <span class="repo-tag">web / systems</span>
+        </div>
+        <div class="repo-row">
+          <span class="repo-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="3.2" r="1.6"/><circle cx="4" cy="12.8" r="1.6"/><circle cx="12" cy="8" r="1.6"/><path d="M4 4.8V11.2M4 8h6.4"/></svg></span>
+          <span class="repo-name">interactive-novel</span>
+          <p class="repo-desc">A visual-novel project exploring storytelling, character interaction, and branching paths in Ren'Py.</p>
+          <span class="repo-tag">ren'py</span>
+        </div>
+        <div class="repo-row">
+          <span class="repo-icon"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="4" cy="3.2" r="1.6"/><circle cx="4" cy="12.8" r="1.6"/><circle cx="12" cy="8" r="1.6"/><path d="M4 4.8V11.2M4 8h6.4"/></svg></span>
+          <span class="repo-name">networking-projects</span>
+          <p class="repo-desc">Hands-on networking work — LAN configuration, routers, connectivity, and troubleshooting.</p>
+          <span class="repo-tag">networking</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Technical World</h2>
+        <span class="section-index">04 / stack</span>
+      </div>
+      <div class="skill-groups">
+        <div class="skill-group">
+          <h3>Development</h3>
+          <div class="tag-row">
+            <span class="tag">Web Development</span>
+            <span class="tag">System Development</span>
+            <span class="tag">Game Development</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Programming</h3>
+          <div class="tag-row">
+            <span class="tag">Python</span>
+            <span class="tag">Java</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">SQL</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Tools</h3>
+          <div class="tag-row">
+            <span class="tag">GitHub</span>
+            <span class="tag">Firebase</span>
+            <span class="tag">Ren'Py</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>IT Skills</h3>
+          <div class="tag-row">
+            <span class="tag">Computer Assembly</span>
+            <span class="tag">Troubleshooting</span>
+            <span class="tag">OS Installation</span>
+            <span class="tag">Networking</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <h3>Creative</h3>
+          <div class="tag-row">
+            <span class="tag">Video Editing</span>
+            <span class="tag">Animation</span>
+            <span class="tag">UI Design</span>
+            <span class="tag">Digital Creativity</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mindset">
+    <div class="wrap">
+      <div class="mantra">Learn. Build.<br>Create. <span>Improve.</span></div>
+      <p>Technology never stops moving, and neither do I. Every project is a chance to learn something new, take on something harder, and turn experience into something greater. I don't just want to use technology — I want to create with it.</p>
+    </div>
+  </section>
+
+  <section id="profile">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Personal Profile</h2>
+        <span class="section-index">05 / details</span>
+      </div>
+      <div class="profile-grid">
+        <div class="profile-photo">
+          <span class="corner tl"></span><span class="corner tr"></span><span class="corner bl"></span><span class="corner br"></span>
+          <img src="Profile.jpe" alt="Marc D. Namacpacan profile photo">
+        </div>
+        <table class="id-table">
+          <tr><td class="k">Name</td><td class="v">Marc D. Namacpacan</td></tr>
+          <tr><td class="k">Age</td><td class="v">21 years old</td></tr>
+          <tr><td class="k">Born</td><td class="v">Maramag, Bukidnon</td></tr>
+          <tr><td class="k">Birthday</td><td class="v">March 29, 2005</td></tr>
+          <tr><td class="k">Profession</td><td class="v">Web, System, Game &amp; Multimedia Developer</td></tr>
+          <tr><td class="k">Focus areas</td><td class="v">Programming, Computer Technology, Networking, Game Development, Animation, Digital Editing</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="vision">
+    <div class="wrap">
+      <div class="section-head" style="margin-bottom:32px;">
+        <h2>Vision</h2>
+        <span class="section-index">06 / ahead</span>
+      </div>
+      <p class="intro">To become a skilled and innovative IT professional — capable of transforming ideas into reliable systems, engaging digital experiences, and creative technology solutions.</p>
+      <div class="stack">
+        <div>From an idea to a project.</div>
+        <div>From a project to reality.</div>
+        <div>I build dreams into reality.</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap" style="display:flex;align-items:center;justify-content:space-between;width:100%;flex-wrap:wrap;gap:12px;">
+    <span>Marc D. Namacpacan — Portfolio</span>
+    <span class="fmark">// built to build more</span>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var lines = [
+      {text:"$ whoami", cls:"prompt-line", type:"prompt"},
+      {text:"Marc D. Namacpacan", cls:"name", type:"text"},
+      {text:"Web · System · Game Developer", cls:"", type:"text"},
+      {text:"Maramag, Bukidnon, Philippines", cls:"", type:"text"},
+      {text:"status: learning, building, shipping", cls:"", type:"text"}
+    ];
+    var body = document.getElementById('termBody');
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function renderStatic(){
+      body.innerHTML = '';
+      lines.forEach(function(l, i){
+        var div = document.createElement('div');
+        div.className = 'terminal-line ' + l.cls;
+        if(l.type === 'prompt'){
+          div.innerHTML = '<span class="prompt">$</span> whoami';
+        } else {
+          div.textContent = l.text;
+        }
+        body.appendChild(div);
+      });
+      var cur = document.createElement('span');
+      cur.className = 'cursor';
+      body.lastChild.appendChild(cur);
+    }
+
+    if(reduce){
+      renderStatic();
+      return;
+    }
+
+    var li = 0;
+    function typeLine(){
+      if(li >= lines.length){ return; }
+      var l = lines[li];
+      var div = document.createElement('div');
+      div.className = 'terminal-line ' + l.cls;
+      body.appendChild(div);
+
+      if(l.type === 'prompt'){
+        div.innerHTML = '<span class="prompt">$</span> ';
+        var word = 'whoami';
+        var wi = 0;
+        (function typeWord(){
+          if(wi < word.length){
+            div.innerHTML = '<span class="prompt">$</span> ' + word.slice(0, wi+1);
+            wi++;
+            setTimeout(typeWord, 55);
+          } else {
+            li++;
+            setTimeout(typeLine, 220);
+          }
+        })();
+      } else {
+        var ci = 0;
+        (function typeChar(){
+          if(ci < l.text.length){
+            div.textContent = l.text.slice(0, ci+1);
+            ci++;
+            setTimeout(typeChar, 14);
+          } else {
+            li++;
+            if(li >= lines.length){
+              var cur = document.createElement('span');
+              cur.className = 'cursor';
+              div.appendChild(cur);
+            } else {
+              setTimeout(typeLine, 160);
+            }
+          }
+        })();
+      }
+    }
+    setTimeout(typeLine, 300);
+  })();
+</script>
+
+</body>
+</html>

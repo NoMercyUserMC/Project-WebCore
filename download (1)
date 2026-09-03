@@ -1,0 +1,44 @@
+# WEBCore
+
+A simple WebCore HTML library that recursively scans the project directory for `.html` files and displays them as live iframe previews.
+
+## Run
+
+1. Install Node.js.
+2. Open this folder in VS Code.
+3. Open the terminal.
+4. Run:
+
+```bash
+npm install
+npm start
+```
+
+5. Open:
+
+http://localhost:3000
+
+## How the scanner works
+
+Put HTML files anywhere inside the WEBCore folder:
+
+```text
+WEBCore/
+├── index.html
+├── server.js
+├── previews/
+│   ├── button.html
+│   └── animation.html
+├── components/
+│   └── card.html
+└── 3d/
+    └── cube.html
+```
+
+All `.html` files are detected recursively. `index.html` is excluded from the preview list.
+
+The page refreshes its library list every 5 seconds.
+
+## Important
+
+A browser cannot recursively inspect arbitrary local folders by itself because of browser security restrictions. `server.js` performs the folder scan and serves the files.

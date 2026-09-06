@@ -1,14 +1,128 @@
-    <!DOCTYPE>
-    <html lang="en">
-        <head>
-            <title>WELCOME TO WEBCORE</title>
-        </head>
-        <body>
-            
-            <video autoplay loop playsinline height="200" width="600" src="video/webcore.mp4" type="video/mp4"></video>
-            <h1><b>WEBCORE</b> show you the beauty of website HTML.</h1>
-            <a href="supreme.html"><h1>Goto Supreme</h1></a>
-            <p>this is a simple website to show you the beauty of HTML.<br>
-            amazing website with amazing features.</p>
-        </body>
-    </html>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WELCOME TO WEBCORE</title>
+
+    <style>
+        /* ===== Base ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        /* ===== Main card ===== */
+        .container {
+            max-width: 640px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: fadeUp 1s ease-out;
+        }
+
+        /* ===== Video ===== */
+        video {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+            margin-bottom: 30px;
+        }
+
+        /* ===== Headings ===== */
+        h1 {
+            font-size: 1.8rem;
+            line-height: 1.4;
+            margin-bottom: 25px;
+        }
+
+        h1 b {
+            background: linear-gradient(90deg, #00e0ff, #ff00e6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 2px;
+        }
+
+        /* ===== Button link ===== */
+        .btn {
+            display: inline-block;
+            padding: 14px 34px;
+            margin: 10px 0 25px;
+            background: linear-gradient(90deg, #00e0ff, #7c4dff);
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 224, 255, 0.4);
+        }
+
+        /* ===== Paragraph ===== */
+        p {
+            color: #c9c9d9;
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+
+        /* ===== Animation ===== */
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Intro video -->
+        <video autoplay muted loop playsinline>
+            <source src="video/webcore.mp4" type="video/mp4">
+        </video>
+
+        <h1><b>WEBCORE</b> show you the beauty of website HTML.</h1>
+
+        <!-- Link to Supreme page -->
+        <a href="supreme.html" class="btn">Goto Supreme &rarr;</a>
+
+        <p>
+            This is a simple website to show you the beauty of HTML.<br>
+            Amazing website with amazing features.
+        </p>
+
+    </div>
+
+</body>
+
+</html>

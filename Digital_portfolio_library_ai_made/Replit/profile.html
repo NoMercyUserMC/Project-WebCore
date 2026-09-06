@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet" />
 
-  <style>
+<style>
     :root {
       --navy: #080d2a;
       --navy-light: #111944;
@@ -120,6 +120,14 @@
       font-family: "Oswald", sans-serif;
       font-size: 1.7rem;
       box-shadow: 0 0 0 5px rgba(217, 255, 63, 0.12);
+      overflow: hidden;
+    }
+
+    .brand-mark img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
     }
 
     .brand-copy strong {
@@ -780,12 +788,12 @@
 
 <body>
   <header>
-    <div class="nav">
+      <div class="nav">
       <a href="#top" class="brand">
-        <span class="brand-mark"><img src="Profile.jpe" alt="Profile Image" /></span>
+        <span class="brand-mark"><img src="web1.png" alt="Marc D. Namacpacan Logo"></span>
         <span class="brand-copy">
           <strong>MARC D.</strong>
-          <span>NAMACPACAN / DEV</span>
+              <span>NAMACPACAN / DEV</span>
         </span>
       </a>
 

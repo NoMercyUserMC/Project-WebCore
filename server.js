@@ -5,6 +5,7 @@ const path = require("path");
 const app = express();
 const root = __dirname;
 const port = process.env.PORT || 3000;
+const libraryFile = path.join(root, "index.html");
 
 function findHTMLFiles(directory, relativeDirectory = "") {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -43,7 +44,7 @@ function findBackgroundImages(directory, relativeDirectory = "") {
 app.get("/api/html-files", (_request, response) => {
   try {
     const files = findHTMLFiles(root)
-      .filter((file) => file.toLowerCase() !== "index.html")
+      .filter((file) => file.toLowerCase() !== "library.html")
       .sort((first, second) => first.localeCompare(second));
     response.json(files);
   } catch (error) {
@@ -64,7 +65,7 @@ app.get("/api/background-images", (_request, response) => {
 });
 
 app.get("/", (_request, response) => {
-  const page = fs.readFileSync(path.join(root, "README.md"), "utf8");
+  const page = fs.readFileSync(libraryFile, "utf8");
   const recovery = `<script>
     if (!document.querySelector('.preview-card') && typeof load === 'function') load();
     document.querySelectorAll('.preview-frame').forEach((frame) => frame.addEventListener('load', () => frame.classList.add('loaded'), { once: true }));

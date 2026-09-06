@@ -1,1 +1,1720 @@
-<>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HTML Land — Fun HTML for Kids</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='32' r='27' fill='%23FFC53D' stroke='%2333302E' stroke-width='4'/%3E%3Cpath d='M26 22 15 32l11 10M38 22l11 10-11 10' fill='none' stroke='%2333302E' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;700;800&family=Nunito:wght@600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/lucide@latest"></script>
+<style>
+/* ============ FOUNDATION ============ */
+:root{
+  --ink:#33302E;
+  --paper:#FFF6E5;
+  --paper2:#FFEDCB;
+  --sky:#C9ECF6;
+  --grass:#CFE8B8;
+  --coral:#FF6B57;
+  --yellow:#FFC53D;
+  --teal:#3FC1C9;
+  --green:#7BC950;
+  --purple:#9B5DE5;
+  --crimson:#E63946;
+  --orange:#F98D2B;
+  --fh:'Baloo 2',cursive;
+  --fb:'Nunito',sans-serif;
+  --fc:'Space Mono',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+[hidden]{display:none!important}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);font-weight:600;color:var(--ink);background:var(--paper);overflow-x:hidden;line-height:1.5}
+section{scroll-margin-top:90px}
+::selection{background:var(--yellow)}
+:focus-visible{outline:3px dashed var(--ink);outline-offset:3px;border-radius:6px}
+img,svg{vertical-align:middle}
+.buddy-svg{display:block}
+.buddy-svg .eye,.buddy-svg .pupil{transform-box:fill-box;transform-origin:50% 50%}
+.buddy-svg .eye{transition:transform .09s}
+.buddy-svg.blink .eye{transform:scaleY(.1)}
+.buddy-svg .pupil{transition:transform .13s ease-out}
+.buddy-svg .mouth-open{display:none}
+.buddy-svg.talking .mouth-open{display:block}
+.buddy-svg.talking .mouth-smile{display:none}
+
+/* ============ BUTTONS & SHARED BITS ============ */
+.btn{font-family:var(--fh);font-weight:700;font-size:1.05rem;color:var(--ink);background:#fff;
+  border:3px solid var(--ink);border-radius:999px;padding:.65em 1.35em;cursor:pointer;
+  display:inline-flex;align-items:center;gap:.5em;box-shadow:4px 5px 0 var(--ink);
+  transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translate(-2px,-3px);box-shadow:6px 8px 0 var(--ink)}
+.btn:active{transform:translate(3px,4px);box-shadow:0 1px 0 var(--ink)}
+.btn:disabled{opacity:.6;cursor:default;transform:none;box-shadow:3px 4px 0 var(--ink)}
+.btn.coral{background:var(--coral)}
+.btn.yellow{background:var(--yellow)}
+.btn.earned{background:var(--green)}
+.btn-lg{font-size:1.3rem;padding:.8em 1.5em}
+.icon-btn{width:46px;height:46px;border:3px solid var(--ink);border-radius:14px;background:#fff;
+  display:grid;place-items:center;box-shadow:3px 4px 0 var(--ink);cursor:pointer;transition:transform .12s,box-shadow .12s;color:var(--ink)}
+.icon-btn:hover{transform:translate(-2px,-2px);box-shadow:5px 6px 0 var(--ink)}
+.icon-btn:active{transform:translate(2px,3px);box-shadow:0 1px 0 var(--ink)}
+.panel{background:#fff;border:4px solid var(--ink);border-radius:26px;box-shadow:7px 9px 0 var(--ink)}
+
+/* ============ NAV ============ */
+.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:4px solid var(--ink);
+  padding:10px 20px;display:flex;align-items:center;gap:14px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--fh);font-weight:800;font-size:1.35rem;text-decoration:none;color:var(--ink)}
+.logo-svg{width:42px;height:42px;transform:rotate(-4deg)}
+.nav-links{display:flex;gap:4px;margin-left:auto}
+.nav-links a{font-family:var(--fh);font-weight:700;padding:8px 15px;border-radius:999px;border:3px solid transparent;color:var(--ink);text-decoration:none;transition:.15s}
+.nav-links a:hover{background:#fff;border-color:var(--ink);box-shadow:3px 3px 0 var(--ink);transform:translate(-1px,-2px)}
+.nav-right{display:flex;gap:10px;align-items:center;margin-left:auto}
+.nav-links + .nav-right{margin-left:0}
+.star-btn{width:auto;padding:0 14px;gap:6px;font-family:var(--fh);font-weight:800;border-radius:999px;display:flex;align-items:center}
+.star-btn b{font-size:1.1rem}
+.star-btn.bump{animation:bump .5s}
+@keyframes bump{30%{transform:scale(1.18) rotate(-4deg)}}
+#menuBtn{display:none}
+.mobile-menu{display:none;position:absolute;top:100%;left:0;right:0;background:var(--paper);border-bottom:4px solid var(--ink);padding:12px 20px;flex-direction:column;gap:6px}
+.mobile-menu a{font-family:var(--fh);font-weight:700;font-size:1.2rem;padding:10px 14px;border-radius:14px;text-decoration:none;color:var(--ink)}
+.mobile-menu a:hover{background:#fff;box-shadow:3px 3px 0 var(--ink)}
+.mobile-menu.open{display:flex}
+
+/* ============ HERO ============ */
+.hero{position:relative;background:var(--sky);padding:70px 20px 170px;overflow:hidden;min-height:80vh;display:flex;align-items:center}
+.hero-inner{position:relative;z-index:4;width:100%;max-width:1150px;margin:0 auto;display:grid;grid-template-columns:1.08fr .92fr;gap:30px;align-items:center}
+.sun{position:absolute;top:22px;right:4%;width:150px;height:150px;z-index:1}
+.sun .rays{transform-box:view-box;transform-origin:50% 50%;animation:spin 55s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.cloud{position:absolute;z-index:1;opacity:.95}
+.cloud svg{width:130px;height:84px}
+.c1{top:60px;left:6%;animation:drift 8s ease-in-out infinite alternate}
+.c2{top:150px;left:38%;animation:drift 11s ease-in-out infinite alternate-reverse}
+.c2 svg{width:100px;height:64px}
+.c3{top:34px;left:56%;animation:drift 9s ease-in-out infinite alternate}
+@keyframes drift{to{transform:translateX(26px)}}
+.plane{position:absolute;top:20%;left:-80px;z-index:1;animation:flyAcross 15s linear infinite;animation-delay:1.5s}
+.plane svg{width:62px;height:40px}
+@keyframes flyAcross{
+  0%{transform:translate(0,0) rotate(8deg)}
+  50%{transform:translate(55vw,-40px) rotate(-3deg)}
+  100%{transform:translate(114vw,30px) rotate(8deg)}
+}
+.hills{position:absolute;left:0;right:0;bottom:-3px;width:100%;height:175px;z-index:2}
+.eyebrow{display:inline-block;background:var(--yellow);border:3px solid var(--ink);border-radius:12px;
+  padding:6px 16px;font-family:var(--fh);font-weight:700;transform:rotate(-2deg);box-shadow:4px 4px 0 var(--ink);animation:popIn .5s .1s cubic-bezier(.2,1.5,.4,1) backwards}
+.big-title{margin:20px 0 14px;font-family:var(--fh);line-height:.95}
+.big-title .pre{display:block;font-size:clamp(1.3rem,2.6vw,1.9rem);font-weight:700;margin-bottom:8px}
+.big-title .l{display:inline-block;font-weight:800;font-size:clamp(3.2rem,7.5vw,5.4rem);color:var(--c);
+  text-shadow:4px 0 0 var(--ink),-4px 0 0 var(--ink),0 4px 0 var(--ink),0 -4px 0 var(--ink),
+   3px 3px 0 var(--ink),-3px 3px 0 var(--ink),3px -3px 0 var(--ink),-3px -3px 0 var(--ink),8px 10px 0 rgba(51,48,46,.9);
+  animation:letterIn .75s cubic-bezier(.2,1.4,.4,1) backwards;cursor:default}
+.big-title .gap{display:inline-block;width:.45em}
+.big-title .l:hover{animation:jump .5s}
+@keyframes letterIn{0%{transform:translateY(-110px) scale(.5);opacity:0}60%{transform:translateY(12px)}80%{transform:translateY(-7px)}100%{transform:translateY(0)}}
+@keyframes jump{30%{transform:translateY(-20px) rotate(-7deg)}60%{transform:translateY(0)}80%{transform:translateY(-7px)}}
+.hero-sub{font-size:1.15rem;font-weight:700;max-width:520px;animation:popIn .5s .45s cubic-bezier(.2,1.5,.4,1) backwards}
+.hero-cta{display:flex;gap:16px;margin-top:28px;flex-wrap:wrap;animation:popIn .5s .6s cubic-bezier(.2,1.5,.4,1) backwards}
+@keyframes popIn{0%{transform:scale(.6) translateY(20px);opacity:0}100%{transform:none;opacity:1}}
+
+.mascot-stage{position:relative;height:400px;animation:popIn .6s .35s cubic-bezier(.2,1.5,.4,1) backwards}
+.taggy-btn{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:295px;height:295px;background:none;border:none;cursor:pointer}
+.taggy-btn .buddy-svg{width:100%;height:100%}
+.taggy-btn.squish .buddy-svg{animation:squish .55s}
+@keyframes squish{0%{transform:scale(1)}30%{transform:scale(1.14,.84)}55%{transform:scale(.92,1.1)}100%{transform:scale(1)}}
+.bubble{position:absolute;top:-14px;left:50%;transform:translateX(-50%) scale(0);background:#fff;border:3px solid var(--ink);
+  border-radius:16px;padding:10px 16px;font-weight:700;max-width:260px;text-align:center;z-index:8;box-shadow:4px 5px 0 var(--ink);
+  transition:transform .3s cubic-bezier(.2,1.6,.4,1);font-size:.95rem}
+.bubble.show{transform:translateX(-50%) scale(1)}
+.bubble::after{content:"";position:absolute;bottom:-11px;left:50%;transform:translateX(-50%) rotate(45deg);width:18px;height:18px;background:#fff;border-right:3px solid var(--ink);border-bottom:3px solid var(--ink)}
+.tag-chip{position:absolute;z-index:7;font-family:var(--fc);font-weight:700;font-size:1rem;background:#fff;border:3px solid var(--ink);
+  border-radius:12px;padding:7px 13px;box-shadow:3px 4px 0 var(--ink);cursor:pointer;color:var(--ink);
+  animation:bob 3.4s ease-in-out infinite;transition:background .2s}
+.tag-chip:hover{background:var(--yellow)}
+.tag-chip.wiggle{animation:wiggle .5s}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-13px) rotate(3deg)}}
+@keyframes wiggle{25%{transform:rotate(-8deg)}75%{transform:rotate(8deg)}}
+
+/* ============ SECTION HEADERS ============ */
+.sec{padding:95px 20px}
+.sec-inner{max-width:1150px;margin:0 auto}
+.sec-head{display:flex;align-items:center;gap:22px;margin-bottom:36px}
+.sec-badge{width:74px;height:74px;flex:none;border:4px solid var(--ink);border-radius:24px;box-shadow:5px 6px 0 var(--ink);
+  display:grid;place-items:center;transform:rotate(-5deg);color:var(--ink)}
+.sec-head h2{font-family:var(--fh);font-weight:800;font-size:clamp(2rem,4vw,2.8rem);line-height:1.05}
+.squiggle{display:block;width:150px;height:12px;margin-top:4px}
+.sec-sub{font-weight:700;color:#6b6559;margin-top:6px}
+
+/* ============ MAP ============ */
+.map-sec{background:var(--grass);padding:90px 20px 80px}
+.map-wrap{position:relative;max-width:1150px;margin:26px auto 0;height:660px}
+.map-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.pathline{stroke:var(--ink);stroke-width:5;fill:none;stroke-dasharray:.5 16;stroke-linecap:round;opacity:.5;animation:march .9s linear infinite}
+@keyframes march{to{stroke-dashoffset:-16.5}}
+.decor{position:absolute;transform:translate(-50%,-50%);z-index:1;pointer-events:none}
+.stop{position:absolute;transform:translate(-50%,-50%);background:none;border:none;cursor:pointer;z-index:5;
+  display:flex;flex-direction:column;align-items:center;gap:8px}
+.stop-circle{width:116px;height:116px;background:#fff;border:4px solid var(--ink);border-radius:50%;
+  display:grid;place-items:center;box-shadow:5px 7px 0 var(--ink);transition:transform .3s cubic-bezier(.2,1.6,.4,1),background .3s;position:relative}
+.stop-circle svg{width:62px;height:62px}
+.stop:hover .stop-circle{transform:rotate(-6deg) scale(1.08)}
+.stop:active .stop-circle{transform:scale(.95)}
+.stop.done .stop-circle{background:#FFF3C9}
+.stop-num{position:absolute;top:-8px;left:-6px;width:34px;height:34px;border:3px solid var(--ink);border-radius:50%;
+  display:grid;place-items:center;font-family:var(--fh);font-weight:800;color:var(--ink);box-shadow:2px 3px 0 var(--ink)}
+.stop-label{font-family:var(--fh);font-weight:700;font-size:.95rem;background:#fff;border:3px solid var(--ink);
+  border-radius:999px;padding:3px 14px;box-shadow:3px 3px 0 var(--ink);white-space:nowrap}
+.stop-done{position:absolute;top:-10px;right:-8px;width:36px;height:36px;background:var(--yellow);border:3px solid var(--ink);
+  border-radius:50%;display:none;place-items:center;z-index:2;box-shadow:2px 3px 0 var(--ink)}
+.stop.done .stop-done{display:grid}
+
+/* ============ TICKER ============ */
+.ticker{background:var(--ink);color:var(--paper);overflow:hidden;padding:13px 0;width:102%;margin-left:-1%;transform:rotate(-.6deg);border-top:4px solid var(--ink);border-bottom:4px solid var(--ink)}
+.ticker-track{display:flex;width:max-content;animation:slide 26s linear infinite}
+.tick{display:flex;align-items:center;gap:26px;padding-right:26px;font-family:var(--fh);font-weight:700;letter-spacing:.5px;white-space:nowrap}
+.tick code{font-family:var(--fc);background:var(--yellow);color:var(--ink);border-radius:8px;padding:1px 8px}
+.tick .d{width:10px;height:10px;background:var(--yellow);border-radius:2px;transform:rotate(45deg);flex:none}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+/* ============ ARCADE ============ */
+.arcade{padding:26px}
+.carts{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:22px}
+.cart{font-family:var(--fh);font-weight:700;font-size:1.05rem;color:var(--ink);background:#fff;border:3px solid var(--ink);
+  border-radius:16px;padding:10px 18px;cursor:pointer;box-shadow:4px 5px 0 var(--ink);display:inline-flex;gap:.5em;align-items:center;transition:transform .12s,box-shadow .12s,background .2s}
+.cart:hover{transform:translate(-2px,-3px);box-shadow:6px 8px 0 var(--ink)}
+.cart.active{background:var(--coral)}
+.game-screen{position:relative;background:var(--sky);border:4px solid var(--ink);border-radius:20px;padding:24px;min-height:480px;overflow:hidden}
+.game-top{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.game-top .icon-btn{margin-left:auto}
+.game-stat{display:inline-flex;align-items:center;gap:8px;background:#fff;border:3px solid var(--ink);border-radius:999px;
+  padding:6px 14px;font-family:var(--fh);font-weight:700;box-shadow:3px 4px 0 var(--ink)}
+.game-hint{font-weight:700;margin-bottom:4px}
+.game-q{font-family:var(--fh);font-weight:800;font-size:1.25rem;margin:6px 0 14px}
+.game-feedback{min-height:30px;font-family:var(--fh);font-weight:700;font-size:1.15rem;margin-top:14px}
+.game-feedback.good{color:#2e6b13}
+.game-feedback.bad{color:#b3271b}
+
+/* memory */
+.mm-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;max-width:620px;margin:20px auto 0}
+.mcard{border:none;background:none;cursor:pointer;perspective:700px;aspect-ratio:3/3.4;padding:0}
+.mcard-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.34,1.45,.64,1)}
+.mcard.flipped .mcard-inner{transform:rotateY(180deg)}
+.mface{position:absolute;inset:0;backface-visibility:hidden;border:3px solid var(--ink);border-radius:14px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;box-shadow:3px 4px 0 var(--ink);padding:6px;text-align:center}
+.mfront{background:var(--coral)}
+.mfront .tagmark{font-family:var(--fc);font-weight:700;font-size:1.5rem;color:#fff}
+.mback{transform:rotateY(180deg);background:#fff}
+.mback .mtag{font-family:var(--fc);font-weight:700;font-size:1.35rem;color:var(--coral)}
+.mback svg{width:30px;height:30px;color:var(--teal)}
+.mback span{font-weight:800;font-size:.85rem;line-height:1.2}
+.mcard.matched .mback{background:#E2F6CE;border-color:#3e7d1f}
+.mcard.matched{animation:cardMatch .5s}
+@keyframes cardMatch{40%{transform:scale(1.12) rotate(4deg)}}
+
+/* bug hunt */
+.bug-stage{position:relative;margin-top:52px}
+.codeblock-wrap{border:3px solid var(--ink);border-radius:16px;overflow:hidden}
+.codebar{display:flex;gap:6px;align-items:center;background:#413d38;padding:8px 14px;border-bottom:3px solid var(--ink)}
+.codebar .cdot{width:11px;height:11px;border-radius:50%;border:2px solid var(--ink)}
+.codebar .cdot:nth-child(1){background:var(--coral)}
+.codebar .cdot:nth-child(2){background:var(--yellow)}
+.codebar .cdot:nth-child(3){background:var(--green)}
+.codebar-label{margin-left:auto;font-family:var(--fc);font-size:.8rem;color:#cfc8bd}
+.codeblock{background:var(--ink);color:#F3EEE2;font-family:var(--fc);font-size:.95rem;padding:16px;overflow-x:auto;line-height:1.6}
+.tok-tag{color:#FF8A7A;font-weight:700}
+.tok-attr{color:#7FDCF2}
+.tok-val{color:#FFD86B}
+.tok-br{color:#8f8880}
+.bug-holder{position:absolute;top:-58px;right:-4px;width:120px;z-index:3;pointer-events:none}
+.bug-holder svg{width:120px;height:100px}
+.bug-svg.bonked{animation:bonkFall 1.2s forwards}
+@keyframes bonkFall{20%{transform:translateY(-16px) rotate(-10deg)}100%{transform:translateY(30px) rotate(-100deg)}}
+.bug-svg.giggle{animation:giggle .5s 3}
+@keyframes giggle{25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+.bug-svg .bug-dizzy{display:none}
+.bug-svg.bonked .bug-eyes{display:none}
+.bug-svg.bonked .bug-dizzy{display:block}
+.bonk-pop{position:absolute;top:-30px;left:50%;transform:translate(-50%,0) scale(0);opacity:0;
+  font-family:var(--fh);font-weight:800;background:var(--yellow);border:3px solid var(--ink);border-radius:12px;padding:2px 12px}
+.bonk-pop.show{animation:bonkPop .8s}
+@keyframes bonkPop{20%{transform:translate(-50%,0) scale(1.25);opacity:1}70%{opacity:1;transform:translate(-50%,-14px) scale(1)}100%{opacity:0;transform:translate(-50%,-26px)}}
+.bug-dots{display:flex;gap:8px}
+.bdot{width:20px;height:20px;border:3px solid var(--ink);border-radius:50%;background:#fff}
+.bdot.on{background:var(--green)}
+.bug-answers{display:flex;flex-direction:column;gap:12px;margin-top:18px;max-width:640px}
+.bug-opt,.qz-opt{font-family:var(--fc);font-weight:700;justify-content:flex-start;text-align:left}
+.btn.right{background:var(--green)}
+.btn.wrong{background:#ffc9bd;animation:shake .4s}
+@keyframes shake{20%{transform:translateX(-7px)}40%{transform:translateX(7px)}60%{transform:translateX(-5px)}80%{transform:translateX(5px)}}
+
+/* quiz */
+.qz-answers{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:680px}
+.streak-pill{background:var(--yellow)}
+.qz-flame{display:inline-flex;align-items:center;gap:4px}
+
+/* win overlays */
+.win-overlay{position:absolute;inset:0;background:rgba(255,246,229,.94);display:grid;place-items:center;z-index:6;border-radius:16px}
+.win-card{max-width:430px;margin:20px;padding:30px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center;animation:popIn .45s cubic-bezier(.2,1.5,.4,1)}
+.win-card h3{font-family:var(--fh);font-weight:800;font-size:1.7rem}
+.win-card p{font-weight:700}
+
+/* ============ WORKSHOP ============ */
+.sec-ws{background:var(--paper2)}
+.ws{padding:26px}
+.ws-chips{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px}
+.chip{font-family:var(--fc);font-weight:700;background:#fff;border:3px solid var(--ink);border-radius:12px;
+  padding:6px 12px;box-shadow:3px 3px 0 var(--ink);cursor:pointer;color:var(--ink);transition:transform .12s,box-shadow .12s}
+.chip:hover{background:var(--yellow);transform:translate(-1px,-2px);box-shadow:4px 5px 0 var(--ink)}
+.chip:active{transform:translate(2px,2px);box-shadow:0 1px 0 var(--ink)}
+.ws-actions{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:20px}
+.ws-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+.ws-label{display:inline-block;font-family:var(--fh);font-weight:700;background:var(--teal);border:3px solid var(--ink);
+  border-radius:10px;padding:3px 12px;margin-bottom:10px;transform:rotate(-1.5deg);box-shadow:3px 3px 0 var(--ink)}
+.ws textarea{width:100%;min-height:420px;background:var(--ink);color:#FFE9B8;font-family:var(--fc);font-size:15px;
+  line-height:1.65;padding:18px;border:3px solid var(--ink);border-radius:16px;resize:vertical;caret-color:var(--coral)}
+.ws textarea:focus{outline:3px dashed var(--coral);outline-offset:3px}
+.ws-frame{border:3px solid var(--ink);border-radius:16px;overflow:hidden;background:#fff;height:458px}
+.ws-frame iframe{width:100%;height:100%;border:none;display:block}
+.ws-frame.tada{animation:tada .5s}
+@keyframes tada{30%{transform:scale(1.02) rotate(.6deg)}60%{transform:scale(.99) rotate(-.6deg)}}
+.ws-note{display:flex;align-items:center;gap:10px;margin-top:18px;font-weight:700;color:#6b6559}
+.ws-note svg{flex:none;color:var(--coral)}
+
+/* ============ CHAT ============ */
+.chat{display:grid;grid-template-columns:290px 1fr;overflow:hidden;min-height:540px}
+.chat-side{background:var(--paper2);border-right:4px solid var(--ink);padding:28px 22px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.chat-taggy svg{width:150px;height:150px}
+.chat-taggy.bounce svg{animation:squish .6s infinite}
+.chat-side h3{font-family:var(--fh);font-weight:800;font-size:1.5rem}
+.chat-status{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;color:#6b6559}
+.status-dot{width:12px;height:12px;border-radius:50%;background:var(--green);border:2px solid var(--ink);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{transform:scale(1.3)}}
+.qchips{display:flex;flex-direction:column;gap:8px;margin-top:14px;width:100%}
+.qchip{font-family:var(--fb);font-weight:700;background:#fff;border:3px solid var(--ink);border-radius:14px;
+  padding:8px 12px;cursor:pointer;box-shadow:3px 3px 0 var(--ink);text-align:left;color:var(--ink);font-size:.9rem;transition:.15s}
+.qchip:hover{background:var(--yellow);transform:translate(-1px,-2px);box-shadow:4px 5px 0 var(--ink)}
+.chat-main{display:flex;flex-direction:column}
+.msgs{flex:1;min-height:400px;max-height:460px;overflow-y:auto;padding:24px;display:flex;flex-direction:column;gap:14px;background:var(--sky)}
+.msg{max-width:80%;padding:12px 16px;border:3px solid var(--ink);border-radius:18px;background:#fff;
+  box-shadow:3px 4px 0 var(--ink);font-weight:700;font-size:.98rem;line-height:1.55}
+.msg code{font-family:var(--fc);font-size:.85em;background:var(--ink);color:var(--yellow);border-radius:8px;padding:1px 7px;white-space:nowrap;display:inline-block}
+.msg.bot{align-self:flex-start;border-bottom-left-radius:4px}
+.msg.user{align-self:flex-end;background:var(--yellow);border-bottom-right-radius:4px}
+.tdots{display:inline-flex;gap:5px;padding:4px 2px}
+.tdots span{width:9px;height:9px;background:var(--ink);border-radius:50%;animation:dotJump .9s infinite}
+.tdots span:nth-child(2){animation-delay:.15s}
+.tdots span:nth-child(3){animation-delay:.3s}
+@keyframes dotJump{40%{transform:translateY(-7px)}}
+.chat-input{display:flex;gap:10px;padding:16px;border-top:4px solid var(--ink);background:#fff}
+.chat-input input{flex:1;font-family:var(--fb);font-weight:700;font-size:1rem;border:3px solid var(--ink);
+  border-radius:999px;padding:12px 18px;background:var(--paper);color:var(--ink)}
+.chat-input input:focus{outline:3px dashed var(--coral);outline-offset:2px}
+.send-btn{width:52px;height:52px;flex:none;border-radius:50%;border:3px solid var(--ink);background:var(--coral);
+  display:grid;place-items:center;cursor:pointer;box-shadow:3px 4px 0 var(--ink);color:var(--ink);transition:transform .12s,box-shadow .12s}
+.send-btn:hover{transform:translate(-2px,-3px);box-shadow:5px 7px 0 var(--ink)}
+.send-btn:active{transform:translate(2px,3px);box-shadow:0 1px 0 var(--ink)}
+
+/* ============ FOOTER ============ */
+.footer{background:var(--ink);color:var(--paper);padding:10px 20px 46px;text-align:center}
+.foot-wave{display:block;width:100%;height:44px;margin-bottom:26px}
+.footer h3{font-family:var(--fh);font-weight:800;font-size:1.6rem}
+.footer p{font-weight:700;opacity:.85;margin-top:8px}
+.foot-buddies{display:flex;justify-content:center;gap:14px;margin:22px 0;flex-wrap:wrap}
+.foot-buddies svg{width:48px;height:48px}
+.footer .tagline{font-family:var(--fh);color:var(--yellow);opacity:1}
+
+/* ============ MODAL / DRAWER / TOAST ============ */
+.overlay{position:fixed;inset:0;background:rgba(51,48,46,.55);z-index:60;display:grid;place-items:center;padding:18px;
+  opacity:0;pointer-events:none;transition:opacity .25s}
+.overlay.open{opacity:1;pointer-events:auto}
+.modal{width:min(700px,100%);max-height:92vh;overflow-y:auto;padding:26px;transform:scale(.72) rotate(-2deg);
+  transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
+.overlay.open .modal{transform:none}
+.lesson-head{display:flex;align-items:center;gap:16px}
+.lesson-head .icon-btn{margin-left:auto;flex:none}
+.lesson-buddy svg{width:96px;height:96px}
+.lesson-head h3{font-family:var(--fh);font-weight:800;font-size:1.7rem;line-height:1.1}
+.lesson-stopname{font-family:var(--fc);font-size:.85rem;font-weight:700;color:#6b6559}
+.speech{background:var(--paper);border:3px solid var(--ink);border-radius:18px;padding:14px 18px;position:relative;
+  margin:18px 0;min-height:78px;cursor:pointer}
+.speech::before{content:"";position:absolute;left:38px;top:-12px;width:22px;height:22px;background:var(--paper);
+  border-left:3px solid var(--ink);border-top:3px solid var(--ink);transform:rotate(45deg)}
+.speech-text{font-weight:700}
+.skip-hint{display:block;text-align:right;font-size:.72rem;color:#a29a8c;font-weight:700;margin-top:6px}
+.lesson-code{margin:18px 0}
+.try-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.try-head span{font-family:var(--fh);font-weight:800;color:var(--teal);font-size:1.1rem}
+.lesson-try textarea{width:100%;min-height:130px;background:var(--ink);color:#FFE9B8;font-family:var(--fc);font-size:14px;
+  line-height:1.6;padding:14px;border:3px solid var(--ink);border-radius:14px;resize:vertical}
+#tryPrev{width:100%;height:170px;border:3px solid var(--ink);border-radius:14px;margin-top:12px;background:#fff;display:block}
+.lesson-foot{display:flex;gap:14px;justify-content:space-between;flex-wrap:wrap;margin-top:20px}
+
+.drawer-overlay{position:fixed;inset:0;background:rgba(51,48,46,.5);z-index:75;opacity:0;pointer-events:none;transition:opacity .3s}
+.drawer-overlay.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;top:0;right:0;height:100%;width:min(440px,94vw);background:var(--paper);border-left:4px solid var(--ink);
+  z-index:80;transform:translateX(106%);transition:transform .4s cubic-bezier(.2,1.2,.4,1);padding:26px;overflow-y:auto}
+.drawer.open{transform:none}
+.drawer-head{display:flex;align-items:center;gap:14px}
+.drawer-head h3{font-family:var(--fh);font-weight:800;font-size:1.7rem}
+.drawer-head .icon-btn{margin-left:auto}
+.drawer-count{font-family:var(--fh);font-weight:700;color:#6b6559;margin:6px 0 20px}
+.shelf{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.slot{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px 8px;border:3px dashed #cbbfa6;border-radius:18px}
+.slot b{font-family:var(--fh);font-weight:700;text-align:center}
+.slot.earned{border-style:solid;border-color:var(--ink);background:#fff;box-shadow:4px 5px 0 var(--ink)}
+.slot:not(.earned) b{color:#b3a98f}
+.seal{position:relative;width:92px;height:92px}
+.seal-bg{width:100%;height:100%;display:block}
+.seal>svg.lucide{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34px;height:34px}
+.seal.locked{border:3px dashed #cbbfa6;border-radius:50%;display:grid;place-items:center;color:#b3a98f}
+.seal.locked svg{width:30px;height:30px}
+
+.toasts{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:90;display:flex;flex-direction:column;gap:12px;align-items:center;pointer-events:none}
+.toast{display:flex;gap:14px;align-items:center;background:#fff;border:4px solid var(--ink);border-radius:20px;
+  box-shadow:6px 7px 0 var(--ink);padding:12px 22px;animation:toastIn .5s cubic-bezier(.2,1.5,.4,1)}
+.toast.out{animation:toastOut .35s forwards}
+@keyframes toastIn{0%{transform:translateY(60px) scale(.7);opacity:0}}
+@keyframes toastOut{to{transform:translateY(40px) scale(.8);opacity:0}}
+.toast-seal{width:48px;height:48px;flex:none;border:3px solid var(--ink);border-radius:50%;display:grid;place-items:center}
+.toast-seal svg{width:24px;height:24px}
+.toast b{font-family:var(--fh);font-weight:800;display:block}
+.toast span{font-weight:700;font-size:.85rem;color:#6b6559}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:100}
+
+/* ============ REVEAL & RESPONSIVE ============ */
+.reveal{opacity:0;transform:translateY(30px) scale(.97);transition:.55s cubic-bezier(.2,1.3,.4,1)}
+.reveal.in{opacity:1;transform:none}
+
+@media(max-width:1000px){
+  .hero-inner{grid-template-columns:1fr;gap:60px}
+  .mascot-stage{height:400px;max-width:420px;margin:0 auto}
+  .chat{grid-template-columns:1fr}
+  .chat-side{border-right:none;border-bottom:4px solid var(--ink);flex-direction:row;flex-wrap:wrap;justify-content:center;gap:16px}
+  .chat-taggy svg{width:110px;height:110px}
+  .qchips{flex-direction:row;flex-wrap:wrap;margin-top:0}
+}
+@media(max-width:860px){
+  .nav-links{display:none}
+  #menuBtn{display:grid}
+  .sec{padding:70px 16px}
+  .map-sec{padding:70px 16px 70px}
+}
+@media(max-width:720px){
+  .map-wrap{height:1220px}
+  .stop-circle{width:96px;height:96px}
+  .stop-circle svg{width:50px;height:50px}
+  .ws-grid{grid-template-columns:1fr}
+  .ws textarea{min-height:230px}
+  .ws-frame{height:280px}
+  .sun{width:100px;height:100px}
+  .hero{padding-top:50px}
+}
+@media(max-width:480px){
+  .mm-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .qz-answers{grid-template-columns:1fr}
+  .tag-chip{font-size:.85rem;padding:5px 10px}
+  .mascot-stage{height:360px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<!-- ================= NAV ================= -->
+<nav class="nav">
+  <a href="#top" class="logo">
+    <svg class="logo-svg" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="27" fill="#FFC53D" stroke="#33302E" stroke-width="4"/><path d="M26 22 15 32l11 10M38 22l11 10-11 10" fill="none" stroke="#33302E" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    HTML Land
+  </a>
+  <div class="nav-links">
+    <a href="#map">The Map</a>
+    <a href="#arcade">Arcade</a>
+    <a href="#workshop">Workshop</a>
+    <a href="#ask">Ask Taggy</a>
+  </div>
+  <div class="nav-right">
+    <button class="icon-btn" id="sndBtn" aria-label="Sound on or off"></button>
+    <button class="icon-btn star-btn" id="starBtn" aria-label="Open my sticker book">
+      <i data-lucide="star"></i><b id="starCount">0</b>
+    </button>
+    <button class="icon-btn" id="menuBtn" aria-label="Menu"><i data-lucide="menu"></i></button>
+  </div>
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#map">The Tag Map</a>
+    <a href="#arcade">The Arcade</a>
+    <a href="#workshop">The Workshop</a>
+    <a href="#ask">Ask Taggy</a>
+  </div>
+</nav>
+
+<!-- ================= HERO ================= -->
+<header class="hero" id="top">
+  <svg class="sun" viewBox="0 0 160 160" aria-hidden="true">
+    <g class="rays" stroke="#33302E" stroke-width="5" stroke-linecap="round">
+      <line x1="80" y1="8" x2="80" y2="26" transform="rotate(0 80 80)"/><line x1="80" y1="8" x2="80" y2="26" transform="rotate(30 80 80)"/>
+      <line x1="80" y1="8" x2="80" y2="26" transform="rotate(60 80 80)"/><line x1="80" y1="8" x2="80" y2="26" transform="rotate(90 80 80)"/>
+      <line x1="80" y1="8" x2="80" y2="26" transform="rotate(120 80 80)"/><line x1="80" y1="8" x2="80" y2="26" transform="rotate(150 80 80)"/>
+      <line x1="80" y1="8" x2="80" y2="26" transform="rotate(180 80 80)"/><line x1="80" y1="8" x2="80" y2="26" transform="rotate(210 80 80)"/>
+      <line x1="80" y1="8" x2="80" y2="26" transform="rotate(240 80 80)"/><line x1="80" y1="8" x2="80" y2="26" transform="rotate(270 80 80)"/>
+      <line x1="80" y1="8" x2="80" y2="26" transform="rotate(300 80 80)"/><line x1="80" y1="8" x2="80" y2="26" transform="rotate(330 80 80)"/>
+    </g>
+    <circle cx="80" cy="80" r="46" fill="#FFC53D" stroke="#33302E" stroke-width="5"/>
+    <circle cx="68" cy="74" r="4" fill="#33302E"/><circle cx="92" cy="74" r="4" fill="#33302E"/>
+    <path d="M68 88 Q80 97 92 88" fill="none" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+  </svg>
+  <div class="cloud c1"><svg viewBox="0 0 100 64"><path d="M12 50 A11 11 0 0 1 11 33 A13 13 0 0 1 30 20 A14 14 0 0 1 58 18 A12 12 0 0 1 80 32 A10 10 0 0 1 88 50 Z" fill="#fff" stroke="#33302E" stroke-width="4" stroke-linejoin="round"/></svg></div>
+  <div class="cloud c2"><svg viewBox="0 0 100 64"><path d="M12 50 A11 11 0 0 1 11 33 A13 13 0 0 1 30 20 A14 14 0 0 1 58 18 A12 12 0 0 1 80 32 A10 10 0 0 1 88 50 Z" fill="#fff" stroke="#33302E" stroke-width="4" stroke-linejoin="round"/></svg></div>
+  <div class="cloud c3"><svg viewBox="0 0 100 64"><path d="M12 50 A11 11 0 0 1 11 33 A13 13 0 0 1 30 20 A14 14 0 0 1 58 18 A12 12 0 0 1 80 32 A10 10 0 0 1 88 50 Z" fill="#fff" stroke="#33302E" stroke-width="4" stroke-linejoin="round"/></svg></div>
+  <div class="plane"><svg viewBox="0 0 64 40"><path d="M2 20 L60 6 L34 24 L38 34 L26 26 Z" fill="#fff" stroke="#33302E" stroke-width="3" stroke-linejoin="round"/></svg></div>
+
+  <div class="hero-inner">
+    <div class="hero-copy">
+      <span class="eyebrow">For curious kids — age 6 to 106</span>
+      <h1 class="big-title"><span class="pre">Welcome to</span><span id="titleWord"></span></h1>
+      <p class="hero-sub">A playful land where you learn <b>real HTML</b> — the language every website is built with. Games, stickers and a fuzzy robot buddy included!</p>
+      <div class="hero-cta">
+        <button class="btn btn-lg coral" data-goto="#map"><i data-lucide="map"></i> Start the adventure</button>
+        <button class="btn btn-lg yellow" data-goto="#arcade"><i data-lucide="gamepad-2"></i> Play a game</button>
+      </div>
+    </div>
+    <div class="mascot-stage">
+      <div class="bubble" id="heroBubble">Hi! I'm Taggy! Click me!</div>
+      <button class="taggy-btn" id="taggyBtn" aria-label="Taggy the mascot"></button>
+      <button class="tag-chip" data-tag="h1" style="left:1%;top:12%;animation-delay:.3s">&lt;h1&gt;</button>
+      <button class="tag-chip" data-tag="p" style="left:76%;top:4%;animation-delay:1.1s">&lt;p&gt;</button>
+      <button class="tag-chip" data-tag="img" style="left:0%;top:64%;animation-delay:.7s">&lt;img&gt;</button>
+      <button class="tag-chip" data-tag="a" style="left:74%;top:70%;animation-delay:1.6s">&lt;a&gt;</button>
+    </div>
+  </div>
+
+  <svg class="hills" viewBox="0 0 1440 170" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 120 Q180 58 360 104 T720 98 T1080 106 T1440 94 V170 H0 Z" fill="#9CCB7A"/>
+    <path d="M0 132 Q240 84 480 122 T960 116 T1440 124 V170 H0 Z" fill="#CFE8B8"/>
+    <path d="M0 132 Q240 84 480 122 T960 116 T1440 124" fill="none" stroke="#33302E" stroke-width="5"/>
+  </svg>
+</header>
+
+<!-- ================= MAP ================= -->
+<section class="map-sec" id="map">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-badge" style="background:var(--yellow)"><i data-lucide="map"></i></span>
+      <div>
+        <h2>The Tag Map</h2>
+        <svg class="squiggle" viewBox="0 0 140 12"><path d="M2 8 Q12 2 22 8 T42 8 T62 8 T82 8 T102 8 T122 8" fill="none" stroke="#FF6B57" stroke-width="5" stroke-linecap="round"/></svg>
+        <p class="sec-sub">Six stops, one wiggly path, and a sticker at every one. Tap a stop to begin!</p>
+      </div>
+    </div>
+
+    <div class="map-wrap reveal" id="mapWrap">
+      <svg class="map-svg" id="mapSvg"><path class="pathline"/></svg>
+      <div class="decor" style="left:9%;top:47%;width:72px"><svg viewBox="0 0 60 84"><rect x="25" y="44" width="10" height="32" rx="4" fill="#8C5A3C" stroke="#33302E" stroke-width="3.5"/><circle cx="30" cy="26" r="22" fill="#5FA843" stroke="#33302E" stroke-width="4"/></svg></div>
+      <div class="decor" style="left:20%;top:57%;width:34px"><svg viewBox="0 0 36 48"><line x1="18" y1="24" x2="18" y2="46" stroke="#5FA843" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="8" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="9" cy="15" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="27" cy="15" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="12" cy="25" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="24" cy="25" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="18" cy="17" r="5.5" fill="#FFC53D" stroke="#33302E" stroke-width="3"/></svg></div>
+      <div class="decor" style="left:37%;top:52%;width:88px"><svg viewBox="0 0 90 50"><circle cx="25" cy="32" r="16" fill="#7BC950" stroke="#33302E" stroke-width="4"/><circle cx="48" cy="26" r="19" fill="#7BC950" stroke="#33302E" stroke-width="4"/><circle cx="68" cy="33" r="14" fill="#7BC950" stroke="#33302E" stroke-width="4"/></svg></div>
+      <div class="decor" style="left:56%;top:50%;width:120px"><svg viewBox="0 0 120 60"><ellipse cx="60" cy="32" rx="52" ry="24" fill="#3FC1C9" stroke="#33302E" stroke-width="4"/><path d="M32 32 q10 -8 20 0 t20 0 t16 0" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" opacity=".8"/></svg></div>
+      <div class="decor" style="left:66%;top:62%;width:30px"><svg viewBox="0 0 36 48"><line x1="18" y1="24" x2="18" y2="46" stroke="#5FA843" stroke-width="4" stroke-linecap="round"/><circle cx="18" cy="8" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="9" cy="15" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="27" cy="15" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="12" cy="25" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="24" cy="25" r="5.5" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="18" cy="17" r="5.5" fill="#FF6B57" stroke="#33302E" stroke-width="3"/></svg></div>
+      <div class="decor" style="left:91%;top:50%;width:54px"><svg viewBox="0 0 60 84"><rect x="25" y="44" width="10" height="32" rx="4" fill="#8C5A3C" stroke="#33302E" stroke-width="3.5"/><circle cx="30" cy="26" r="22" fill="#5FA843" stroke="#33302E" stroke-width="4"/></svg></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= TICKER ================= -->
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track">
+    <div class="tick">
+      <span>WELCOME TO HTML LAND</span><span class="d"></span>
+      <span><code>&lt;h1&gt;</code> MAKES BIG TITLES</span><span class="d"></span>
+      <span><code>&lt;p&gt;</code> HOLDS YOUR WORDS</span><span class="d"></span>
+      <span><code>&lt;img&gt;</code> SHOWS PICTURES</span><span class="d"></span>
+      <span><code>&lt;a&gt;</code> MAKES LINKS</span><span class="d"></span>
+      <span><code>&lt;ul&gt;</code> MAKES LISTS</span><span class="d"></span>
+      <span>COLLECT ALL 10 STICKERS</span><span class="d"></span>
+    </div>
+    <div class="tick">
+      <span>WELCOME TO HTML LAND</span><span class="d"></span>
+      <span><code>&lt;h1&gt;</code> MAKES BIG TITLES</span><span class="d"></span>
+      <span><code>&lt;p&gt;</code> HOLDS YOUR WORDS</span><span class="d"></span>
+      <span><code>&lt;img&gt;</code> SHOWS PICTURES</span><span class="d"></span>
+      <span><code>&lt;a&gt;</code> MAKES LINKS</span><span class="d"></span>
+      <span><code>&lt;ul&gt;</code> MAKES LISTS</span><span class="d"></span>
+      <span>COLLECT ALL 10 STICKERS</span><span class="d"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ARCADE ================= -->
+<section class="sec" id="arcade">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-badge" style="background:var(--coral)"><i data-lucide="gamepad-2"></i></span>
+      <div>
+        <h2>The Arcade</h2>
+        <svg class="squiggle" viewBox="0 0 140 12"><path d="M2 8 Q12 2 22 8 T42 8 T62 8 T82 8 T102 8 T122 8" fill="none" stroke="#3FC1C9" stroke-width="5" stroke-linecap="round"/></svg>
+        <p class="sec-sub">Three games. Zero boring bits. Stickers for winners.</p>
+      </div>
+    </div>
+
+    <div class="panel arcade reveal">
+      <div class="carts">
+        <button class="cart active" data-game="match"><i data-lucide="layers"></i> Tag Match</button>
+        <button class="cart" data-game="bug"><i data-lucide="bug"></i> Bug Squasher</button>
+        <button class="cart" data-game="quiz"><i data-lucide="zap"></i> Speed Quiz</button>
+      </div>
+
+      <div class="game-screen">
+        <!-- TAG MATCH -->
+        <div class="game" id="gMatch">
+          <div class="game-top">
+            <div class="game-stat"><i data-lucide="repeat"></i><b id="mmMoves">0</b>&nbsp;moves</div>
+            <div class="game-stat"><i data-lucide="check"></i><b id="mmPairs">0</b>&nbsp;/ 6 pairs</div>
+            <button class="icon-btn" id="mmRestart" aria-label="Restart game"><i data-lucide="rotate-ccw"></i></button>
+          </div>
+          <p class="game-hint">Flip two cards — match each tag to its job!</p>
+          <div class="mm-grid" id="mmGrid"></div>
+          <div class="win-overlay" id="mmWin" hidden></div>
+        </div>
+
+        <!-- BUG SQUASHER -->
+        <div class="game" id="gBug" hidden>
+          <div class="game-top">
+            <div class="bug-dots" id="bugDots"></div>
+            <button class="icon-btn" id="bugRestart" aria-label="Restart game"><i data-lucide="rotate-ccw"></i></button>
+          </div>
+          <p class="game-q" id="bugQ"></p>
+          <div class="bug-stage">
+            <div class="codeblock-wrap">
+              <div class="codebar"><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="codebar-label">buggy-code.html</span></div>
+              <pre class="codeblock" id="bugCode"></pre>
+            </div>
+            <div class="bug-holder">
+              <div class="bonk-pop" id="bonkPop">BONK!</div>
+              <svg viewBox="0 0 130 110" class="bug-svg" id="bugSvg">
+                <g stroke="#33302E" stroke-width="4" stroke-linecap="round">
+                  <line x1="45" y1="60" x2="24" y2="68"/><line x1="43" y1="72" x2="22" y2="82"/><line x1="48" y1="84" x2="32" y2="96"/>
+                  <line x1="85" y1="60" x2="106" y2="68"/><line x1="87" y1="72" x2="108" y2="82"/><line x1="82" y1="84" x2="98" y2="96"/>
+                </g>
+                <line x1="57" y1="26" x2="48" y2="10" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/><circle cx="47" cy="8" r="4" fill="#33302E"/>
+                <line x1="73" y1="26" x2="82" y2="10" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/><circle cx="83" cy="8" r="4" fill="#33302E"/>
+                <circle cx="65" cy="38" r="18" fill="#F98D2B" stroke="#33302E" stroke-width="4.5"/>
+                <ellipse cx="65" cy="70" rx="30" ry="26" fill="#F98D2B" stroke="#33302E" stroke-width="4.5"/>
+                <circle cx="52" cy="64" r="5" fill="#B35C10"/><circle cx="78" cy="66" r="5" fill="#B35C10"/><circle cx="65" cy="82" r="5" fill="#B35C10"/>
+                <g class="bug-eyes">
+                  <circle cx="57" cy="34" r="7" fill="#fff" stroke="#33302E" stroke-width="3"/><circle cx="73" cy="34" r="7" fill="#fff" stroke="#33302E" stroke-width="3"/>
+                  <circle cx="58.5" cy="36" r="3" fill="#33302E"/><circle cx="74.5" cy="36" r="3" fill="#33302E"/>
+                </g>
+                <g class="bug-dizzy" stroke="#33302E" stroke-width="3.5" stroke-linecap="round">
+                  <path d="M52 30 l10 10 M62 30 l-10 10"/><path d="M68 30 l10 10 M78 30 l-10 10"/>
+                </g>
+                <path d="M57 47 Q65 53 73 47" fill="none" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+          <div class="bug-answers" id="bugAnswers"></div>
+          <p class="game-feedback" id="bugFb"></p>
+          <div class="win-overlay" id="bugWin" hidden></div>
+        </div>
+
+        <!-- SPEED QUIZ -->
+        <div class="game" id="gQuiz" hidden>
+          <div class="game-top">
+            <div class="game-stat" id="qzProg">Question 1 of 8</div>
+            <div class="game-stat"><i data-lucide="star"></i><b id="qzScore">0</b></div>
+            <div class="game-stat streak-pill qz-flame"><i data-lucide="flame"></i><b id="qzStreak">0</b></div>
+            <button class="icon-btn" id="qzRestart" aria-label="Restart game"><i data-lucide="rotate-ccw"></i></button>
+          </div>
+          <p class="game-q" id="qzQ"></p>
+          <div class="qz-answers" id="qzAnswers"></div>
+          <p class="game-feedback" id="qzFb"></p>
+          <div class="win-overlay" id="qzWin" hidden></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= WORKSHOP ================= -->
+<section class="sec sec-ws" id="workshop">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-badge" style="background:var(--teal)"><i data-lucide="hammer"></i></span>
+      <div>
+        <h2>The Workshop</h2>
+        <svg class="squiggle" viewBox="0 0 140 12"><path d="M2 8 Q12 2 22 8 T42 8 T62 8 T82 8 T102 8 T122 8" fill="none" stroke="#9B5DE5" stroke-width="5" stroke-linecap="round"/></svg>
+        <p class="sec-sub">Type real HTML on the left — watch it become a real page on the right. Like magic, but realer.</p>
+      </div>
+    </div>
+
+    <div class="panel ws reveal">
+      <div class="ws-chips" id="wsChips"></div>
+      <div class="ws-actions">
+        <button class="btn coral" id="wsRun"><i data-lucide="play"></i> Run my code</button>
+        <button class="btn yellow" id="wsSurprise"><i data-lucide="sparkles"></i> Surprise me</button>
+        <button class="btn" id="wsClear"><i data-lucide="trash-2"></i> Clear</button>
+      </div>
+      <div class="ws-grid">
+        <div>
+          <div class="ws-label">You type</div>
+          <textarea id="wsCode" spellcheck="false" aria-label="HTML code editor"></textarea>
+        </div>
+        <div>
+          <div class="ws-label" style="background:var(--coral)">You make</div>
+          <div class="ws-frame" id="wsFrameWrap"><iframe id="wsPrev" sandbox="allow-popups" title="Your live webpage"></iframe></div>
+        </div>
+      </div>
+      <p class="ws-note"><i data-lucide="info"></i> This is plain HTML — honest and simple! Later, CSS dresses pages up in colors and fonts.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ASK TAGGY ================= -->
+<section class="sec" id="ask">
+  <div class="sec-inner">
+    <div class="sec-head reveal">
+      <span class="sec-badge" style="background:var(--purple)"><i data-lucide="message-circle"></i></span>
+      <div>
+        <h2>Ask Taggy</h2>
+        <svg class="squiggle" viewBox="0 0 140 12"><path d="M2 8 Q12 2 22 8 T42 8 T62 8 T82 8 T102 8 T122 8" fill="none" stroke="#FFC53D" stroke-width="5" stroke-linecap="round"/></svg>
+        <p class="sec-sub">Taggy knows (almost) everything about HTML — and he's dying to share. Ask him anything!</p>
+      </div>
+    </div>
+
+    <div class="panel chat reveal">
+      <aside class="chat-side">
+        <div class="chat-taggy" id="chatTaggy"></div>
+        <div>
+          <h3>Taggy</h3>
+          <p class="chat-status"><span class="status-dot"></span>online &amp; tag-tastic</p>
+        </div>
+        <div class="qchips">
+          <button class="qchip">What is HTML?</button>
+          <button class="qchip">How do I add a picture?</button>
+          <button class="qchip">What does &lt;a&gt; do?</button>
+          <button class="qchip">Tell me a joke!</button>
+          <button class="qchip">Fun fact!</button>
+        </div>
+      </aside>
+      <div class="chat-main">
+        <div class="msgs" id="msgs"></div>
+        <form class="chat-input" id="chatForm">
+          <input id="chatInput" type="text" maxlength="200" placeholder="Ask Taggy anything about HTML…" autocomplete="off">
+          <button class="send-btn" type="submit" aria-label="Send message"><i data-lucide="send"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <svg class="foot-wave" viewBox="0 0 1440 44" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 44 Q120 4 240 22 T480 18 T720 26 T960 14 T1200 22 T1440 18 V44 Z" fill="#33302E"/>
+  </svg>
+  <h3>HTML Land</h3>
+  <p>Where every great website begins.</p>
+  <div class="foot-buddies" id="footBuddies"></div>
+  <p>This whole world is one single HTML file — just like the pages you'll make.</p>
+  <p class="tagline">Taggy says: keep exploring!</p>
+</footer>
+
+<!-- ================= LESSON MODAL ================= -->
+<div class="overlay" id="lessonOverlay" hidden>
+  <div class="modal panel">
+    <div class="lesson-head">
+      <div class="lesson-buddy" id="lessonBuddy"></div>
+      <div>
+        <h3 id="lessonTitle"></h3>
+        <span class="lesson-stopname" id="lessonStopName"></span>
+      </div>
+      <button class="icon-btn" id="lessonClose" aria-label="Close lesson"><i data-lucide="x"></i></button>
+    </div>
+    <div class="speech" id="speechBox" title="Tap to finish the sentence">
+      <span class="speech-text" id="speechText"></span>
+      <span class="skip-hint">tap the bubble to finish the sentence</span>
+    </div>
+    <div class="lesson-code">
+      <div class="codeblock-wrap">
+        <div class="codebar"><span class="cdot"></span><span class="cdot"></span><span class="cdot"></span><span class="codebar-label">example.html</span></div>
+        <pre class="codeblock" id="lessonCode"></pre>
+      </div>
+    </div>
+    <div class="lesson-try">
+      <div class="try-head">
+        <span>Try it yourself!</span>
+        <button class="btn yellow" id="tryRun"><i data-lucide="play"></i> Run</button>
+      </div>
+      <textarea id="tryCode" spellcheck="false" aria-label="Try it editor"></textarea>
+      <iframe id="tryPrev" sandbox="allow-popups" title="Try it preview"></iframe>
+    </div>
+    <div class="lesson-foot">
+      <button class="btn coral" id="stickerBtn"><i data-lucide="star"></i> Collect my sticker!</button>
+      <button class="btn" id="nextBtn">Next stop <i data-lucide="arrow-right"></i></button>
+    </div>
+  </div>
+</div>
+
+<!-- ================= STICKER DRAWER ================= -->
+<div class="drawer-overlay" id="drawerOverlay"></div>
+<aside class="drawer" id="drawer" aria-label="My sticker book">
+  <div class="drawer-head">
+    <h3>My Sticker Book</h3>
+    <button class="icon-btn" id="drawerClose" aria-label="Close sticker book"><i data-lucide="x"></i></button>
+  </div>
+  <p class="drawer-count" id="drawerCount"></p>
+  <div class="shelf" id="shelf"></div>
+</aside>
+
+<div class="toasts" id="toasts"></div>
+<canvas id="confetti"></canvas>
+
+<script>
+/* ================================================================
+   HTML LAND — everything runs locally, no servers, no keys.
+   ================================================================ */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const wait = ms => new Promise(r => setTimeout(r, ms));
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function refreshIcons(){ try{ if(window.lucide) lucide.createIcons(); }catch(e){} }
+
+/* Tiny syntax highlighter for the code examples */
+function hi(code){
+  let s = esc(code);
+  s = s.replace(/(&lt;\/?)([a-zA-Z][\w-]*)([\s\S]*?)(\/?&gt;)/g, (m, open, tag, attrs, close) => {
+    if(attrs) attrs = attrs.replace(/([\w-]+)=("[^"]*")/g, (a,n,v)=>`<span class="tok-attr">${n}</span>=<span class="tok-val">${v}</span>`);
+    return `<span class="tok-br">${open}</span><span class="tok-tag">${tag}</span>${attrs||''}<span class="tok-br">${close}</span>`;
+  });
+  return s;
+}
+
+/* ============ CHARACTERS ============ */
+const BUDDIES = {
+  taggy: { name:'Taggy', color:'#FF6B57', svg:`<svg viewBox="0 0 140 140" class="buddy-svg buddy-taggy mascot" aria-hidden="true">
+    <ellipse cx="70" cy="128" rx="42" ry="8" fill="#33302E" opacity=".12"/>
+    <g><line x1="70" y1="34" x2="70" y2="12" stroke="#33302E" stroke-width="4.5" stroke-linecap="round"/><circle cx="70" cy="9" r="7" fill="#FFC53D" stroke="#33302E" stroke-width="4"/></g>
+    <ellipse cx="50" cy="121" rx="14" ry="9" fill="#F04E3C" stroke="#33302E" stroke-width="4"/>
+    <ellipse cx="90" cy="121" rx="14" ry="9" fill="#F04E3C" stroke="#33302E" stroke-width="4"/>
+    <rect x="20" y="28" width="100" height="96" rx="44" fill="#FF6B57" stroke="#33302E" stroke-width="5"/>
+    <ellipse cx="33" cy="78" rx="7" ry="5" fill="#FFB3A3"/><ellipse cx="107" cy="78" rx="7" ry="5" fill="#FFB3A3"/>
+    <g class="eye"><circle cx="52" cy="60" r="14" fill="#fff" stroke="#33302E" stroke-width="4"/><circle class="pupil" cx="52" cy="60" r="6" fill="#33302E"/></g>
+    <g class="eye"><circle cx="88" cy="60" r="14" fill="#fff" stroke="#33302E" stroke-width="4"/><circle class="pupil" cx="88" cy="60" r="6" fill="#33302E"/></g>
+    <path class="mouth-smile" d="M58 82 Q70 92 82 82" fill="none" stroke="#33302E" stroke-width="4.5" stroke-linecap="round"/>
+    <path class="mouth-open" d="M58 81 A13 10 0 0 0 84 81 Z" fill="#33302E"/>
+    <path d="M54 105 L43 112 L54 119" fill="none" stroke="#33302E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M86 105 L97 112 L86 119" fill="none" stroke="#33302E" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`},
+  boom: { name:'Boom', color:'#FFC53D', svg:`<svg viewBox="0 0 110 110" class="buddy-svg" aria-hidden="true">
+    <ellipse cx="55" cy="104" rx="32" ry="6" fill="#33302E" opacity=".12"/>
+    <line x1="47" y1="20" x2="42" y2="7" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <line x1="55" y1="18" x2="55" y2="5" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <line x1="63" y1="20" x2="68" y2="7" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="20" cy="60" rx="9" ry="15" fill="#FFC53D" stroke="#33302E" stroke-width="4" transform="rotate(14 20 60)"/>
+    <ellipse cx="90" cy="60" rx="9" ry="15" fill="#FFC53D" stroke="#33302E" stroke-width="4" transform="rotate(-14 90 60)"/>
+    <circle cx="55" cy="58" r="36" fill="#FFC53D" stroke="#33302E" stroke-width="5"/>
+    <circle cx="42" cy="48" r="9" fill="#fff" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="68" cy="48" r="9" fill="#fff" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="44" cy="50" r="4" fill="#33302E"/><circle cx="70" cy="50" r="4" fill="#33302E"/>
+    <path d="M42 62 L68 62 L55 71 Z" fill="#F98D2B" stroke="#33302E" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M46 73 L64 73 L55 80 Z" fill="#D96F1E" stroke="#33302E" stroke-width="3.5" stroke-linejoin="round"/>
+    <path d="M76 56 q6 6 0 12" fill="none" stroke="#3FC1C9" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M83 51 q9 11 0 22" fill="none" stroke="#3FC1C9" stroke-width="3.5" stroke-linecap="round"/>
+  </svg>`},
+  pip: { name:'Pip', color:'#3FC1C9', svg:`<svg viewBox="0 0 110 110" class="buddy-svg" aria-hidden="true">
+    <ellipse cx="52" cy="96" rx="28" ry="6" fill="#33302E" opacity=".12"/>
+    <circle cx="55" cy="82" r="13" fill="#3FC1C9" stroke="#33302E" stroke-width="4.5"/>
+    <circle cx="46" cy="64" r="15" fill="#3FC1C9" stroke="#33302E" stroke-width="4.5"/>
+    <circle cx="58" cy="40" r="24" fill="#3FC1C9" stroke="#33302E" stroke-width="5"/>
+    <circle cx="49" cy="36" r="7.5" fill="none" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="67" cy="36" r="7.5" fill="none" stroke="#33302E" stroke-width="3.5"/>
+    <line x1="56.5" y1="36" x2="59.5" y2="36" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="49" cy="37" r="3.2" fill="#33302E"/><circle cx="67" cy="37" r="3.2" fill="#33302E"/>
+    <path d="M50 52 Q58 58 66 52" fill="none" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="40" cy="47" rx="5" ry="3.5" fill="#FFB3A3"/><ellipse cx="76" cy="47" rx="5" ry="3.5" fill="#FFB3A3"/>
+    <line x1="48" y1="18" x2="43" y2="7" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/><circle cx="42" cy="6" r="4" fill="#FFC53D" stroke="#33302E" stroke-width="3"/>
+    <line x1="66" y1="18" x2="71" y2="7" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/><circle cx="72" cy="6" r="4" fill="#FFC53D" stroke="#33302E" stroke-width="3"/>
+  </svg>`},
+  snappy: { name:'Snappy', color:'#7BC950', svg:`<svg viewBox="0 0 110 110" class="buddy-svg" aria-hidden="true">
+    <ellipse cx="55" cy="102" rx="34" ry="6" fill="#33302E" opacity=".12"/>
+    <line x1="38" y1="100" x2="38" y2="88" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <line x1="72" y1="100" x2="72" y2="88" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <rect x="14" y="32" width="82" height="56" rx="12" fill="#7BC950" stroke="#33302E" stroke-width="5"/>
+    <rect x="30" y="26" width="22" height="10" rx="4" fill="#FFC53D" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="86" cy="25" r="6" fill="#FF6B57" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="38" cy="46" r="4.5" fill="#33302E"/><circle cx="72" cy="46" r="4.5" fill="#33302E"/>
+    <circle cx="55" cy="64" r="16" fill="#fff" stroke="#33302E" stroke-width="4"/>
+    <circle cx="55" cy="64" r="7" fill="#3FC1C9" stroke="#33302E" stroke-width="3"/>
+    <circle cx="59" cy="60" r="2.5" fill="#fff"/>
+    <path d="M47 82 Q55 87 63 82" fill="none" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/>
+  </svg>`},
+  linkey: { name:'Linkey', color:'#9B5DE5', svg:`<svg viewBox="0 0 110 110" class="buddy-svg" aria-hidden="true">
+    <ellipse cx="55" cy="104" rx="34" ry="6" fill="#33302E" opacity=".12"/>
+    <circle cx="17" cy="50" r="11" fill="#9B5DE5" stroke="#33302E" stroke-width="4"/><circle cx="17" cy="50" r="4.5" fill="#FFC53D"/>
+    <circle cx="93" cy="50" r="11" fill="#9B5DE5" stroke="#33302E" stroke-width="4"/><circle cx="93" cy="50" r="4.5" fill="#FFC53D"/>
+    <circle cx="55" cy="52" r="31" fill="#9B5DE5" stroke="#33302E" stroke-width="5"/>
+    <ellipse cx="55" cy="62" rx="21" ry="16" fill="#F3E8FF"/>
+    <circle cx="45" cy="46" r="7" fill="#fff" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="65" cy="46" r="7" fill="#fff" stroke="#33302E" stroke-width="3.5"/>
+    <circle cx="46.5" cy="48" r="3.2" fill="#33302E"/><circle cx="66.5" cy="48" r="3.2" fill="#33302E"/>
+    <circle cx="51" cy="58" r="2" fill="#33302E"/><circle cx="59" cy="58" r="2" fill="#33302E"/>
+    <path d="M46 64 Q55 72 64 64" fill="none" stroke="#33302E" stroke-width="4" stroke-linecap="round"/>
+    <path d="M50 20 Q52 12 58 10" fill="none" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/>
+    <path d="M60 20 Q64 12 68 12" fill="none" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/>
+    <rect x="36" y="84" width="16" height="9" rx="4.5" fill="#FFC53D" stroke="#33302E" stroke-width="3" transform="rotate(-12 44 88)"/>
+    <rect x="50" y="88" width="16" height="9" rx="4.5" fill="#FFC53D" stroke="#33302E" stroke-width="3" transform="rotate(12 58 92)"/>
+  </svg>`},
+  dotty: { name:'Dotty', color:'#E63946', svg:`<svg viewBox="0 0 110 110" class="buddy-svg" aria-hidden="true">
+    <ellipse cx="55" cy="100" rx="34" ry="6" fill="#33302E" opacity=".12"/>
+    <line x1="46" y1="18" x2="38" y2="6" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/><circle cx="37" cy="5" r="3.5" fill="#33302E"/>
+    <line x1="64" y1="18" x2="72" y2="6" stroke="#33302E" stroke-width="3.5" stroke-linecap="round"/><circle cx="73" cy="5" r="3.5" fill="#33302E"/>
+    <circle cx="55" cy="26" r="17" fill="#33302E"/>
+    <circle cx="48" cy="24" r="4.5" fill="#fff"/><circle cx="62" cy="24" r="4.5" fill="#fff"/>
+    <circle cx="48.5" cy="25" r="2" fill="#33302E"/><circle cx="62.5" cy="25" r="2" fill="#33302E"/>
+    <circle cx="55" cy="64" r="33" fill="#E63946" stroke="#33302E" stroke-width="5"/>
+    <line x1="55" y1="40" x2="55" y2="96" stroke="#33302E" stroke-width="4"/>
+    <circle cx="41" cy="56" r="5" fill="#33302E"/><circle cx="69" cy="56" r="5" fill="#33302E"/>
+    <circle cx="38" cy="74" r="5" fill="#33302E"/><circle cx="72" cy="74" r="5" fill="#33302E"/>
+    <circle cx="48" cy="84" r="4" fill="#33302E"/><circle cx="62" cy="84" r="4" fill="#33302E"/>
+  </svg>`}
+};
+
+/* ============ LESSON & GAME DATA ============ */
+const LESSONS = [
+  { id:'intro', num:1, stop:'What is HTML?', title:'What is HTML?', buddy:BUDDIES.taggy, sticker:'first-tag',
+    speech:"HTML is the secret language every website is built with! It's made of little labels called tags. Tags live inside pointy brackets, like <this>. They tell the browser what things are — a title, a picture, or words!",
+    code:`<h1>Hello, world!</h1>\n<p>I am learning HTML!</p>` },
+  { id:'headings', num:2, stop:'Headings', title:'Headings', buddy:BUDDIES.boom, sticker:'heading-hero',
+    speech:"Headings are for the BIG important words! <h1> is the loudest shout, and <h6> is a tiny whisper. Change the number in the code and watch the size change!",
+    code:`<h1>I am LOUD!</h1>\n<h3>I am medium.</h3>\n<h6>i am a whisper...</h6>` },
+  { id:'paragraphs', num:3, stop:'Paragraphs', title:'Paragraphs', buddy:BUDDIES.pip, sticker:'story-teller',
+    speech:"The <p> tag holds your words — a whole paragraph of them! And <br> makes words jump down to a new line. Try writing your own story!",
+    code:`<p>Once upon a time,<br>a kid learned HTML.<br>The end.</p>` },
+  { id:'images', num:4, stop:'Pictures', title:'Pictures', buddy:BUDDIES.snappy, sticker:'pic-master',
+    speech:"The <img> tag shows pictures! It needs a src — that's the picture's address on the internet. alt describes the picture in words. Change the word after seed for a new picture!",
+    code:`<img src="https://picsum.photos/seed/puppy/280/170.jpg"\n     alt="A surprise picture">` },
+  { id:'links', num:5, stop:'Links', title:'Links', buddy:BUDDIES.linkey, sticker:'link-explorer',
+    speech:"The <a> tag makes links you can CLICK! href tells the link where to fly. Try clicking the link in the preview below — whoosh!",
+    code:`<p><a href="https://en.wikipedia.org/wiki/HTML">\n  Fly to HTML Island!\n</a></p>` },
+  { id:'lists', num:6, stop:'Lists', title:'Lists', buddy:BUDDIES.dotty, sticker:'list-champ',
+    speech:"<ul> makes a bullet list, <ol> counts 1, 2, 3, and every <li> is one thing on the list. Lists are perfect for favorites — what are yours?",
+    code:`<h3>My favorite snacks</h3>\n<ul>\n  <li>Pizza</li>\n  <li>Mango</li>\n  <li>Cookies</li>\n</ul>` },
+];
+
+const STICKERS = {
+  'first-tag':     { n:'First Tag',      i:'tag',      c:'#FFC53D', dark:true  },
+  'heading-hero':  { n:'Heading Hero',   i:'megaphone',c:'#FF6B57', dark:false },
+  'story-teller':  { n:'Story Teller',   i:'book-open',c:'#3FC1C9', dark:false },
+  'pic-master':    { n:'Pic Master',     i:'image',    c:'#7BC950', dark:true  },
+  'link-explorer': { n:'Link Explorer',  i:'compass',  c:'#9B5DE5', dark:false },
+  'list-champ':    { n:'List Champ',     i:'list',     c:'#F98D2B', dark:true  },
+  'memory-machine':{ n:'Memory Machine', i:'brain',    c:'#E63946', dark:false },
+  'bug-buster':    { n:'Bug Buster',     i:'bug',      c:'#7BC950', dark:true  },
+  'quiz-whiz':     { n:'Quiz Whiz',      i:'zap',      c:'#9B5DE5', dark:false },
+  'web-builder':   { n:'Web Builder',    i:'hammer',   c:'#FF6B57', dark:false },
+};
+
+const PAIRS = [
+  { key:'h1',  tag:'<h1>',  job:'Big title',      icon:'type' },
+  { key:'p',   tag:'<p>',   job:'A paragraph',    icon:'align-left' },
+  { key:'img', tag:'<img>', job:'Shows a picture',icon:'image' },
+  { key:'a',   tag:'<a>',   job:'A link',         icon:'link' },
+  { key:'ul',  tag:'<ul>',  job:'Bullet list',    icon:'list' },
+  { key:'br',  tag:'<br>',  job:'New line',       icon:'corner-down-left' },
+];
+
+const BUGS = [
+  { q:"Mia wants a BIG title, but it came out small. What's wrong?",
+    code:`<p>Welcome to my page!</p>`,
+    opts:["It should use <h1>, not <p>", "It should use <br>", "It's missing a banana"],
+    correct:0, why:"<h1> makes titles BIG — <p> is for paragraphs!" },
+  { q:"Tom's title ran away! Something is missing at the end…",
+    code:`<h1>Hello friends`,
+    opts:["A closing </h1> tag", "More letters", "A bigger computer"],
+    correct:0, why:"Every tag needs a closing </h1> at the end — tags come in pairs!" },
+  { q:"This heading looks broken. Spot the bug!",
+    code:`h1>Oops!</h1>`,
+    opts:["It's missing the first <", "It needs more !", "'Oops' is spelled wrong"],
+    correct:0, why:"Tags start with < and end with >. This one lost its opening < !" },
+  { q:"Sami's picture won't show up. Why?",
+    code:`<img alt="a cool dinosaur">`,
+    opts:["It's missing src — the picture's address", "'alt' is spelled wrong", "Dinosaurs aren't allowed online"],
+    correct:0, why:"<img> needs src to know WHERE the picture lives!" },
+  { q:"This link won't go anywhere when you click it. Why?",
+    code:`<a>Visit the fun zone</a>`,
+    opts:["It's missing href — where to go", "It needs a <p> around it", "Links are sleepy today"],
+    correct:0, why:"href tells the link WHERE to fly. Without it, the link just sits there!" },
+];
+
+const QUIZ = [
+  { q:"I make text BIG and important. Who am I?", a:"<h1>",  wrong:["<p>","<br>","<ul>"] },
+  { q:"I show pictures on the page. Who am I?",    a:"<img>", wrong:["<a>","<h6>","<li>"] },
+  { q:"Click me and I fly you to another page!",   a:"<a>",   wrong:["<b>","<img>","<p>"] },
+  { q:"I hold a whole paragraph of words.",        a:"<p>",   wrong:["<h1>","<br>","<ol>"] },
+  { q:"I make words jump to a new line!",          a:"<br>",  wrong:["<b>","<ul>","<img>"] },
+  { q:"What does <ul> do?",       a:"Makes a bullet list",  wrong:["Makes text bold","Shows a picture","Makes a link"] },
+  { q:"<h6> is the…",             a:"Smallest heading",     wrong:["Biggest heading","A link tag","A picture tag"] },
+  { q:"What is an <li>?",         a:"One thing inside a list", wrong:["A line break","A big title","The whole page"] },
+];
+const PRAISE = ['Great!','Awesome!','Super!','Brainiac!','Wow!','Tag-tastic!','You rock!'];
+
+/* ============ SOUND (WebAudio bleeps, no files) ============ */
+const Sound = {
+  on: localStorage.getItem('htmlland-sound') !== 'off',
+  ctx: null,
+  init(){ try{
+    if(!this.ctx) this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+    if(this.ctx.state === 'suspended') this.ctx.resume();
+  }catch(e){} },
+  t(f, d, type='triangle', v=.12, when=0, slide){
+    if(!this.on || !this.ctx) return;
+    const c=this.ctx, o=c.createOscillator(), g=c.createGain(), t0=c.currentTime+when;
+    o.type=type; o.frequency.setValueAtTime(f,t0);
+    if(slide) o.frequency.exponentialRampToValueAtTime(slide, t0+d);
+    g.gain.setValueAtTime(v,t0); g.gain.exponentialRampToValueAtTime(.001, t0+d);
+    o.connect(g).connect(c.destination); o.start(t0); o.stop(t0+d+.02);
+  },
+  pop(){ this.t(300,.09,'triangle',.15,0,520); },
+  blip(){ this.t(700+Math.random()*180,.05,'sine',.045); },
+  good(){ this.t(523,.09); this.t(784,.14,'triangle',.12,.08); },
+  bad(){ this.t(220,.2,'sawtooth',.07,0,110); },
+  win(){ [523,659,784,1047].forEach((f,i)=>this.t(f,.16,'triangle',.13,i*.09)); }
+};
+addEventListener('pointerdown', ()=>Sound.init(), {capture:true});
+
+/* ============ CONFETTI ============ */
+const Confetti = (() => {
+  const cv = $('#confetti'), cx = cv.getContext('2d');
+  const COLS = ['#FF6B57','#FFC53D','#3FC1C9','#7BC950','#9B5DE5','#F98D2B','#E63946'];
+  let parts = [], raf = null;
+  function size(){ cv.width = innerWidth; cv.height = innerHeight; }
+  addEventListener('resize', size); size();
+  function loop(){
+    cx.clearRect(0,0,cv.width,cv.height);
+    parts = parts.filter(p => p.life>0 && p.y < cv.height+30);
+    parts.forEach(p => {
+      p.vy+=.16; p.x+=p.vx; p.y+=p.vy; p.r+=p.vr; p.life--;
+      cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r);
+      cx.globalAlpha = Math.min(1,p.life/25); cx.fillStyle = p.c;
+      if(p.s==='r') cx.fillRect(-p.z/2,-p.z*.3,p.z,p.z*.6);
+      else { cx.beginPath(); cx.arc(0,0,p.z/2.4,0,7); cx.fill(); }
+      cx.restore();
+    });
+    if(parts.length) raf = requestAnimationFrame(loop);
+    else { raf=null; cx.clearRect(0,0,cv.width,cv.height); }
+  }
+  return {
+    burst(x,y,n=70){
+      for(let i=0;i<n;i++) parts.push({ x,y, vx:(Math.random()-.5)*9, vy:-Math.random()*7-2,
+        r:Math.random()*6, vr:(Math.random()-.5)*.3, z:6+Math.random()*8,
+        c:COLS[i%COLS.length], s:Math.random()<.55?'r':'c', life:70+Math.random()*40 });
+      if(!raf) raf = requestAnimationFrame(loop);
+    }
+  };
+})();
+function burstAt(el, n=70){
+  if(!el) return;
+  const r = el.getBoundingClientRect();
+  Confetti.burst(r.left+r.width/2, r.top+r.height/2, n);
+}
+
+/* ============ STICKERS / STATE ============ */
+let earned = new Set();
+try{ earned = new Set(JSON.parse(localStorage.getItem('htmlland-stickers') || '[]')); }catch(e){}
+function saveStickers(){ try{ localStorage.setItem('htmlland-stickers', JSON.stringify([...earned])); }catch(e){} }
+
+function sealPath(n=14, rO=47, rI=39){
+  const pts = [];
+  for(let i=0;i<n*2;i++){
+    const a = Math.PI*i/n - Math.PI/2, r = i%2===0 ? rO : rI;
+    pts.push((50+r*Math.cos(a)).toFixed(1)+','+(50+r*Math.sin(a)).toFixed(1));
+  }
+  return 'M'+pts.join(' L ')+' Z';
+}
+function sealSVG(color){ return `<svg class="seal-bg" viewBox="0 0 100 100"><path d="${sealPath()}" fill="${color}" stroke="#33302E" stroke-width="4" stroke-linejoin="round"/></svg>`; }
+
+function renderShelf(){
+  const shelf = $('#shelf'); shelf.innerHTML = '';
+  Object.entries(STICKERS).forEach(([id,s]) => {
+    const has = earned.has(id);
+    const d = document.createElement('div');
+    d.className = 'slot' + (has ? ' earned' : '');
+    d.innerHTML = has
+      ? `<span class="seal">${sealSVG(s.c)}<i data-lucide="${s.i}" style="color:${s.dark?'#33302E':'#fff'}"></i></span><b>${s.n}</b>`
+      : `<span class="seal locked"><i data-lucide="lock"></i></span><b>${s.n}</b>`;
+    shelf.appendChild(d);
+  });
+  $('#drawerCount').textContent = `${earned.size} of ${Object.keys(STICKERS).length} collected — keep exploring!`;
+  refreshIcons();
+}
+
+let curLesson = null;
+function updateStickerUI(bump){
+  $('#starCount').textContent = earned.size;
+  if(bump){ const b=$('#starBtn'); b.classList.remove('bump'); void b.offsetWidth; b.classList.add('bump'); }
+  renderShelf();
+  LESSONS.forEach(L => {
+    const st = $(`.stop[data-lesson="${L.id}"]`);
+    if(st) st.classList.toggle('done', earned.has(L.sticker));
+  });
+  if(curLesson) updateStickerBtn();
+}
+function award(id){
+  if(earned.has(id) || !STICKERS[id]) return false;
+  earned.add(id); saveStickers();
+  const s = STICKERS[id];
+  toast(s.n, 'New sticker for your book!', s);
+  updateStickerUI(true);
+  burstAt($('#starBtn'), 45);
+  return true;
+}
+
+/* ============ TOASTS ============ */
+function toast(title, sub, s){
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerHTML = `<span class="toast-seal" style="background:${s.c};color:${s.dark?'#33302E':'#fff'}"><i data-lucide="${s.i}"></i></span>
+    <div><b>Sticker earned: ${title}</b><span>${sub}</span></div>`;
+  $('#toasts').appendChild(t); refreshIcons();
+  requestAnimationFrame(()=>burstAt(t, 40));
+  setTimeout(()=>{ t.classList.add('out'); setTimeout(()=>t.remove(), 380); }, 3500);
+}
+
+/* ============ NAV / DRAWER / SOUND ============ */
+const sndBtn = $('#sndBtn');
+function renderSnd(){
+  sndBtn.innerHTML = `<i data-lucide="${Sound.on ? 'volume-2' : 'volume-x'}"></i>`;
+  refreshIcons();
+}
+sndBtn.addEventListener('click', ()=>{
+  Sound.on = !Sound.on;
+  try{ localStorage.setItem('htmlland-sound', Sound.on ? 'on' : 'off'); }catch(e){}
+  if(Sound.on){ Sound.init(); Sound.pop(); }
+  renderSnd();
+});
+const drawer = $('#drawer'), drawerOverlay = $('#drawerOverlay');
+function openDrawer(){ drawer.classList.add('open'); drawerOverlay.classList.add('open'); Sound.pop(); }
+function closeDrawer(){ drawer.classList.remove('open'); drawerOverlay.classList.remove('open'); }
+ $('#starBtn').addEventListener('click', openDrawer);
+ $('#drawerClose').addEventListener('click', closeDrawer);
+drawerOverlay.addEventListener('click', closeDrawer);
+ $('#menuBtn').addEventListener('click', ()=>{ $('#mobileMenu').classList.toggle('open'); Sound.pop(); });
+ $$('#mobileMenu a').forEach(a=>a.addEventListener('click', ()=>$('#mobileMenu').classList.remove('open')));
+ $$('[data-goto]').forEach(b=>b.addEventListener('click', ()=>{
+  Sound.pop();
+  const el = document.querySelector(b.dataset.goto);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}));
+
+/* ============ HERO ============ */
+const LETTER_COLORS = ['#FF6B57','#3FC1C9','#FFC53D','#7BC950','#9B5DE5','#E63946'];
+ $('#titleWord').innerHTML = 'HTML LAND'.split('').map((ch,i)=>
+  ch===' ' ? '<span class="gap"></span>'
+  : `<span class="l" style="--c:${LETTER_COLORS[i%LETTER_COLORS.length]};animation-delay:${.15+i*.08}s">${ch}</span>`
+).join('');
+
+ $('#taggyBtn').innerHTML = BUDDIES.taggy.svg;
+ $('#chatTaggy').innerHTML = BUDDIES.taggy.svg;
+ $('#footBuddies').innerHTML = Object.values(BUDDIES).map(b=>b.svg).join('');
+
+const HERO_FACTS = [
+  "Psst! Every website you've ever visited is made with HTML!",
+  "Did you know? The paragraph tag holds your words!",
+  "I eat bugs for breakfast. Code bugs, that is!",
+  "Want a joke? Ask me in the chat at the bottom!",
+  "Tap the floating tags around me — they tell you their jobs!",
+];
+const HERO_TAG_TIPS = {
+  h1:  "h1 makes BIG titles — like a giant shout!",
+  p:   "p holds your words — a whole paragraph!",
+  img: "img shows pictures from the internet!",
+  a:   "a makes clickable links — zoom!",
+};
+let heroBubbleT, factI = 0;
+function heroSay(text){
+  const b = $('#heroBubble');
+  b.textContent = text;
+  b.classList.add('show');
+  clearTimeout(heroBubbleT);
+  heroBubbleT = setTimeout(()=>b.classList.remove('show'), 6000);
+}
+ $('#taggyBtn').addEventListener('click', function(){
+  this.classList.remove('squish'); void this.offsetWidth; this.classList.add('squish');
+  Sound.pop();
+  heroSay(HERO_FACTS[factI++ % HERO_FACTS.length]);
+});
+ $$('.tag-chip').forEach(c => c.addEventListener('click', ()=>{
+  c.classList.remove('wiggle'); void c.offsetWidth; c.classList.add('wiggle');
+  Sound.blip();
+  heroSay(HERO_TAG_TIPS[c.dataset.tag] || 'Ooh, a tag!');
+}));
+setTimeout(()=>heroSay("Hi! I'm Taggy! Click me!"), 1200);
+
+/* Eye tracking + blinking for every Taggy on the page */
+const tracked = [];
+function registerMascots(root=document){
+  root.querySelectorAll('.mascot').forEach(m => { if(!tracked.includes(m)) tracked.push(m); });
+}
+addEventListener('pointermove', e => {
+  tracked.forEach(m => {
+    m.querySelectorAll('.eye').forEach(eye => {
+      const r = eye.getBoundingClientRect();
+      if(!r.width) return;
+      const cx = r.left+r.width/2, cy = r.top+r.height/2;
+      let dx = e.clientX-cx, dy = e.clientY-cy;
+      const len = Math.hypot(dx,dy) || 1;
+      const d = Math.min(1, len/140);
+      const px = (dx/len*5.5*d).toFixed(2), py = (dy/len*5.5*d).toFixed(2);
+      const p = eye.querySelector('.pupil');
+      if(p) p.style.transform = `translate(${px}px,${py}px)`;
+    });
+  });
+});
+setInterval(()=>{
+  $$('.mascot').forEach(m => {
+    if(Math.random() < .5){ m.classList.add('blink'); setTimeout(()=>m.classList.remove('blink'), 150); }
+  });
+}, 2700);
+registerMascots();
+
+/* ============ THE TAG MAP ============ */
+const mapWrap = $('#mapWrap');
+const DESK = [[7,24],[26,74],[47,24],[67,74],[86,26],[86,80]];
+const MOB  = [[26,7],[74,21],[26,35],[74,49],[26,63],[74,77]];
+LESSONS.forEach(L => {
+  const b = document.createElement('button');
+  b.className = 'stop';
+  b.dataset.lesson = L.id;
+  b.innerHTML = `<span class="stop-circle">${L.buddy.svg}</span>
+    <span class="stop-num" style="background:${L.buddy.color}">${L.num}</span>
+    <span class="stop-label">${L.stop}</span>
+    <span class="stop-done"><i data-lucide="check"></i></span>`;
+  b.addEventListener('click', ()=>openLesson(L.id));
+  mapWrap.appendChild(b);
+});
+function drawMapPath(){
+  const svg = $('#mapSvg');
+  const wr = mapWrap.getBoundingClientRect();
+  if(!wr.width) return;
+  const pts = $$('.stop').map(s => {
+    const c = s.querySelector('.stop-circle').getBoundingClientRect();
+    return { x:c.left-wr.left+c.width/2, y:c.top-wr.top+c.height/2 };
+  });
+  svg.setAttribute('viewBox', `0 0 ${wr.width} ${wr.height}`);
+  let d = `M ${pts[0].x} ${pts[0].y}`;
+  for(let i=1;i<pts.length;i++){
+    const a=pts[i-1], b=pts[i];
+    let c1, c2;
+    if(Math.abs(b.x-a.x) >= Math.abs(b.y-a.y)){
+      const mx=(a.x+b.x)/2; c1={x:mx,y:a.y}; c2={x:mx,y:b.y};
+    } else {
+      const my=(a.y+b.y)/2; c1={x:a.x,y:my}; c2={x:b.x,y:my};
+    }
+    d += ` C ${c1.x} ${c1.y}, ${c2.x} ${c2.y}, ${b.x} ${b.y}`;
+  }
+  svg.querySelector('.pathline').setAttribute('d', d);
+}
+function layoutMap(){
+  const pos = mapWrap.clientWidth < 720 ? MOB : DESK;
+  $$('.stop').forEach((s,i)=>{ s.style.left = pos[i][0]+'%'; s.style.top = pos[i][1]+'%'; });
+  drawMapPath();
+}
+let rzT; addEventListener('resize', ()=>{ clearTimeout(rzT); rzT = setTimeout(layoutMap, 160); });
+addEventListener('load', layoutMap);
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(layoutMap);
+layoutMap();
+
+/* ============ LESSON MODAL ============ */
+const lessonOverlay = $('#lessonOverlay');
+let twToken = 0;
+function typewrite(el, text, opts={}){
+  const tok = ++twToken;
+  el.textContent = ''; el.dataset.full = text;
+  let i = 0;
+  clearInterval(el._tw);
+  if(opts.buddy) opts.buddy.classList.add('talking');
+  el._tw = setInterval(()=>{
+    if(tok !== twToken){ clearInterval(el._tw); return; }
+    i++; el.textContent = text.slice(0, i);
+    if(i % 6 === 0) Sound.blip();
+    if(i >= text.length){
+      clearInterval(el._tw);
+      if(opts.buddy) opts.buddy.classList.remove('talking');
+    }
+  }, opts.speed || 16);
+}
+function showOverlay(){
+  lessonOverlay.hidden = false;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>lessonOverlay.classList.add('open')));
+  document.body.style.overflow = 'hidden';
+}
+function hideOverlay(){
+  lessonOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(()=>{ lessonOverlay.hidden = true; }, 300);
+}
+function updateStickerBtn(){
+  const b = $('#stickerBtn');
+  if(!curLesson) return;
+  const has = earned.has(curLesson.sticker);
+  b.disabled = has;
+  b.className = 'btn' + (has ? ' earned' : ' coral');
+  b.innerHTML = has
+    ? '<i data-lucide="check"></i> Sticker collected!'
+    : '<i data-lucide="star"></i> Collect my sticker!';
+  refreshIcons();
+}
+function openLesson(id){
+  const L = LESSONS.find(l => l.id === id);
+  if(!L) return;
+  curLesson = L;
+  $('#lessonTitle').textContent = L.title;
+  $('#lessonStopName').textContent = `Stop ${L.num} — ${L.stop} · with ${L.buddy.name}`;
+  $('#lessonBuddy').innerHTML = L.buddy.svg;
+  $('#lessonCode').innerHTML = hi(L.code);
+  $('#tryCode').value = L.code;
+  $('#tryPrev').srcdoc = L.code;
+  updateStickerBtn();
+  const last = LESSONS.indexOf(L) === LESSONS.length-1;
+  $('#nextBtn').innerHTML = last
+    ? 'Finish the map! <i data-lucide="flag"></i>'
+    : 'Next stop <i data-lucide="arrow-right"></i>';
+  refreshIcons();
+  registerMascots($('#lessonBuddy'));
+  showOverlay();
+  Sound.pop();
+  typewrite($('#speechText'), L.speech, { buddy: $('#lessonBuddy .buddy-svg') });
+}
+ $('#lessonClose').addEventListener('click', hideOverlay);
+lessonOverlay.addEventListener('click', e => { if(e.target === lessonOverlay) hideOverlay(); });
+ $('#speechBox').addEventListener('click', ()=>{
+  const el = $('#speechText');
+  if(el.dataset.full && el.textContent.length < el.dataset.full.length){
+    twToken++; clearInterval(el._tw);
+    el.textContent = el.dataset.full;
+    $$('.buddy-svg.talking').forEach(b => b.classList.remove('talking'));
+  }
+});
+let tryT;
+ $('#tryCode').addEventListener('input', ()=>{
+  clearTimeout(tryT);
+  tryT = setTimeout(()=>{ $('#tryPrev').srcdoc = $('#tryCode').value; }, 600);
+});
+ $('#tryRun').addEventListener('click', ()=>{
+  $('#tryPrev').srcdoc = $('#tryCode').value;
+  Sound.pop();
+});
+ $('#stickerBtn').addEventListener('click', ()=>{
+  if(!curLesson) return;
+  const wasNew = award(curLesson.sticker);
+  if(wasNew) burstAt($('#stickerBtn'), 60);
+});
+ $('#nextBtn').addEventListener('click', ()=>{
+  const i = LESSONS.indexOf(curLesson);
+  if(i < LESSONS.length-1){
+    Sound.pop();
+    openLesson(LESSONS[i+1].id);
+  } else {
+    Sound.win();
+    burstAt(lessonOverlay, 90);
+    hideOverlay();
+  }
+});
+addEventListener('keydown', e => {
+  if(e.key === 'Escape'){ hideOverlay(); closeDrawer(); }
+});
+
+/* ============ ARCADE ============ */
+ $$('.cart').forEach(c => c.addEventListener('click', ()=>{
+  $$('.cart').forEach(x => x.classList.toggle('active', x === c));
+  const map = { match:'#gMatch', bug:'#gBug', quiz:'#gQuiz' };
+  Object.values(map).forEach(sel => $(sel).hidden = true);
+  $(map[c.dataset.game]).hidden = false;
+  Sound.pop();
+}));
+function winCard(title, sub, againCb){
+  const d = document.createElement('div');
+  d.className = 'win-card panel';
+  d.innerHTML = `<h3>${title}</h3><p>${sub}</p>`;
+  const btn = document.createElement('button');
+  btn.className = 'btn coral';
+  btn.innerHTML = '<i data-lucide="rotate-ccw"></i> Play again';
+  btn.addEventListener('click', againCb);
+  d.appendChild(btn);
+  return d;
+}
+
+/* --- Tag Match (memory) --- */
+const mm = { first:null, lock:false, moves:0, pairs:0 };
+function mmInit(){
+  mm.first=null; mm.lock=false; mm.moves=0; mm.pairs=0;
+  $('#mmMoves').textContent = 0; $('#mmPairs').textContent = 0;
+  $('#mmWin').hidden = true;
+  const deck = shuffle(PAIRS.flatMap(p => [{...p, side:'tag'}, {...p, side:'job'}]));
+  const grid = $('#mmGrid'); grid.innerHTML = '';
+  deck.forEach(c => {
+    const el = document.createElement('button');
+    el.className = 'mcard'; el.dataset.key = c.key;
+    el.setAttribute('aria-label','Memory card');
+    el.innerHTML = `<div class="mcard-inner">
+      <div class="mface mfront"><span class="tagmark">&lt;/&gt;</span></div>
+      <div class="mface mback">${c.side==='tag'
+        ? `<span class="mtag">${esc(c.tag)}</span>`
+        : `<i data-lucide="${c.icon}"></i><span>${c.job}</span>`}</div>
+    </div>`;
+    el.addEventListener('click', ()=>mmFlip(el));
+    grid.appendChild(el);
+  });
+  refreshIcons();
+}
+function mmFlip(el){
+  if(mm.lock || el.classList.contains('flipped')) return;
+  el.classList.add('flipped'); Sound.pop();
+  if(!mm.first){ mm.first = el; return; }
+  mm.moves++; $('#mmMoves').textContent = mm.moves;
+  const a = mm.first, b = el; mm.first = null;
+  if(a.dataset.key === b.dataset.key){
+    a.classList.add('matched'); b.classList.add('matched');
+    Sound.good();
+    mm.pairs++; $('#mmPairs').textContent = mm.pairs;
+    if(mm.pairs === PAIRS.length) setTimeout(mmWin, 650);
+  } else {
+    mm.lock = true;
+    setTimeout(()=>{ a.classList.remove('flipped'); b.classList.remove('flipped'); mm.lock = false; }, 850);
+  }
+}
+function mmWin(){
+  Sound.win(); award('memory-machine'); burstAt($('#mmGrid'), 80);
+  const w = $('#mmWin'); w.innerHTML = ''; w.hidden = false;
+  w.appendChild(winCard('You matched them all!', `${mm.moves} moves — those tags never stood a chance!`, mmInit));
+  refreshIcons();
+}
+ $('#mmRestart').addEventListener('click', ()=>{ Sound.pop(); mmInit(); });
+
+/* --- Bug Squasher --- */
+const bg = { i:0 };
+function bgInit(){
+  bg.i = 0;
+  $('#bugWin').hidden = true;
+  $('#bugDots').innerHTML = BUGS.map(()=>'<span class="bdot"></span>').join('');
+  bgRender();
+}
+function bgRender(){
+  const B = BUGS[bg.i];
+  $('#bugQ').textContent = `Round ${bg.i+1} of ${BUGS.length} — ${B.q}`;
+  $('#bugCode').innerHTML = hi(B.code);
+  const fb = $('#bugFb'); fb.textContent = ''; fb.className = 'game-feedback';
+  const bug = $('#bugSvg');
+  bug.classList.remove('bonked','giggle');
+  const opts = shuffle(B.opts.map((t,i)=>({ t, ok:i===B.correct })));
+  const wrap = $('#bugAnswers'); wrap.innerHTML = '';
+  opts.forEach(o => {
+    const btn = document.createElement('button');
+    btn.className = 'btn bug-opt';
+    btn.textContent = o.t;
+    btn.addEventListener('click', ()=>bgAnswer(btn, o.ok, B));
+    wrap.appendChild(btn);
+  });
+}
+function bgAnswer(btn, ok, B){
+  if(btn.disabled) return;
+  if(ok){
+    btn.classList.add('right');
+    $$('#bugAnswers .bug-opt').forEach(b => b.disabled = true);
+    Sound.good();
+    $('#bugSvg').classList.add('bonked');
+    const bp = $('#bonkPop');
+    bp.classList.remove('show'); void bp.offsetWidth; bp.classList.add('show');
+    const fb = $('#bugFb'); fb.textContent = B.why; fb.className = 'game-feedback good';
+    const dots = $$('#bugDots .bdot');
+    if(dots[bg.i]) dots[bg.i].classList.add('on');
+    setTimeout(()=>{
+      bg.i++;
+      if(bg.i >= BUGS.length) bgWin(); else bgRender();
+    }, 1750);
+  } else {
+    btn.disabled = true; btn.classList.add('wrong');
+    Sound.bad();
+    const bug = $('#bugSvg');
+    bug.classList.remove('giggle'); void bug.offsetWidth; bug.classList.add('giggle');
+    const fb = $('#bugFb'); fb.textContent = 'Not quite — the bug giggles at you! Try another answer.'; fb.className = 'game-feedback bad';
+  }
+}
+function bgWin(){
+  Sound.win(); award('bug-buster'); burstAt($('#gBug'), 80);
+  const w = $('#bugWin'); w.innerHTML = ''; w.hidden = false;
+  w.appendChild(winCard('Bug Busted!', 'You fixed all 5 broken codes. The web is safe again!', bgInit));
+  refreshIcons();
+}
+ $('#bugRestart').addEventListener('click', ()=>{ Sound.pop(); bgInit(); });
+
+/* --- Speed Quiz --- */
+const qz = { i:0, score:0, streak:0, lock:false };
+function qzInit(){
+  qz.i=0; qz.score=0; qz.streak=0; qz.lock=false;
+  $('#qzWin').hidden = true;
+  qzRender();
+}
+function qzRender(){
+  const Q = QUIZ[qz.i];
+  $('#qzProg').textContent = `Question ${qz.i+1} of ${QUIZ.length}`;
+  $('#qzQ').textContent = Q.q;
+  $('#qzScore').textContent = qz.score;
+  $('#qzStreak').textContent = qz.streak;
+  const fb = $('#qzFb'); fb.textContent = ''; fb.className = 'game-feedback';
+  const opts = shuffle([Q.a, ...Q.wrong]);
+  const wrap = $('#qzAnswers'); wrap.innerHTML = '';
+  opts.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'btn qz-opt';
+    b.textContent = t;
+    b.addEventListener('click', ()=>qzAnswer(b, t === Q.a, Q.a));
+    wrap.appendChild(b);
+  });
+}
+function qzAnswer(b, ok, correct){
+  if(qz.lock) return;
+  qz.lock = true;
+  if(ok){
+    b.classList.add('right'); Sound.good();
+    qz.score++; qz.streak++;
+    burstAt(b, 24);
+    const fb = $('#qzFb'); fb.textContent = pick(PRAISE) + (qz.streak >= 3 ? ` Streak x${qz.streak}!` : ''); fb.className = 'game-feedback good';
+  } else {
+    b.classList.add('wrong'); Sound.bad(); qz.streak = 0;
+    $$('#qzAnswers .qz-opt').forEach(x => { if(x.textContent === correct) x.classList.add('right'); });
+    const fb = $('#qzFb'); fb.textContent = 'Good try! The green one was right.'; fb.className = 'game-feedback bad';
+  }
+  $('#qzScore').textContent = qz.score;
+  $('#qzStreak').textContent = qz.streak;
+  setTimeout(()=>{
+    qz.i++; qz.lock = false;
+    if(qz.i >= QUIZ.length) qzWin(); else qzRender();
+  }, 1200);
+}
+function qzWin(){
+  Sound.win(); award('quiz-whiz'); burstAt($('#gQuiz'), 80);
+  const msg = qz.score >= 7 ? 'INCREDIBLE! Taggy is speechless (and he talks a lot).'
+    : qz.score >= 5 ? 'Super solid — the tags respect you now!'
+    : 'Nice try! Play again and beat your score!';
+  const w = $('#qzWin'); w.innerHTML = ''; w.hidden = false;
+  w.appendChild(winCard(`Quiz done — ${qz.score} / ${QUIZ.length}!`, msg, qzInit));
+  refreshIcons();
+}
+ $('#qzRestart').addEventListener('click', ()=>{ Sound.pop(); qzInit(); });
+mmInit(); bgInit(); qzInit();
+
+/* ============ WORKSHOP ============ */
+const WS_DEFAULT = `<h1>My First Webpage</h1>
+<p>Hi! I built this with HTML!</p>
+<img src="https://picsum.photos/seed/hello123/280/170.jpg" alt="a happy picture">`;
+const SURPRISES = [
+`<h1>Beep boop!</h1>
+<p>I am a robot page. I speak <b>bold</b> and <i>italic</i>.</p>
+<img src="https://picsum.photos/seed/robot42/260/160.jpg" alt="a robot">`,
+`<h1>Party Time!</h1>
+<p>Things I need:</p>
+<ul>
+ <li>Cake</li>
+ <li>Balloons</li>
+ <li>Music</li>
+</ul>
+<img src="https://picsum.photos/seed/party77/260/160.jpg" alt="party">`,
+`<h1>Tiny Detective</h1>
+<p>Notes on the missing cookie case:</p>
+<ol>
+ <li>The cookie is missing</li>
+ <li>Crumbs lead to the dog</li>
+ <li>Case closed!</li>
+</ol>`];
+const WS_CHIPS = [
+  ['h1','<h1>Hello!</h1>'],
+  ['p','<p>Some words here</p>'],
+  ['br','<br>'],
+  ['img', ()=>`<img src="https://picsum.photos/seed/${Math.random().toString(36).slice(2,8)}/220/150.jpg" alt="picture">`],
+  ['a','<a href="https://example.com">My link</a>'],
+  ['ul','<ul>\n <li>one</li>\n <li>two</li>\n</ul>'],
+  ['b','<b>bold!</b>'],
+  ['i','<i>italics!</i>'],
+];
+const wsCode = $('#wsCode'), wsPrev = $('#wsPrev');
+wsCode.value = WS_DEFAULT;
+ $('#wsChips').innerHTML = WS_CHIPS.map((c,i)=>
+  `<button class="chip" data-chip="${i}">&lt;${c[0]}&gt;</button>`).join('');
+ $$('#wsChips .chip').forEach(btn => btn.addEventListener('click', ()=>{
+  const c = WS_CHIPS[+btn.dataset.chip];
+  const snip = typeof c[1] === 'function' ? c[1]() : c[1];
+  wsCode.setRangeText(snip, wsCode.selectionStart, wsCode.selectionEnd, 'end');
+  wsCode.focus();
+  Sound.blip();
+  clearTimeout(wsT); wsT = setTimeout(runWS, 600);
+}));
+let wsT, surpriseI = 0;
+wsCode.addEventListener('input', ()=>{ clearTimeout(wsT); wsT = setTimeout(()=>runWS(false), 650); });
+function runWS(loud){
+  wsPrev.srcdoc = wsCode.value;
+  const f = $('#wsFrameWrap');
+  f.classList.remove('tada'); void f.offsetWidth; f.classList.add('tada');
+  if(loud){ Sound.pop(); award('web-builder'); }
+}
+ $('#wsRun').addEventListener('click', ()=>runWS(true));
+ $('#wsSurprise').addEventListener('click', ()=>{
+  wsCode.value = SURPRISES[surpriseI++ % SURPRISES.length];
+  runWS(true);
+});
+ $('#wsClear').addEventListener('click', ()=>{
+  wsCode.value = ''; Sound.pop(); wsPrev.srcdoc = '';
+});
+wsPrev.srcdoc = WS_DEFAULT;
+
+/* ============ ASK TAGGY (offline rule-based helper) ============ */
+const JOKES = [
+  "Why did the <code>&lt;br&gt;</code> tag go to the doctor? Because it had a line break!",
+  "What did <code>&lt;h1&gt;</code> say to <code>&lt;h6&gt;</code>? 'You're so quiet — speak UP!'",
+  "Why does every website love <code>&lt;a&gt;</code> tags? Because they always take you places!",
+  "Why was the web page cold? It forgot to close its <code>&lt;/body&gt;</code>!",
+  "Why did the little tag blush? It saw the page's <code>&lt;body&gt;</code>!",
+  "What do you call a dinosaur that knows HTML? A dino-CODE-saur — and it codes in <b>bold</b>!",
+];
+const FACTS = [
+  "The very first website ever is still online today! It was built in 1991 by Tim Berners-Lee — the inventor of the web.",
+  "HTML stands for <b>H</b>yper<b>T</b>ext <b>M</b>arkup <b>L</b>anguage — a big name that means 'labels for your words'!",
+  "Every website you have EVER visited — even game sites — is built with HTML.",
+  "There are over 100 different HTML tags. You already know the coolest ones!",
+  "The <code>&lt;img&gt;</code> tag is over 30 years old and still shows pictures every single day!",
+];
+const GREET = [
+  "Hi hi! So happy you're here! Ask me about any tag — like <code>&lt;img&gt;</code> or <code>&lt;a&gt;</code> — or say <i>joke</i>!",
+  "Hellooo! What are we learning today? Pictures? Links? Jokes? I'm ready!",
+];
+const TAGS = {
+  h1:  "<code>&lt;h1&gt;</code> is the BIGGEST heading — the title of your whole page! It shouts loud and proud. There's also <code>&lt;h2&gt;</code>… all the way down to <code>&lt;h6&gt;</code>, a tiny whisper. Try them in the Workshop!",
+  p:   "<code>&lt;p&gt;</code> is for paragraphs — it holds your words! Wrap a sentence in <code>&lt;p&gt;</code> and <code>&lt;/p&gt;</code> and boom, it's a paragraph. Like: <code>&lt;p&gt;Hi! I wrote this!&lt;/p&gt;</code>",
+  img: "<code>&lt;img&gt;</code> shows pictures! Give it <code>src</code> (the picture's web address) and <code>alt</code> (words describing it):<br><code>&lt;img src=\"https://picsum.photos/seed/pet/200/150.jpg\" alt=\"my pet\"&gt;</code><br>Try it in the Workshop!",
+  a:   "<code>&lt;a&gt;</code> makes links! <code>href</code> says where the link flies when you click it:<br><code>&lt;a href=\"https://example.com\"&gt;click me!&lt;/a&gt;</code><br>Links are little doors to other pages!",
+  ul:  "<code>&lt;ul&gt;</code> makes a bullet list! Put <code>&lt;li&gt;</code> items inside — one for each thing. Great for favorites lists!",
+  ol:  "<code>&lt;ol&gt;</code> makes a NUMBERED list — it counts 1, 2, 3 for you! Each <code>&lt;li&gt;</code> is one thing on the list.",
+  li:  "<code>&lt;li&gt;</code> is one item in a list — it lives inside <code>&lt;ul&gt;</code> (bullets) or <code>&lt;ol&gt;</code> (numbers). Like: <code>&lt;li&gt;pizza&lt;/li&gt;</code>",
+  br:  "<code>&lt;br&gt;</code> makes words jump to a brand-new line — like pressing Enter! Fun fact: it has no closing tag. It works all by itself!",
+  b:   "<code>&lt;b&gt;</code> makes words bold and chunky! Its cousin <code>&lt;i&gt;</code> makes them lean and fancy. Great for making important words pop!",
+  i:   "<code>&lt;i&gt;</code> makes words italic — lean and fancy! Its cousin <code>&lt;b&gt;</code> makes them bold. Use them to make words stand out!",
+  body:"<code>&lt;body&gt;</code> is the part of the page people actually SEE — everything you write shows up there. Like a stage where your content performs!",
+  html:"<code>&lt;html&gt;</code> is the biggest tag of all — it wraps the WHOLE page in a big warm hug. Everything else lives inside it!",
+};
+const TOPIC_REPLIES = {
+  img: TAGS.img, a: TAGS.a, lists: TAGS.ul, h1: TAGS.h1, p: TAGS.p, bi: TAGS.b, br: TAGS.br,
+  css: "Ooh — colors and fonts are <b>CSS</b>'s job! HTML says what things <i>are</i>, and CSS makes them pretty — like picking clothes for your words. Learn HTML first, then CSS feels easy!",
+  attr: "Attributes are little helpers that give tags extra info! They live inside the pointy brackets, like <code>src</code> in <code>&lt;img&gt;</code> or <code>href</code> in <code>&lt;a&gt;</code>.",
+  game: "Games?! YES! Zoom up to <b>The Arcade</b> — match tags, squash bugs and race the quiz. I'll be cheering for you!",
+  ws: "The <b>Workshop</b> is where you try real HTML! Type (or tap the chips) and press <b>Run</b> — your code becomes a real page instantly. It's my favorite magic trick!",
+  stickers: "I LOVE stickers! Finish map stops, win games, and run code in the Workshop to collect all 10. Tap the star up in the corner to peek at your Sticker Book!",
+  help: "I can answer HTML questions — like what <code>&lt;p&gt;</code> does or how pictures work. I also tell <b>jokes</b> and <b>fun facts</b>! Try asking: <i>what does the a tag do?</i>",
+  map: "The Tag Map has 6 fun stops — one for each cool tag! Tap any stop on the map to start a lesson. Collect all the stickers!",
+  htmlAll: "HTML is what every website is built with — even this one! It's made of <b>tags</b> in pointy brackets, like <code>&lt;h1&gt;</code> or <code>&lt;p&gt;</code>, that tell the browser what everything is. You already speak a little HTML just by being here!",
+};
+const TOPICS = [
+  [/pictur|image|photo|\bimg\b|\bpics?\b/, 'img'],
+  [/link|\bhref\b|click|web ?site/, 'a'],
+  [/list|bullet|\bul\b|\bol\b|\bli\b/, 'lists'],
+  [/heading|headline|\btitles?\b|big (text|words)/, 'h1'],
+  [/paragraph|\bwords\b|\btext\b|story|sentences?/, 'p'],
+  [/bold|italic|\bstrong\b|\bem\b/, 'bi'],
+  [/line ?break|new line|\bbr\b|\benter\b/, 'br'],
+  [/colou?r|font|pretty|beautiful|\bcss\b|style|background/, 'css'],
+  [/attribute|\bsrc\b|\balt\b/, 'attr'],
+  [/\bgame|arcade|\bplay\b/, 'game'],
+  [/playground|editor|practice|\btry\b|write|build|make (a )?(page|site|web)/, 'ws'],
+  [/sticker|badge|collect/, 'stickers'],
+  [/help|what can you|how do i ask/, 'help'],
+  [/lesson|\bmap\b|\blearn\b|adventure/, 'map'],
+  [/html|website|web ?page|internet|browser|cod(e|ing)|\bprogram\b/, 'htmlAll'],
+];
+const FALLBACKS = [
+  "Hmm, that one's got me scratching my antenna! Try asking about a tag like <code>&lt;img&gt;</code>, <code>&lt;a&gt;</code> or <code>&lt;h1&gt;</code> — or say <i>joke</i>!",
+  "I'm still learning that one — my tag-brain is small but mighty! Ask me <i>what is HTML</i> or ask for a fun fact!",
+  "Ooh, I don't know that yet! But I DO know tags, jokes and fun facts. Try: <i>what does the a tag do?</i>",
+];
+function findTag(t){
+  const tm = t.match(/<\s*\/?([a-z0-9]+)\s*>/);
+  if(tm) return tm[1];
+  if(/html tag/.test(t)) return 'html';
+  for(const k of Object.keys(TAGS)){
+    if(k.length > 1 && k !== 'html' && new RegExp(`(^|[^a-z0-9])${k}([^a-z0-9]|$)`).test(t)) return k;
+  }
+  return null;
+}
+function think(raw){
+  const t = raw.toLowerCase().trim();
+  if(/joke|funny|laugh/.test(t)) return pick(JOKES);
+  if(/fun fact|cool thing|tell me something/.test(t)) return pick(FACTS);
+  if(/^(hi+|hello+|hey+|yo|hiya|howdy|sup)\b/.test(t)) return pick(GREET);
+  if(/how are (you|u)|how('s| is) it going/.test(t)) return "I'm tag-tastic, thanks for asking! Being made of HTML feels great. How are YOU doing?";
+  if(/(who|what) are (you|u)|your name/.test(t)) return "I'm Taggy! I live inside every webpage (it's cozy in here) and my favorite thing is teaching kids HTML. Ask me anything!";
+  if(/thank/.test(t)) return "You're so welcome! Helping you learn HTML is my favorite job. Ask me another one!";
+  if(/\b(bye|goodbye|see (you|ya)|cya)\b/.test(t)) return "Bye-bye! Come back soon — I'll be here snacking on code-bugs and waiting for you!";
+  if(/\b(love|like)\s+(you|u)\b/.test(t)) return "Awww, I like you too! You're going to be an amazing web builder.";
+  if(/how old|your age/.test(t)) return "I'm exactly as old as the very first website — HTML and I grew up together in 1991!";
+  for(const [rx, key] of TOPICS){
+    if(rx.test(t)) return TOPIC_REPLIES[key];
+  }
+  const tag = findTag(t);
+  if(tag && TAGS[tag]) return TAGS[tag];
+  return pick(FALLBACKS);
+}
+const msgsEl = $('#msgs');
+let chatBusy = false;
+function addMsg(html, who){
+  const d = document.createElement('div');
+  d.className = 'msg ' + who;
+  if(who === 'user') d.textContent = html;
+  else d.innerHTML = html;
+  msgsEl.appendChild(d);
+  msgsEl.scrollTop = msgsEl.scrollHeight;
+  return d;
+}
+async function botReply(userText){
+  chatBusy = true;
+  const tw = $('#chatTaggy');
+  tw.classList.add('bounce');
+  const typing = addMsg('<span class="tdots"><span></span><span></span><span></span></span>', 'bot');
+  await wait(550 + Math.random()*550);
+  typing.remove();
+  tw.classList.remove('bounce');
+  addMsg(think(userText), 'bot');
+  Sound.blip();
+  chatBusy = false;
+}
+ $('#chatForm').addEventListener('submit', e => {
+  e.preventDefault();
+  if(chatBusy) return;
+  const inp = $('#chatInput');
+  const v = inp.value.trim();
+  if(!v) return;
+  inp.value = '';
+  addMsg(v, 'user');
+  Sound.pop();
+  botReply(v);
+});
+ $$('.qchip').forEach(c => c.addEventListener('click', ()=>{
+  if(chatBusy) return;
+  addMsg(c.textContent, 'user');
+  Sound.pop();
+  botReply(c.textContent);
+}));
+addMsg("Hi hi! I'm <b>Taggy</b>, your HTML helper! Ask me anything — what a tag does, how to add a picture, or just say <i>joke</i>. I know ALL the tag secrets (and too many jokes).", 'bot');
+
+/* ============ SCROLL REVEAL & INIT ============ */
+const io = new IntersectionObserver(es => es.forEach(en => {
+  if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+}), { threshold:.12 });
+ $$('.reveal').forEach(el => io.observe(el));
+
+updateStickerUI(false);
+renderSnd();
+refreshIcons();
+</script>
+</body>
+</html>

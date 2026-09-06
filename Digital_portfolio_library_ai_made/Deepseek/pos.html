@@ -1,0 +1,839 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>Webcore Digital Shop POS — Created by Marc D. Namacpacan</title>
+    <!-- Font Awesome for icons (lightweight, optional CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: #f4f7fc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 0;
+            margin: 0;
+            transition: all 0.2s;
+        }
+        .app-container {
+            width: 100%;
+            max-width: 1440px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border-radius: 0;
+            overflow: hidden;
+        }
+        /* Loading screen */
+        .loader-screen {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: #0b1a2e;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            color: white;
+            transition: opacity 0.5s ease;
+        }
+        .loader-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .loader-logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #4f9cf7, #a0c8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .loader-sub {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #ccddee;
+        }
+        .progress-bar {
+            width: 240px;
+            height: 6px;
+            background: #2a3b52;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 1rem;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #4f9cf7;
+            border-radius: 10px;
+            animation: loadProgress 1.2s ease forwards;
+        }
+        @keyframes loadProgress {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+        /* Header */
+        .pos-header {
+            background: #0b1a2e;
+            color: white;
+            padding: 12px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid #2a3b52;
+            gap: 10px;
+        }
+        .shop-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .shop-title i {
+            color: #4f9cf7;
+        }
+        .header-info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+        .badge {
+            background: #1e3a5f;
+            padding: 8px 14px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge i {
+            color: #7bb3ff;
+        }
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .icon-btn {
+            background: #1e3a5f;
+            border: none;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .icon-btn:hover {
+            background: #2c5078;
+        }
+        /* Main layout */
+        .main-content {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            background: #f8fafd;
+        }
+        .left-panel {
+            width: 62%;
+            background: white;
+            border-right: 1px solid #dee5ed;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .right-panel {
+            width: 38%;
+            background: #f1f5f9;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 16px;
+        }
+        .search-section {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+        .search-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #cbd5e0;
+            border-radius: 12px;
+            font-size: 1rem;
+        }
+        .category-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 14px;
+        }
+        .pill {
+            background: #e8edf4;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        .pill.active {
+            background: #0b1a2e;
+            color: white;
+        }
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .product-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            transition: 0.15s;
+            cursor: pointer;
+        }
+        .product-card:hover {
+            box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+            border-color: #9bb8d4;
+        }
+        .product-img-placeholder {
+            width: 70px;
+            height: 70px;
+            background: #eef2f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #7a8ea3;
+            margin-bottom: 8px;
+        }
+        .product-card img {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 8px;
+        }
+        .product-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+        .product-price {
+            font-weight: 700;
+            color: #0b1a2e;
+        }
+        .stock-badge {
+            font-size: 0.7rem;
+            background: #d4edda;
+            padding: 2px 6px;
+            border-radius: 10px;
+        }
+        .add-product-btn {
+            background: #0b1a2e;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            margin: 12px 0;
+        }
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px 12px;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border-left: 4px solid #4f9cf7;
+        }
+        .cart-item-info {
+            flex: 1;
+        }
+        .qty-control {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .qty-btn {
+            background: #e2e8f0;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .cart-summary {
+            background: white;
+            padding: 16px;
+            border-radius: 16px;
+            margin-top: 10px;
+        }
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        .checkout-btn {
+            background: #0b1a2e;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            width: 100%;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        .modal {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 90%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        }
+        .modal-backdrop {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        .form-group label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 10px;
+        }
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #0b1a2e;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            z-index: 2000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        @media print {
+            body * { visibility: hidden; }
+            .receipt-print-area, .receipt-print-area * { visibility: visible; }
+            .receipt-print-area { position: absolute; left: 0; top: 0; width: 80mm; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader-screen" id="loaderScreen">
+        <div class="loader-logo">WEBCORE DIGITAL SHOP</div>
+        <div class="loader-sub">POINT OF SALE SYSTEM</div>
+        <div>Created by: Marc D. Namacpacan</div>
+        <div class="progress-bar"><div class="progress-fill"></div></div>
+    </div>
+
+    <div class="app-container" id="appContainer" style="display: none;">
+        <header class="pos-header">
+            <div class="shop-title"><i class="fas fa-store"></i> WEBCORE DIGITAL SHOP</div>
+            <div class="header-info">
+                <span class="badge"><i class="fas fa-calendar"></i> <span id="currentDate"></span></span>
+                <span class="badge"><i class="fas fa-clock"></i> <span id="currentTime"></span></span>
+                <span class="badge"><i class="fas fa-user"></i> Cashier: <span id="cashierName">Employee</span></span>
+                <span class="badge"><i class="fas fa-circle"></i> POS ACTIVE</span>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="calcBtn" title="Calculator"><i class="fas fa-calculator"></i> Calc</button>
+                <button class="icon-btn" id="settingsBtn"><i class="fas fa-cog"></i> Settings</button>
+                <button class="icon-btn" id="helpBtn"><i class="fas fa-question-circle"></i> Help</button>
+            </div>
+        </header>
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="search-section">
+                    <input type="text" class="search-input" id="searchInput" placeholder="Search name, ID, SKU, barcode...">
+                    <button class="icon-btn" id="scanBarcodeBtn"><i class="fas fa-camera"></i> Scan</button>
+                    <button class="icon-btn" id="usbScanBtn"><i class="fas fa-keyboard"></i> Enter/Scan</button>
+                </div>
+                <div class="category-pills" id="categoryPills">
+                    <button class="pill active" data-category="All">All</button>
+                    <button class="pill" data-category="Electronics">Electronics</button>
+                    <button class="pill" data-category="Accessories">Accessories</button>
+                    <button class="pill" data-category="Software">Software</button>
+                    <button class="pill" data-category="Other">Other</button>
+                </div>
+                <div class="product-grid" id="productGrid"></div>
+                <button class="add-product-btn" id="addProductBtn"><i class="fas fa-plus-circle"></i> ADD PRODUCT</button>
+            </div>
+            <div class="right-panel">
+                <h3><i class="fas fa-shopping-cart"></i> SHOPPING CART</h3>
+                <div class="cart-items" id="cartItemsContainer"></div>
+                <div class="cart-summary">
+                    <div class="summary-line"><span>Subtotal:</span> <strong id="subtotalVal">₱0.00</strong></div>
+                    <div class="summary-line"><span>Discount:</span> <strong id="discountVal">₱0.00</strong></div>
+                    <div class="summary-line"><span>Tax (0%):</span> <strong id="taxVal">₱0.00</strong></div>
+                    <div class="summary-line"><span>Total:</span> <strong id="totalVal">₱0.00</strong></div>
+                    <button class="checkout-btn" id="checkoutBtn"><i class="fas fa-credit-card"></i> CHECKOUT</button>
+                    <button class="icon-btn" style="width:100%; margin-top:8px;" id="clearCartBtn">Clear Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalContainer"></div>
+    <div id="toastContainer"></div>
+    <div id="receiptPrintArea" class="receipt-print-area" style="display:none;"></div>
+
+    <script>
+        (function() {
+            // --- Core data store ---
+            const STORAGE_PRODUCTS = 'wds_products';
+            const STORAGE_BARCODES = 'wds_barcodes';
+            const STORAGE_RECEIPTS = 'wds_receipts';
+            const STORAGE_RETURNS = 'wds_returns';
+            const STORAGE_SETTINGS = 'wds_settings';
+
+            function getData(key, fallback) {
+                try { return JSON.parse(localStorage.getItem(key)) || fallback; } catch { return fallback; }
+            }
+            function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+
+            let products = getData(STORAGE_PRODUCTS, []);
+            let barcodes = getData(STORAGE_BARCODES, []);
+            let receipts = getData(STORAGE_RECEIPTS, []);
+            let returns = getData(STORAGE_RETURNS, []);
+            let settings = getData(STORAGE_SETTINGS, { receiptCounter: 1, currentReceiptNumber: '' });
+
+            // Seed with few sample products if empty
+            if (products.length === 0) {
+                products = [
+                    { id: 'WC-000001', name: 'ASUS TUF Gaming Laptop', category: 'Electronics', price: 55000, cost: 45000, stock: 5, sku: 'WC001', barcode: '123456789012', image: '', brand: 'ASUS', supplier: 'TechDist' },
+                    { id: 'WC-000002', name: 'Logitech MX Master 3', category: 'Accessories', price: 4500, cost: 3200, stock: 12, sku: 'WC002', barcode: '123456789013', image: '', brand: 'Logitech', supplier: 'OfficePlus' },
+                    { id: 'WC-000003', name: 'USB-C Hub 7-in-1', category: 'Accessories', price: 1800, cost: 1100, stock: 20, sku: 'WC003', barcode: '123456789014', image: '', brand: 'Anker', supplier: 'TechDist' },
+                ];
+                setData(STORAGE_PRODUCTS, products);
+            }
+
+            // --- Helper Functions ---
+            function formatPeso(amount) { return '₱' + Number(amount).toFixed(2); }
+            function generateTransactionId() { return 'TXN-' + Math.random().toString(36).substring(2, 10).toUpperCase(); }
+            function generateReceiptNumber() {
+                const today = new Date();
+                const dateStr = today.toISOString().slice(0,10).replace(/-/g,'');
+                let counter = settings.receiptCounter || 1;
+                const receiptNum = `WDS-${dateStr}-${String(counter).padStart(6,'0')}`;
+                settings.receiptCounter = counter + 1;
+                settings.currentReceiptNumber = receiptNum;
+                setData(STORAGE_SETTINGS, settings);
+                return receiptNum;
+            }
+            function isValidImage(file) {
+                return file && file.type.startsWith('image/');
+            }
+            function showToast(msg, type='success') {
+                const container = document.getElementById('toastContainer');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.style.background = type === 'error' ? '#b91c1c' : '#0b1a2e';
+                toast.textContent = msg;
+                container.appendChild(toast);
+                setTimeout(() => toast.remove(), 2500);
+            }
+            function openModal(html) {
+                const container = document.getElementById('modalContainer');
+                container.innerHTML = `<div class="modal-backdrop" onclick="if(event.target===this) closeModal()">${html}</div>`;
+            }
+            window.closeModal = function() { document.getElementById('modalContainer').innerHTML = ''; };
+
+            // --- Loading screen transition ---
+            window.addEventListener('load', function() {
+                setTimeout(() => {
+                    document.getElementById('loaderScreen').classList.add('hidden');
+                    document.getElementById('appContainer').style.display = 'flex';
+                }, 800);
+            });
+
+            // --- Header date/time ---
+            function updateClock() {
+                const now = new Date();
+                document.getElementById('currentDate').textContent = now.toLocaleDateString();
+                document.getElementById('currentTime').textContent = now.toLocaleTimeString();
+            }
+            setInterval(updateClock, 1000);
+            updateClock();
+
+            // --- Render products grid ---
+            function renderProducts(filter='', category='All') {
+                const grid = document.getElementById('productGrid');
+                let filtered = products.filter(p => {
+                    const matchCat = category === 'All' || p.category === category;
+                    const matchSearch = !filter || p.name.toLowerCase().includes(filter.toLowerCase()) || p.id.toLowerCase().includes(filter.toLowerCase()) || p.sku.toLowerCase().includes(filter.toLowerCase()) || p.barcode.includes(filter);
+                    return matchCat && matchSearch;
+                });
+                if (filtered.length === 0) {
+                    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:30px;">NO PRODUCTS AVAILABLE<br><small>Add your first product to begin selling.</small></div>`;
+                    return;
+                }
+                grid.innerHTML = filtered.map(p => {
+                    const imageHtml = p.image ? `<img src="${p.image}" alt="${p.name}">` : `<div class="product-img-placeholder"><i class="fas fa-box"></i></div>`;
+                    const stockStatus = p.stock <= 0 ? 'OUT OF STOCK' : (p.stock < 5 ? 'LOW STOCK' : 'IN STOCK');
+                    return `<div class="product-card" onclick="quickAddToCart('${p.id}')">
+                        ${imageHtml}
+                        <div class="product-name">${p.name}</div>
+                        <div class="product-price">${formatPeso(p.price)}</div>
+                        <div class="stock-badge">${stockStatus}</div>
+                    </div>`;
+                }).join('');
+            }
+            window.quickAddToCart = function(productId) {
+                const prod = products.find(p => p.id === productId);
+                if (!prod) return showToast('PRODUCT NOT FOUND', 'error');
+                if (prod.stock <= 0) return showToast('INSUFFICIENT STOCK', 'error');
+                addToCart(productId);
+            };
+
+            // Cart state
+            let cart = [];
+            function addToCart(productId) {
+                const prod = products.find(p => p.id === productId);
+                if (!prod) return;
+                const existing = cart.find(item => item.id === productId);
+                if (existing) {
+                    if (existing.qty >= prod.stock) return showToast('INSUFFICIENT STOCK', 'error');
+                    existing.qty += 1;
+                } else {
+                    cart.push({ id: prod.id, name: prod.name, price: prod.price, sku: prod.sku, barcode: prod.barcode, qty: 1, stock: prod.stock });
+                }
+                renderCart();
+                showToast(`${prod.name} added to cart`);
+            }
+            window.increaseQty = function(productId) {
+                const item = cart.find(i => i.id === productId);
+                if (!item) return;
+                const prod = products.find(p => p.id === productId);
+                if (prod && item.qty >= prod.stock) return showToast('INSUFFICIENT STOCK', 'error');
+                item.qty += 1;
+                renderCart();
+            };
+            window.decreaseQty = function(productId) {
+                const item = cart.find(i => i.id === productId);
+                if (item && item.qty > 1) { item.qty -= 1; renderCart(); }
+                else if (item) { cart = cart.filter(i => i.id !== productId); renderCart(); }
+            };
+            window.removeCartItem = function(productId) { cart = cart.filter(i => i.id !== productId); renderCart(); };
+
+            function renderCart() {
+                const container = document.getElementById('cartItemsContainer');
+                if (cart.length === 0) {
+                    container.innerHTML = `<div style="text-align:center; padding:30px;">YOUR CART IS EMPTY<br><small>Scan or select a product to begin.</small></div>`;
+                    document.getElementById('subtotalVal').textContent = '₱0.00';
+                    document.getElementById('discountVal').textContent = '₱0.00';
+                    document.getElementById('taxVal').textContent = '₱0.00';
+                    document.getElementById('totalVal').textContent = '₱0.00';
+                    return;
+                }
+                container.innerHTML = cart.map(item => `
+                    <div class="cart-item">
+                        <div class="cart-item-info"><strong>${item.name}</strong><br><small>SKU:${item.sku}</small></div>
+                        <div class="qty-control">
+                            <button class="qty-btn" onclick="decreaseQty('${item.id}')">−</button>
+                            <span>${item.qty}</span>
+                            <button class="qty-btn" onclick="increaseQty('${item.id}')">+</button>
+                            <button class="qty-btn" onclick="removeCartItem('${item.id}')"><i class="fas fa-trash"></i></button>
+                        </div>
+                        <div>${formatPeso(item.price * item.qty)}</div>
+                    </div>
+                `).join('');
+                const subtotal = cart.reduce((sum, i) => sum + i.price*i.qty, 0);
+                const discount = 0;
+                const tax = 0;
+                const total = subtotal - discount + tax;
+                document.getElementById('subtotalVal').textContent = formatPeso(subtotal);
+                document.getElementById('discountVal').textContent = formatPeso(discount);
+                document.getElementById('taxVal').textContent = formatPeso(tax);
+                document.getElementById('totalVal').textContent = formatPeso(total);
+            }
+
+            // Search input
+            document.getElementById('searchInput').addEventListener('input', function(e) {
+                const activeCategory = document.querySelector('.pill.active')?.dataset.category || 'All';
+                renderProducts(e.target.value, activeCategory);
+            });
+
+            // Category pills
+            document.getElementById('categoryPills').addEventListener('click', function(e) {
+                if (e.target.classList.contains('pill')) {
+                    document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+                    e.target.classList.add('active');
+                    renderProducts(document.getElementById('searchInput').value, e.target.dataset.category);
+                }
+            });
+
+            // Add product modal
+            document.getElementById('addProductBtn').addEventListener('click', function() {
+                openModal(`
+                    <h3>ADD PRODUCT</h3>
+                    <div class="form-group"><label>Product Name *</label><input id="apName" placeholder="Name"></div>
+                    <div class="form-group"><label>Category</label><select id="apCategory"><option>Electronics</option><option>Accessories</option><option>Software</option><option>Other</option></select></div>
+                    <div class="form-group"><label>Price *</label><input id="apPrice" type="number" min="0"></div>
+                    <div class="form-group"><label>Cost</label><input id="apCost" type="number" min="0"></div>
+                    <div class="form-group"><label>Stock *</label><input id="apStock" type="number" min="0"></div>
+                    <div class="form-group"><label>SKU</label><input id="apSku"></div>
+                    <div class="form-group"><label>Barcode</label><input id="apBarcode"></div>
+                    <div class="form-group"><label>Brand</label><input id="apBrand"></div>
+                    <div class="form-group"><label>Supplier</label><input id="apSupplier"></div>
+                    <div class="form-group"><label>Image (optional)</label><input id="apImage" type="file" accept="image/*"></div>
+                    <button class="icon-btn" style="width:100%;" id="saveProductBtn">SAVE PRODUCT</button>
+                    <button class="icon-btn" style="width:100%; margin-top:8px;" onclick="closeModal()">CANCEL</button>
+                `);
+                document.getElementById('saveProductBtn').addEventListener('click', function() {
+                    const name = document.getElementById('apName').value.trim();
+                    const price = parseFloat(document.getElementById('apPrice').value);
+                    const stock = parseInt(document.getElementById('apStock').value);
+                    const sku = document.getElementById('apSku').value.trim();
+                    const barcode = document.getElementById('apBarcode').value.trim();
+                    if (!name || isNaN(price) || isNaN(stock) || price<0 || stock<0) return showToast('Invalid fields', 'error');
+                    if (products.some(p => p.sku && sku && p.sku === sku)) return showToast('DUPLICATE SKU', 'error');
+                    if (products.some(p => p.barcode && barcode && p.barcode === barcode)) return showToast('DUPLICATE BARCODE', 'error');
+                    const imageInput = document.getElementById('apImage');
+                    let imageData = '';
+                    if (imageInput.files && imageInput.files[0]) {
+                        if (!isValidImage(imageInput.files[0])) return showToast('Invalid image', 'error');
+                        const reader = new FileReader();
+                        reader.onload = function(ev) { imageData = ev.target.result; finalizeAdd(); };
+                        reader.readAsDataURL(imageInput.files[0]);
+                    } else { finalizeAdd(); }
+                    function finalizeAdd() {
+                        const newId = 'WC-' + String(products.length + 1).padStart(6, '0');
+                        products.push({ id: newId, name, category: document.getElementById('apCategory').value, price, cost: parseFloat(document.getElementById('apCost').value)||0, stock, sku, barcode, image: imageData, brand: document.getElementById('apBrand').value, supplier: document.getElementById('apSupplier').value });
+                        setData(STORAGE_PRODUCTS, products);
+                        renderProducts(document.getElementById('searchInput').value, document.querySelector('.pill.active')?.dataset.category || 'All');
+                        closeModal();
+                        showToast('Product added');
+                    }
+                });
+            });
+
+            // Clear cart
+            document.getElementById('clearCartBtn').addEventListener('click', function() {
+                if (cart.length === 0) return;
+                if (confirm('Clear cart?')) { cart = []; renderCart(); }
+            });
+
+            // Checkout
+            document.getElementById('checkoutBtn').addEventListener('click', function() {
+                if (cart.length === 0) return showToast('Cart is empty', 'error');
+                const total = cart.reduce((sum,i)=>sum+i.price*i.qty,0);
+                openModal(`
+                    <h3>PAYMENT</h3>
+                    <div class="summary-line">TOTAL: <strong>${formatPeso(total)}</strong></div>
+                    <div class="form-group"><label>Cash Received</label><input id="cashReceived" type="number" min="0"></div>
+                    <div class="form-group"><label>Payment Method</label><select id="payMethod"><option>Cash</option><option>Card</option><option>GCash</option><option>Other</option></select></div>
+                    <div class="summary-line">CHANGE: <strong id="changeDisplay">₱0.00</strong></div>
+                    <button class="checkout-btn" id="confirmPayBtn">CONFIRM PAYMENT</button>
+                    <button class="icon-btn" style="width:100%;" onclick="closeModal()">CANCEL</button>
+                `);
+                document.getElementById('cashReceived').addEventListener('input', function() {
+                    const cash = parseFloat(this.value) || 0;
+                    const change = cash - total;
+                    document.getElementById('changeDisplay').textContent = formatPeso(change >=0 ? change : 0);
+                });
+                document.getElementById('confirmPayBtn').addEventListener('click', function() {
+                    const cash = parseFloat(document.getElementById('cashReceived').value) || 0;
+                    if (cash < total) return showToast('INSUFFICIENT PAYMENT', 'error');
+                    const transactionId = generateTransactionId();
+                    const receiptNumber = generateReceiptNumber();
+                    const change = cash - total;
+                    const receipt = {
+                        receiptNumber, transactionId, date: new Date().toISOString().slice(0,10), time: new Date().toLocaleTimeString(),
+                        cashier: 'Employee', items: JSON.parse(JSON.stringify(cart)), subtotal: total, discount:0, tax:0, total,
+                        paymentMethod: document.getElementById('payMethod').value, cashReceived: cash, change
+                    };
+                    receipts.push(receipt);
+                    setData(STORAGE_RECEIPTS, receipts);
+                    // update stock
+                    cart.forEach(item => {
+                        const prod = products.find(p => p.id === item.id);
+                        if (prod) prod.stock = Math.max(0, prod.stock - item.qty);
+                    });
+                    setData(STORAGE_PRODUCTS, products);
+                    cart = [];
+                    renderCart();
+                    renderProducts(document.getElementById('searchInput').value, document.querySelector('.pill.active')?.dataset.category || 'All');
+                    closeModal();
+                    showPrintReceipt(receipt);
+                });
+            });
+
+            function showPrintReceipt(receipt) {
+                const area = document.getElementById('receiptPrintArea');
+                area.style.display = 'block';
+                area.innerHTML = `<div style="width:80mm; font-family: monospace; font-size:12px;">
+                    <h2>WEBCORE DIGITAL SHOP</h2><p>Created by Marc D. Namacpacan</p>
+                    <p>Receipt: ${receipt.receiptNumber}<br>TXN: ${receipt.transactionId}<br>${receipt.date} ${receipt.time}</p>
+                    <hr>${receipt.items.map(i=>`<div>${i.name} x${i.qty} - ${formatPeso(i.price*i.qty)}</div>`).join('')}<hr>
+                    <p>Total: ${formatPeso(receipt.total)}<br>Method: ${receipt.paymentMethod}<br>Cash: ${formatPeso(receipt.cashReceived)}<br>Change: ${formatPeso(receipt.change)}</p>
+                    <p>RETURN POLICY: Receipt required. Verify with database. No fake receipts accepted.</p>
+                </div>`;
+                setTimeout(() => { window.print(); area.style.display = 'none'; }, 100);
+            }
+
+            // Barcode generator (simple CODE128 visual using canvas)
+            window.generateBarcode = function(productId) {
+                const prod = products.find(p=>p.id===productId);
+                if(!prod) return showToast('Product not found','error');
+                const barcodeVal = 'WC' + Date.now().toString().slice(-8);
+                barcodes.push({ productId: prod.id, productName: prod.name, barcode: barcodeVal, format:'CODE128', createdAt: new Date().toISOString() });
+                setData(STORAGE_BARCODES, barcodes);
+                openModal(`<h3>BARCODE (CODE128)</h3><canvas id="barcodeCanvas" width="220" height="80"></canvas><p>${barcodeVal}</p><button onclick="closeModal()">Close</button>`);
+                // Draw simple code128-like bars (visual)
+                const canvas = document.getElementById('barcodeCanvas');
+                if(canvas) {
+                    const ctx = canvas.getContext('2d');
+                    ctx.fillStyle = 'white'; ctx.fillRect(0,0,220,80);
+                    ctx.fillStyle = 'black';
+                    for(let i=0; i<18; i++){ ctx.fillRect(i*10+5, 10, 4, 60); }
+                }
+            };
+
+            // Camera scanner simulation
+            document.getElementById('scanBarcodeBtn').addEventListener('click', function() {
+                openModal(`<h3>CAMERA SCANNER</h3><div style="text-align:center; padding:20px;"><i class="fas fa-camera fa-3x"></i><p>Scanning... (Camera simulation) Enter barcode manually or click below</p><input id="manualBarcode" placeholder="Enter barcode"><button class="icon-btn" id="simulateScan">Add</button></div><button onclick="closeModal()">CLOSE SCANNER</button>`);
+                document.getElementById('simulateScan').addEventListener('click', function() {
+                    const barcode = document.getElementById('manualBarcode').value.trim();
+                    const prod = products.find(p=>p.barcode === barcode);
+                    if(prod) { addToCart(prod.id); closeModal(); showToast('PRODUCT FOUND'); }
+                    else showToast('BARCODE NOT FOUND', 'error');
+                });
+            });
+
+            // USB scanner / Enter barcode
+            document.getElementById('usbScanBtn').addEventListener('click', function() {
+                const barcode = prompt('ENTER OR SCAN BARCODE');
+                if(barcode) {
+                    const prod = products.find(p=>p.barcode === barcode);
+                    if(prod) addToCart(prod.id); else showToast('BARCODE NOT FOUND','error');
+                }
+            });
+
+            // Calculator
+            document.getElementById('calcBtn').addEventListener('click', function() {
+                openModal(`<h3>CALCULATOR</h3><input id="calcDisplay" style="width:100%;padding:12px;" value="0"><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;">
+                    ${['7','8','9','/','4','5','6','*','1','2','3','-','0','.','=','+'].map(btn=>`<button class="qty-btn" style="padding:15px;" onclick="calcPress('${btn}')">${btn}</button>`).join('')}
+                </div><button onclick="closeModal()">Close</button>`);
+                window.calcExpression = '';
+            });
+            window.calcPress = function(val) {
+                const display = document.getElementById('calcDisplay');
+                if(val === '=') {
+                    try { display.value = Function(`"use strict";return (${display.value})`)(); } catch { display.value = 'Error'; }
+                } else if(val === 'C') { display.value = '0'; }
+                else { if(display.value === '0') display.value = ''; display.value += val; }
+            };
+
+            // Settings/Help/Data management
+            document.getElementById('settingsBtn').addEventListener('click', function() {
+                openModal(`<h3>DATA MANAGEMENT</h3>
+                    <button class="icon-btn" id="exportAllBtn">Export All Data</button>
+                    <button class="icon-btn" id="importAllBtn">Import All Data</button>
+                    <button class="icon-btn" id="exportProductsBtn">Export Products</button>
+                    <button class="icon-btn" id="exportBarcodesBtn">Export Barcodes</button>
+                    <button class="icon-btn" id="exportReceiptsBtn">Export Receipts</button>
+                    <input type="file" id="importFile" accept=".json" style="margin-top:10px;">
+                    <button onclick="closeModal()">Close</button>`);
+                document.getElementById('exportAllBtn').onclick = () => exportJSON({products,barcodes,receipts,returns}, 'webcore_all.json');
+                document.getElementById('exportProductsBtn').onclick = () => exportJSON({products}, 'products.json');
+                document.getElementById('exportBarcodesBtn').onclick = () => exportJSON({barcodes}, 'barcodes.json');
+                document.getElementById('exportReceiptsBtn').onclick = () => exportJSON({receipts}, 'receipts.json');
+                document.getElementById('importFile').onchange = (e) => {
+                    const file = e.target.files[0]; if(!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (ev) => {
+                        try { const data = JSON.parse(ev.target.result); if(data.products){ products = data.products; setData(STORAGE_PRODUCTS, products);} if(data.barcodes){barcodes=data.barcodes; setData(STORAGE_BARCODES,barcodes);} if(data.receipts){receipts=data.receipts; setData(STORAGE_RECEIPTS,receipts);} showToast('Imported'); renderProducts(); } catch { showToast('INVALID JSON DATA','error'); }
+                    };
+                    reader.readAsText(file);
+                };
+            });
+            function exportJSON(data, filename) {
+                const blob = new Blob([JSON.stringify(data)], {type:'application/json'});
+                const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+            }
+
+            document.getElementById('helpBtn').addEventListener('click', () => {
+                openModal(`<h3>SHORTCUTS</h3><p>F2 Search, F4 Scanner, F6 Calculator, F8 Payment, F9 Print, ESC Close</p><button onclick="closeModal()">Close</button>`);
+            });
+
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                if(e.key === 'F2') document.getElementById('searchInput').focus();
+                if(e.key === 'F4') document.getElementById('scanBarcodeBtn').click();
+                if(e.key === 'F6') document.getElementById('calcBtn').click();
+                if(e.key === 'F8') document.getElementById('checkoutBtn').click();
+                if(e.key === 'Escape') closeModal();
+            });
+
+            // Receipt verification & returns (simplified)
+            window.verifyReceipt = function() {
+                const num = prompt('Enter Receipt Number');
+                if(!num) return;
+                const receipt = receipts.find(r=>r.receiptNumber === num);
+                if(receipt) alert('✓ VALID RECEIPT\nTXN: '+receipt.transactionId+'\nTotal: '+formatPeso(receipt.total));
+                else alert('RECEIPT NOT FOUND');
+            };
+
+            // initial render
+            renderProducts();
+            renderCart();
+        })();
+    </script>
+</body>
+</html>

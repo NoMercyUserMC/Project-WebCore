@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebCore HTML Library</title>
+  <style>
+    :root { color-scheme: dark; --ink: #f4f1ff; --muted: #aaa3bd; --line: rgba(255,255,255,.12); --panel: rgba(20,18,29,.78); --cyan: #72faff; --pink: #ff91c8; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; color: var(--ink); background: #08070b; font-family: Georgia, "Times New Roman", serif; }
+    a { color: inherit; }
+    .page-shell { min-height: 100vh; overflow: hidden; }
+    .hero, .work, .library, .footer { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+    .hero { min-height: 56vh; display: grid; grid-template-columns: 1.2fr .8fr; align-items: center; gap: 32px; padding: 76px 0 54px; }
+    .eyebrow, .library-label, .card-type { color: var(--cyan); font: 700 11px/1.2 Arial, sans-serif; letter-spacing: .18em; text-transform: uppercase; }
+    .wordmark { display: inline-block; text-decoration: none; font: 700 14px/1 Arial, sans-serif; letter-spacing: .18em; }
+    h1 { max-width: 720px; margin: 22px 0 18px; font-size: clamp(48px, 8vw, 104px); line-height: .9; font-weight: 400; letter-spacing: -.04em; }
+    .hero-copy { max-width: 570px; color: var(--muted); font: 17px/1.6 Arial, sans-serif; }
+    .hero-art { min-height: 280px; position: relative; border: 1px solid var(--line); background: radial-gradient(circle at 50% 42%, rgba(114,250,255,.18), transparent 22%), linear-gradient(145deg, rgba(255,145,200,.13), transparent 55%); clip-path: polygon(50% 0, 100% 24%, 86% 100%, 12% 100%, 0 24%); }
+    .hero-art::after { content: "✦"; position: absolute; inset: 0; display: grid; place-items: center; color: var(--pink); font-size: 124px; text-shadow: 0 0 36px rgba(255,145,200,.7); }
+    .work { padding: 20px 0 72px; }
+    .section-head { display: flex; justify-content: space-between; align-items: end; gap: 24px; border-bottom: 1px solid var(--line); padding-bottom: 18px; }
+    .section-title { margin: 8px 0 0; font-size: clamp(28px, 4vw, 48px); font-weight: 400; }
+    .section-description { max-width: 360px; margin: 0; color: var(--muted); font: 14px/1.5 Arial, sans-serif; }
+    .preview-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; padding-top: 26px; }
+    .preview-card { min-width: 0; overflow: hidden; border: 1px solid var(--line); background: var(--panel); transition: border-color .2s, transform .2s; }
+    .preview-card:hover { border-color: var(--cyan); }
+    .preview { position: relative; height: 210px; overflow: hidden; background: #fff; }
+    .preview-frame { position: absolute; inset: 0; width: 200%; height: 200%; border: 0; transform: scale(.5); transform-origin: top left; opacity: 0; transition: opacity .5s; }
+    .preview-frame.loaded { opacity: 1; }
+    .preview-loader { position: absolute; inset: 0; display: grid; place-items: center; color: #222; font: 12px Arial, sans-serif; }
+    .preview-frame.loaded + .preview-loader { display: none; }
+    .card-body { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px; }
+    .card-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 20px; }
+    .card-link { flex: 0 0 auto; color: var(--cyan); font: 700 11px Arial, sans-serif; letter-spacing: .1em; text-decoration: none; text-transform: uppercase; }
+    .empty { padding: 48px 0; color: var(--muted); font: 15px Arial, sans-serif; }
+    .footer { padding: 28px 0 48px; color: var(--muted); font: 12px Arial, sans-serif; }
+    @media (max-width: 700px) { .hero { grid-template-columns: 1fr; min-height: auto; padding-top: 48px; } .hero-art { min-height: 170px; } .section-head { display: block; } .section-description { margin-top: 14px; } .hero, .work, .library, .footer { width: min(100% - 28px, 1180px); } }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero" aria-labelledby="pageTitle">
+      <div>
+        <a class="wordmark" href="/">WEBCORE / LIBRARY</a>
+        <p class="eyebrow">Creative HTML archive</p>
+        <h1 id="pageTitle">Choose a world<br>to open.</h1>
+        <p class="hero-copy">Browse every HTML experiment in this workspace. Each preview is live, and every card opens the original page in a new tab.</p>
+      </div>
+      <div id="heroArt" class="hero-art" aria-hidden="true"></div>
+    </section>
+    <section class="work" aria-labelledby="collectionTitle">
+      <div class="section-head">
+        <div><span class="library-label">01 / The collection</span><h2 class="section-title" id="collectionTitle">All experiments</h2></div>
+        <p class="section-description">The list is generated from the HTML files on the server, so new experiments appear automatically.</p>
+      </div>
+      <div id="previewGrid" class="preview-grid"><p class="empty">Loading the library...</p></div>
+    </section>
+    <footer class="footer">WEBCORE · A living collection of small web experiences.</footer>
+  </main>
+  <script>
+    function readableName(file) {
+      return file.split("/").pop().replace(/\.html?$/i, "").replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
+    }
+
+    function createPreviewCard(file) {
+      const card = document.createElement("article");
+      card.className = "preview-card";
+      const preview = document.createElement("div");
+      preview.className = "preview";
+      const frame = document.createElement("iframe");
+      frame.className = "preview-frame";
+      frame.src = `/${file}`;
+      frame.title = `Preview of ${readableName(file)}`;
+      frame.loading = "lazy";
+      frame.sandbox = "allow-scripts allow-same-origin allow-forms allow-modals";
+      frame.addEventListener("load", () => frame.classList.add("loaded"), { once: true });
+      const loader = document.createElement("span");
+      loader.className = "preview-loader";
+      loader.textContent = "Rendering preview...";
+      preview.append(frame, loader);
+      const body = document.createElement("div");
+      body.className = "card-body";
+      body.innerHTML = `<span class="card-name"></span><a class="card-link" target="_blank" rel="noopener">Open ↗</a>`;
+      body.querySelector(".card-name").textContent = readableName(file);
+      body.querySelector(".card-link").href = `/${file}`;
+      card.append(preview, body);
+      return card;
+    }
+
+    function load() {
+      const grid = document.getElementById("previewGrid");
+      fetch("/api/html-files")
+        .then((response) => response.ok ? response.json() : Promise.reject(new Error("Library request failed")))
+        .then((files) => {
+          grid.replaceChildren();
+          if (!files.length) { grid.innerHTML = '<p class="empty">No HTML experiments found.</p>'; return; }
+          files.forEach((file) => grid.append(createPreviewCard(file)));
+        })
+        .catch(() => { grid.innerHTML = '<p class="empty">The library could not be loaded. Check the server and refresh.</p>'; });
+    }
+
+    load();
+  </script>
+</body>
+</html>

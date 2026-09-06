@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcore Digital Shop - POS</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+    <style>
+        /* ================= CSS VARIABLES & RESET ================= */
+        :root {
+            --primary: #0f172a;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --bg: #f8fafc;
+            --text-main: #0f172a;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --white: #ffffff;
+            --radius: 8px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg); color: var(--text-main); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        
+        /* ================= LOADING SCREEN ================= */
+        #loading-screen {
+            position: fixed; inset: 0; background: var(--primary); color: var(--white);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 9999; transition: opacity 0.6s ease;
+        }
+        .loader-spinner { border: 4px solid rgba(255,255,255,0.1); border-left-color: var(--accent); border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; margin-bottom: 20px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ================= HEADER ================= */
+        header { background: var(--primary); color: var(--white); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: var(--shadow); }
+        .header-title h1 { font-size: 1.2rem; font-weight: 700; letter-spacing: 1px; }
+        .header-title p { font-size: 0.75rem; color: #94a3b8; }
+        .header-info { display: flex; gap: 20px; align-items: center; font-size: 0.9rem; }
+        .btn-icon { background: none; border: none; color: var(--white); font-size: 1.2rem; cursor: pointer; padding: 5px; transition: color 0.2s; }
+        .btn-icon:hover { color: var(--accent); }
+
+        /* ================= MAIN LAYOUT ================= */
+        #main-container { display: flex; flex: 1; overflow: hidden; }
+        
+        /* LEFT: Products */
+        #left-panel { flex: 7; display: flex; flex-direction: column; background: var(--bg); border-right: 1px solid var(--border); }
+        .toolbar { padding: 15px; background: var(--white); display: flex; gap: 10px; border-bottom: 1px solid var(--border); align-items: center;}
+        .search-wrapper { flex: 1; display: flex; position: relative; }
+        .search-wrapper input { width: 100%; padding: 10px 15px 10px 40px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 1rem; }
+        .search-wrapper i { position: absolute; left: 15px; top: 12px; color: var(--text-light); }
+        .btn { padding: 10px 15px; border: none; border-radius: var(--radius); cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--white); }
+        .btn-primary { background: var(--accent); } .btn-primary:hover { background: #2563eb; }
+        .btn-success { background: var(--success); } .btn-success:hover { background: #059669; }
+        .btn-danger { background: var(--danger); } .btn-danger:hover { background: #dc2626; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text-main); }
+        
+        #product-grid { flex: 1; padding: 15px; overflow-y: auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 15px; align-content: start; }
+        .product-card { background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); overflow: hidden; cursor: pointer; transition: transform 0.1s, box-shadow 0.1s; display: flex; flex-direction: column; }
+        .product-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent); }
+        .product-img-placeholder { height: 120px; background: #e2e8f0; display: flex; align-items: center; justify-content: center; color: var(--text-light); font-size: 2rem; }
+        .product-img { height: 120px; width: 100%; object-fit: cover; }
+        .product-info { padding: 10px; flex: 1; display: flex; flex-direction: column; }
+        .product-title { font-weight: 600; font-size: 0.9rem; margin-bottom: 5px; }
+        .product-sku { font-size: 0.75rem; color: var(--text-light); margin-bottom: 5px; }
+        .product-price { font-weight: 700; color: var(--accent); font-size: 1.1rem; margin-top: auto; }
+        .product-stock { font-size: 0.8rem; margin-top: 5px; }
+        .stock-good { color: var(--success); } .stock-low { color: var(--warning); } .stock-out { color: var(--danger); }
+
+        /* RIGHT: Cart */
+        #right-panel { flex: 3; min-width: 350px; display: flex; flex-direction: column; background: var(--white); }
+        .cart-header { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--secondary); color: white;}
+        #cart-items { flex: 1; overflow-y: auto; padding: 10px; }
+        .cart-item { display: flex; flex-direction: column; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px; }
+        .cart-item-top { display: flex; justify-content: space-between; font-weight: 600; margin-bottom: 5px; }
+        .cart-item-sku { font-size: 0.75rem; color: var(--text-light); }
+        .cart-item-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .qty-controls { display: flex; align-items: center; gap: 10px; }
+        .qty-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; width: 28px; height: 28px; cursor: pointer; }
+        .remove-btn { color: var(--danger); background: none; border: none; cursor: pointer; }
+        
+        .cart-totals { padding: 15px; background: var(--bg); border-top: 1px solid var(--border); }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 5px; font-size: 0.9rem; }
+        .total-row.grand-total { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin: 10px 0; border-top: 2px dashed var(--border); padding-top: 10px; }
+        .cart-actions { display: grid; grid-template-columns: 1fr 2fr; gap: 10px; margin-top: 10px; }
+        .cart-actions .btn { justify-content: center; padding: 15px; font-size: 1.1rem; }
+
+        /* ================= MODALS ================= */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 1000; backdrop-filter: blur(2px); }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--white); border-radius: var(--radius); width: 90%; max-width: 600px; max-height: 90vh; display: flex; flex-direction: column; box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1); }
+        .modal-header { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: var(--primary); color: white; border-radius: var(--radius) var(--radius) 0 0; }
+        .modal-body { padding: 20px; overflow-y: auto; }
+        .modal-footer { padding: 15px 20px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; background: var(--bg); border-radius: 0 0 var(--radius) var(--radius); }
+        
+        /* Forms */
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .form-group { display: flex; flex-direction: column; gap: 5px; }
+        .form-group.full { grid-column: span 2; }
+        label { font-size: 0.85rem; font-weight: 600; color: var(--text-main); }
+        input, select, textarea { padding: 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 1rem; }
+        input:focus { outline: none; border-color: var(--accent); }
+
+        /* Calculator Specific */
+        .calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+        .calc-display { grid-column: span 4; background: var(--primary); color: var(--white); text-align: right; padding: 15px; font-size: 2rem; border-radius: var(--radius); margin-bottom: 10px; overflow: hidden; }
+        .calc-btn { padding: 15px; font-size: 1.2rem; border: none; border-radius: var(--radius); cursor: pointer; background: var(--bg); font-weight: 600; }
+        .calc-btn:hover { background: #e2e8f0; }
+        .calc-op { background: var(--secondary); color: white; }
+        .calc-eq { background: var(--accent); color: white; grid-column: span 2; }
+
+        /* Payment Specific */
+        .payment-display { text-align: center; font-size: 2rem; font-weight: bold; margin-bottom: 20px; color: var(--primary); }
+        .change-display { text-align: center; font-size: 1.5rem; color: var(--success); margin-top: 10px; font-weight: bold; }
+
+        /* Toast Notifications */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 2000; }
+        .toast { background: var(--secondary); color: white; padding: 12px 20px; border-radius: var(--radius); box-shadow: var(--shadow); display: flex; align-items: center; gap: 10px; animation: slideIn 0.3s ease; }
+        .toast.error { background: var(--danger); }
+        .toast.success { background: var(--success); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* Empty States */
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--text-light); }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; opacity: 0.5; }
+
+        /* Tables for Data Management & History */
+        table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg); font-weight: 600; position: sticky; top: 0; }
+        tr:hover { background: #f1f5f9; }
+
+        /* ================= PRINT STYLES ================= */
+        @media print {
+            body > *:not(#print-area) { display: none !important; }
+            #print-area { display: block !important; position: absolute; top: 0; left: 0; width: 100%; background: white; color: black; font-family: monospace; }
+            .receipt-container { width: 100%; max-width: 80mm; margin: 0 auto; padding: 0; }
+            .receipt-header { text-align: center; margin-bottom: 10px; }
+            .receipt-header h2 { font-size: 14pt; margin: 0; }
+            .receipt-header p { font-size: 9pt; margin: 2px 0; }
+            .receipt-divider { border-bottom: 1px dashed black; margin: 5px 0; }
+            .receipt-item { display: flex; justify-content: space-between; font-size: 10pt; margin: 3px 0;}
+            .receipt-item-name { width: 100%; display: block; font-size: 10pt;}
+            .receipt-totals { margin-top: 10px; font-size: 10pt; }
+            .receipt-totals .bold { font-weight: bold; font-size: 12pt;}
+            .receipt-footer { text-align: center; font-size: 8pt; margin-top: 15px; }
+            .barcode-print { text-align: center; margin-top: 10px; }
+            .barcode-print img { max-width: 100%; height: auto; }
+        }
+        #print-area { display: none; } /* Hidden on screen */
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">
+        <div class="loader-spinner"></div>
+        <h2 style="letter-spacing: 2px;">WEBCORE DIGITAL SHOP</h2>
+        <p>POINT OF SALE SYSTEM</p>
+        <p style="margin-top: 20px; font-size: 0.8rem; opacity: 0.7;">Created by: Marc D. Namacpacan</p>
+    </div>
+
+    <header>
+        <div class="header-title">
+            <h1>WEBCORE DIGITAL SHOP</h1>
+            <p>Created by: Marc D. Namacpacan</p>
+        </div>
+        <div class="header-info">
+            <span id="clock"><i class="far fa-clock"></i> 00:00:00</span>
+            <span class="role-badge"><i class="fas fa-user-circle"></i> <span id="current-user">ADMIN</span></span>
+            <div style="border-left: 1px solid rgba(255,255,255,0.2); height: 20px; margin: 0 10px;"></div>
+            <button class="btn-icon" onclick="openModal('calculator-modal')" title="Calculator (F6)"><i class="fas fa-calculator"></i></button>
+            <button class="btn-icon" onclick="openModal('scanner-modal')" title="Camera Scanner (F4)"><i class="fas fa-camera"></i></button>
+            <button class="btn-icon admin-only" onclick="openModal('inventory-modal')" title="Inventory & Database"><i class="fas fa-database"></i></button>
+            <button class="btn-icon admin-only" onclick="openModal('history-modal')" title="Sales History"><i class="fas fa-history"></i></button>
+            <button class="btn-icon" onclick="openModal('help-modal')" title="Shortcuts & Help"><i class="fas fa-question-circle"></i></button>
+        </div>
+    </header>
+
+    <div id="main-container">
+        
+        <div id="left-panel">
+            <div class="toolbar">
+                <div class="search-wrapper">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="search-input" placeholder="Search product, SKU, Barcode (F2)..." autocomplete="off">
+                </div>
+                <button class="btn btn-outline" onclick="openModal('barcode-modal')"><i class="fas fa-barcode"></i> Create Barcode</button>
+                <button class="btn btn-outline admin-only" onclick="openModal('verify-modal')"><i class="fas fa-check-circle"></i> Verify Receipt</button>
+                <button class="btn btn-primary admin-only" onclick="openModal('product-modal')"><i class="fas fa-plus"></i> Add Product</button>
+            </div>
+            <div id="product-grid">
+                </div>
+        </div>
+
+        <div id="right-panel">
+            <div class="cart-header">
+                <h3><i class="fas fa-shopping-cart"></i> Shopping Cart</h3>
+                <span id="cart-count" style="background: var(--accent); padding: 2px 8px; border-radius: 12px; font-size: 0.8rem;">0 Items</span>
+            </div>
+            
+            <div id="cart-items">
+                <div class="empty-state" id="cart-empty-state">
+                    <i class="fas fa-box-open"></i>
+                    <p>YOUR CART IS EMPTY</p>
+                    <p style="font-size: 0.8rem; margin-top:5px;">Scan or select a product to begin.</p>
+                </div>
+            </div>
+
+            <div class="cart-totals">
+                <div class="total-row"><span>Subtotal:</span> <span id="cart-subtotal">₱0.00</span></div>
+                <div class="total-row"><span>Discount:</span> <span id="cart-discount">₱0.00</span></div>
+                <div class="total-row"><span>Tax (0%):</span> <span id="cart-tax">₱0.00</span></div>
+                <div class="total-row grand-total"><span>TOTAL:</span> <span id="cart-total">₱0.00</span></div>
+                
+                <div class="cart-actions">
+                    <button class="btn btn-danger" onclick="clearCartConfirm()">Clear</button>
+                    <button class="btn btn-success" onclick="openPayment()" id="btn-checkout">Checkout (F8)</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Add / Edit Product</h3>
+                <button class="btn-icon" onclick="closeModal('product-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="product-form" class="form-grid">
+                    <input type="hidden" id="p-id">
+                    <div class="form-group full">
+                        <label>Product Name *</label>
+                        <input type="text" id="p-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>SKU *</label>
+                        <input type="text" id="p-sku" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Barcode</label>
+                        <input type="text" id="p-barcode">
+                    </div>
+                    <div class="form-group">
+                        <label>Category *</label>
+                        <input type="text" id="p-category" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Stock *</label>
+                        <input type="number" id="p-stock" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Cost (₱) *</label>
+                        <input type="number" id="p-cost" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Selling Price (₱) *</label>
+                        <input type="number" id="p-price" min="0" step="0.01" required>
+                    </div>
+                    <div class="form-group full">
+                        <label>Optional Image (Base64 / URL)</label>
+                        <input type="text" id="p-image" placeholder="Leave blank for text-only">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('product-modal')">CANCEL</button>
+                <button class="btn btn-primary" onclick="saveProduct()">SAVE PRODUCT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="payment-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Payment</h3>
+                <button class="btn-icon" onclick="closeModal('payment-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="payment-display">TOTAL: <span id="pay-total-display">₱0.00</span></div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select id="pay-method">
+                        <option value="Cash">Cash</option>
+                        <option value="Card">Card</option>
+                        <option value="GCash">GCash</option>
+                    </select>
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Amount Received (₱)</label>
+                    <input type="number" id="pay-amount" min="0" step="0.01" style="font-size: 1.5rem; text-align: right;" oninput="calculateChange()">
+                </div>
+                <div class="change-display">CHANGE: <span id="pay-change-display">₱0.00</span></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('payment-modal')">CANCEL</button>
+                <button class="btn btn-success" id="btn-confirm-payment" onclick="processPayment()">CONFIRM PAYMENT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="calculator-modal">
+        <div class="modal" style="max-width: 300px;">
+            <div class="modal-header">
+                <h3>Calculator</h3>
+                <button class="btn-icon" onclick="closeModal('calculator-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body calc-grid">
+                <div class="calc-display" id="calc-display">0</div>
+                <button class="calc-btn calc-op" onclick="calcAction('clear')">C</button>
+                <button class="calc-btn calc-op" onclick="calcAction('backspace')">⌫</button>
+                <button class="calc-btn calc-op" onclick="calcAction('percent')">%</button>
+                <button class="calc-btn calc-op" onclick="calcAction('divide')">÷</button>
+                
+                <button class="calc-btn" onclick="calcInput('7')">7</button>
+                <button class="calc-btn" onclick="calcInput('8')">8</button>
+                <button class="calc-btn" onclick="calcInput('9')">9</button>
+                <button class="calc-btn calc-op" onclick="calcAction('multiply')">×</button>
+                
+                <button class="calc-btn" onclick="calcInput('4')">4</button>
+                <button class="calc-btn" onclick="calcInput('5')">5</button>
+                <button class="calc-btn" onclick="calcInput('6')">6</button>
+                <button class="calc-btn calc-op" onclick="calcAction('subtract')">-</button>
+                
+                <button class="calc-btn" onclick="calcInput('1')">1</button>
+                <button class="calc-btn" onclick="calcInput('2')">2</button>
+                <button class="calc-btn" onclick="calcInput('3')">3</button>
+                <button class="calc-btn calc-op" onclick="calcAction('add')">+</button>
+                
+                <button class="calc-btn" onclick="calcInput('0')">0</button>
+                <button class="calc-btn" onclick="calcInput('.')">.</button>
+                <button class="calc-btn calc-eq" onclick="calcAction('equals')">=</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="barcode-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Create Barcode</h3>
+                <button class="btn-icon" onclick="closeModal('barcode-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Select Product</label>
+                    <select id="bg-product-select" onchange="previewBarcode()"></select>
+                </div>
+                <div class="form-group" style="margin-top:10px;">
+                    <label>Custom Barcode Value (Alphanumeric, optional)</label>
+                    <input type="text" id="bg-custom-val" placeholder="Auto-generates if empty" oninput="previewBarcode()">
+                </div>
+                <div style="text-align: center; margin-top: 20px; padding: 20px; border: 1px solid var(--border); background: var(--bg);">
+                    <svg id="barcode-preview"></svg>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('barcode-modal')">CLOSE</button>
+                <button class="btn btn-primary" onclick="saveGeneratedBarcode()">SAVE & PRINT</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="scanner-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Camera Barcode Scanner</h3>
+                <button class="btn-icon" onclick="stopScanner()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div id="qr-reader" style="width: 100%; min-height: 300px; background: black;"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="stopScanner()">CLOSE SCANNER</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="verify-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Verify Receipt / Return</h3>
+                <button class="btn-icon" onclick="closeModal('verify-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="search-wrapper" style="margin-bottom: 20px;">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="verify-receipt-input" placeholder="Enter Receipt Number (WDS-...)" autocomplete="off">
+                </div>
+                <button class="btn btn-primary" style="width:100%; justify-content:center;" onclick="verifyReceipt()">VERIFY</button>
+                <div id="verify-results" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="inventory-modal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>Inventory & Data Management</h3>
+                <button class="btn-icon" onclick="closeModal('inventory-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-outline" onclick="exportData('products')"><i class="fas fa-download"></i> Export Products</button>
+                    <button class="btn btn-outline" onclick="exportData('receipts')"><i class="fas fa-download"></i> Export Receipts</button>
+                    <button class="btn btn-outline" onclick="document.getElementById('import-file').click()"><i class="fas fa-upload"></i> Import JSON Backup</button>
+                    <input type="file" id="import-file" style="display:none" accept=".json" onchange="importData(event)">
+                </div>
+                <div style="max-height: 400px; overflow-y: auto;">
+                    <table id="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>SKU</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="history-modal">
+        <div class="modal" style="max-width: 900px;">
+            <div class="modal-header">
+                <h3>Sales History</h3>
+                <button class="btn-icon" onclick="closeModal('history-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body" style="max-height: 500px; overflow-y: auto;">
+                <table id="history-table">
+                    <thead>
+                        <tr>
+                            <th>Date/Time</th>
+                            <th>Receipt No.</th>
+                            <th>Txn ID</th>
+                            <th>Total</th>
+                            <th>Method</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="help-modal">
+        <div class="modal" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3>Keyboard Shortcuts</h3>
+                <button class="btn-icon" onclick="closeModal('help-modal')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <ul style="list-style: none; line-height: 2;">
+                    <li><strong>F2</strong> — Product Search</li>
+                    <li><strong>F4</strong> — Barcode Scanner (Camera)</li>
+                    <li><strong>F6</strong> — Calculator</li>
+                    <li><strong>F8</strong> — Payment / Checkout</li>
+                    <li><strong>F9</strong> — Print Last Receipt</li>
+                    <li><strong>ESC</strong> — Close Modal</li>
+                    <li><strong>ENTER</strong> — Confirm</li>
+                </ul>
+                <div class="receipt-divider" style="margin:15px 0;"></div>
+                <p style="font-size: 0.8rem; text-align:center;">USB Barcode scanners acting as keyboards are supported automatically. Just scan anytime on the main screen!</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <div id="print-area">
+        <div class="receipt-container" id="receipt-print-content">
+            </div>
+    </div>
+
+    <script>
+        /* --- 7 & 31. LOCAL DATABASE (Browser Storage) --- */
+        const DB_KEY = 'WDS_POS_DATA';
+        let db = {
+            products: [],
+            barcodes: [],
+            receipts: [],
+            settings: { shopName: "WEBCORE DIGITAL SHOP", creator: "Marc D. Namacpacan" }
+        };
+
+        // Initialize state
+        let cart = [];
+        let html5QrcodeScanner = null;
+        let lastPrintedReceipt = null;
+
+        // Load Data
+        function loadDB() {
+            try {
+                const stored = localStorage.getItem(DB_KEY);
+                if (stored) {
+                    const parsed = JSON.parse(stored);
+                    db = { ...db, ...parsed };
+                }
+            } catch(e) {
+                showToast("INVALID JSON DATA in local storage. Resetting.", "error");
+            }
+        }
+        function saveDB() {
+            localStorage.setItem(DB_KEY, JSON.stringify(db));
+        }
+
+        /* --- 1. BOOTSTRAP / LOADING --- */
+        window.onload = () => {
+            loadDB();
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Populate UI
+            renderProducts();
+            renderCart();
+            updateInventoryTable();
+            updateHistoryTable();
+
+            // Simulate loading
+            setTimeout(() => {
+                const loader = document.getElementById('loading-screen');
+                loader.style.opacity = '0';
+                setTimeout(() => loader.style.display = 'none', 600);
+            }, 800);
+        };
+
+        /* --- UI HELPERS --- */
+        const formatMoney = (amount) => '₱' + parseFloat(amount).toFixed(2);
+        
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('clock').innerHTML = `<i class="far fa-clock"></i> ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-circle' : 'fa-check-circle'}"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
+        }
+
+        function openModal(id) { document.getElementById(id).classList.add('active'); if(id==='barcode-modal') populateBarcodeSelect(); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Keyboard Shortcuts
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
+                stopScanner();
+            }
+            if(e.key === 'F2') { e.preventDefault(); document.getElementById('search-input').focus(); }
+            if(e.key === 'F4') { e.preventDefault(); openModal('scanner-modal'); startScanner(); }
+            if(e.key === 'F6') { e.preventDefault(); openModal('calculator-modal'); }
+            if(e.key === 'F8') { e.preventDefault(); if(cart.length>0) openPayment(); }
+            if(e.key === 'F9') { e.preventDefault(); if(lastPrintedReceipt) printReceiptDiv(lastPrintedReceipt); }
+        });
+
+        /* --- 4, 5. PRODUCT SYSTEM --- */
+        function renderProducts(query = "") {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            const q = query.toLowerCase();
+            const filtered = db.products.filter(p => 
+                p.name.toLowerCase().includes(q) || 
+                p.sku.toLowerCase().includes(q) || 
+                (p.barcode && p.barcode.toLowerCase().includes(q))
+            );
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="empty-state" style="grid-column: 1/-1;"><i class="fas fa-box"></i><p>NO PRODUCTS AVAILABLE OR FOUND</p></div>`;
+                return;
+            }
+
+            filtered.forEach(p => {
+                const stockClass = p.stock > 10 ? 'stock-good' : (p.stock > 0 ? 'stock-low' : 'stock-out');
+                const stockText = p.stock > 0 ? `${p.stock} in stock` : 'OUT OF STOCK';
+                const imgHtml = p.image ? `<img src="${p.image}" class="product-img">` : `<div class="product-img-placeholder"><i class="fas fa-image"></i></div>`;
+                
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.onclick = () => addToCart(p.sku);
+                card.innerHTML = `
+                    ${imgHtml}
+                    <div class="product-info">
+                        <div class="product-sku">${p.sku} | ${p.category}</div>
+                        <div class="product-title">${p.name}</div>
+                        <div class="product-stock ${stockClass}">${stockText}</div>
+                        <div class="product-price">${formatMoney(p.price)}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        document.getElementById('search-input').addEventListener('input', (e) => renderProducts(e.target.value));
+
+        function saveProduct() {
+            const idInput = document.getElementById('p-id').value;
+            const sku = document.getElementById('p-sku').value.trim();
+            const barcode = document.getElementById('p-barcode').value.trim();
+            const name = document.getElementById('p-name').value.trim();
+            const stock = parseInt(document.getElementById('p-stock').value);
+            const price = parseFloat(document.getElementById('p-price').value);
+            
+            if(!sku || !name || isNaN(stock) || isNaN(price) || price < 0 || stock < 0) {
+                showToast("Please fill all required fields correctly. No negative values.", "error"); return;
+            }
+
+            // Check duplicates
+            const isDupSKU = db.products.find(p => p.sku === sku && p.id !== idInput);
+            if(isDupSKU) { showToast("DUPLICATE PRODUCT SKU", "error"); return; }
+            if(barcode) {
+                const isDupBar = db.products.find(p => p.barcode === barcode && p.id !== idInput);
+                if(isDupBar) { showToast("DUPLICATE BARCODE", "error"); return; }
+            }
+
+            const product = {
+                id: idInput || 'PROD-' + Date.now(),
+                sku, barcode, name,
+                category: document.getElementById('p-category').value.trim(),
+                stock, price,
+                cost: parseFloat(document.getElementById('p-cost').value) || 0,
+                image: document.getElementById('p-image').value.trim()
+            };
+
+            if(idInput) {
+                const idx = db.products.findIndex(p => p.id === idInput);
+                if(idx > -1) db.products[idx] = product;
+            } else {
+                db.products.push(product);
+            }
+
+            saveDB();
+            renderProducts();
+            updateInventoryTable();
+            closeModal('product-modal');
+            document.getElementById('product-form').reset();
+            document.getElementById('p-id').value = '';
+            showToast("Product saved successfully.");
+        }
+
+        function editProduct(sku) {
+            const p = db.products.find(x => x.sku === sku);
+            if(!p) return;
+            document.getElementById('p-id').value = p.id;
+            document.getElementById('p-sku').value = p.sku;
+            document.getElementById('p-barcode').value = p.barcode || '';
+            document.getElementById('p-name').value = p.name;
+            document.getElementById('p-category').value = p.category;
+            document.getElementById('p-stock').value = p.stock;
+            document.getElementById('p-cost').value = p.cost;
+            document.getElementById('p-price').value = p.price;
+            document.getElementById('p-image').value = p.image || '';
+            openModal('product-modal');
+        }
+
+        /* --- 9, 10. CART SYSTEM --- */
+        function addToCart(identifier) {
+            // Identifier can be SKU or Barcode
+            const p = db.products.find(x => x.sku === identifier || x.barcode === identifier);
+            if(!p) { showToast("PRODUCT NOT FOUND", "error"); return; }
+            if(p.stock <= 0) { showToast("INSUFFICIENT STOCK", "error"); return; }
+
+            const existing = cart.find(item => item.sku === p.sku);
+            if(existing) {
+                if(existing.qty >= p.stock) { showToast("Cannot exceed available stock.", "error"); return; }
+                existing.qty++;
+            } else {
+                cart.push({ ...p, qty: 1 });
+            }
+            renderCart();
+        }
+
+        function updateCartQty(sku, delta) {
+            const item = cart.find(x => x.sku === sku);
+            if(!item) return;
+            const p = db.products.find(x => x.sku === sku);
+            
+            item.qty += delta;
+            if(item.qty > p.stock) { item.qty = p.stock; showToast("Max stock reached.", "error"); }
+            if(item.qty <= 0) cart = cart.filter(x => x.sku !== sku);
+            renderCart();
+        }
+
+        function removeFromCart(sku) {
+            cart = cart.filter(x => x.sku !== sku);
+            renderCart();
+        }
+
+        function clearCartConfirm() {
+            if(cart.length === 0) return;
+            if(confirm("Are you sure you want to clear the cart?")) {
+                cart = []; renderCart();
+            }
+        }
+
+        function getCartTotals() {
+            let sub = 0;
+            cart.forEach(item => sub += item.price * item.qty);
+            return { subtotal: sub, discount: 0, tax: 0, total: sub };
+        }
+
+        function renderCart() {
+            const container = document.getElementById('cart-items');
+            const countBadge = document.getElementById('cart-count');
+            
+            if(cart.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-box-open"></i><p>YOUR CART IS EMPTY</p><p style="font-size:0.8rem;">Scan or select a product to begin.</p></div>`;
+                document.getElementById('cart-subtotal').innerText = formatMoney(0);
+                document.getElementById('cart-total').innerText = formatMoney(0);
+                countBadge.innerText = '0 Items';
+                return;
+            }
+
+            container.innerHTML = '';
+            let itemCount = 0;
+            cart.forEach(item => {
+                itemCount += item.qty;
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div class="cart-item-top">
+                        <span>${item.name}</span>
+                        <span>${formatMoney(item.price * item.qty)}</span>
+                    </div>
+                    <div class="cart-item-sku">SKU: ${item.sku} | @ ${formatMoney(item.price)}</div>
+                    <div class="cart-item-controls">
+                        <div class="qty-controls">
+                            <button class="qty-btn" onclick="updateCartQty('${item.sku}', -1)"><i class="fas fa-minus"></i></button>
+                            <span style="font-weight:bold; min-width:20px; text-align:center;">${item.qty}</span>
+                            <button class="qty-btn" onclick="updateCartQty('${item.sku}', 1)"><i class="fas fa-plus"></i></button>
+                        </div>
+                        <button class="remove-btn" onclick="removeFromCart('${item.sku}')"><i class="fas fa-trash"></i></button>
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+
+            const totals = getCartTotals();
+            document.getElementById('cart-subtotal').innerText = formatMoney(totals.subtotal);
+            document.getElementById('cart-total').innerText = formatMoney(totals.total);
+            countBadge.innerText = `${itemCount} Items`;
+        }
+
+        /* --- 16, 17, 18, 19. PAYMENT & CHECKOUT --- */
+        function openPayment() {
+            if(cart.length === 0) return;
+            const totals = getCartTotals();
+            document.getElementById('pay-total-display').innerText = formatMoney(totals.total);
+            document.getElementById('pay-amount').value = '';
+            document.getElementById('pay-change-display').innerText = formatMoney(0);
+            openModal('payment-modal');
+            setTimeout(() => document.getElementById('pay-amount').focus(), 100);
+        }
+
+        function calculateChange() {
+            const totals = getCartTotals();
+            const received = parseFloat(document.getElementById('pay-amount').value) || 0;
+            const change = received - totals.total;
+            const display = document.getElementById('pay-change-display');
+            if(change < 0) { display.style.color = 'var(--danger)'; display.innerText = "INSUFFICIENT"; }
+            else { display.style.color = 'var(--success)'; display.innerText = formatMoney(change); }
+        }
+
+        function processPayment() {
+            const totals = getCartTotals();
+            const received = parseFloat(document.getElementById('pay-amount').value) || 0;
+            const method = document.getElementById('pay-method').value;
+
+            if(received < totals.total && method === 'Cash') {
+                showToast("INSUFFICIENT PAYMENT", "error"); return;
+            }
+
+            const change = Math.max(0, received - totals.total);
+            
+            // Create Transaction
+            const dateStr = new Date().toISOString().split('T')[0];
+            const timeStr = new Date().toLocaleTimeString();
+            const rxNum = `WDS-${dateStr.replace(/-/g,'')}-${String(db.receipts.length+1).padStart(6,'0')}`;
+            const txId = 'TXN-' + Math.random().toString(16).substr(2, 8).toUpperCase();
+
+            const receipt = {
+                receiptNumber: rxNum,
+                transactionId: txId,
+                date: dateStr,
+                time: timeStr,
+                cashier: document.getElementById('current-user').innerText,
+                items: JSON.parse(JSON.stringify(cart)), // deep copy
+                subtotal: totals.subtotal,
+                discount: totals.discount,
+                tax: totals.tax,
+                total: totals.total,
+                paymentMethod: method,
+                cashReceived: received,
+                change: change,
+                status: 'VALID'
+            };
+
+            // Deduct Inventory
+            cart.forEach(item => {
+                const dbProd = db.products.find(p => p.sku === item.sku);
+                if(dbProd) dbProd.stock -= item.qty;
+            });
+
+            db.receipts.push(receipt);
+            saveDB();
+
+            // Reset UI
+            cart = [];
+            renderCart();
+            renderProducts();
+            updateInventoryTable();
+            updateHistoryTable();
+            closeModal('payment-modal');
+            showToast("Payment Successful!", "success");
+
+            // Print
+            printReceiptDiv(receipt);
+        }
+
+        /* --- 26. RECEIPT PRINTING --- */
+        function printReceiptDiv(receipt) {
+            lastPrintedReceipt = receipt;
+            let itemsHtml = '';
+            receipt.items.forEach(item => {
+                itemsHtml += `
+                    <span class="receipt-item-name">${item.name}</span>
+                    <div class="receipt-item">
+                        <span>${item.qty} x ${formatMoney(item.price)}</span>
+                        <span>${formatMoney(item.price * item.qty)}</span>
+                    </div>
+                `;
+            });
+
+            const html = `
+                <div class="receipt-header">
+                    <h2>WEBCORE DIGITAL SHOP</h2>
+                    <p>Created by: Marc D. Namacpacan</p>
+                    <p>Receipt: ${receipt.receiptNumber}</p>
+                    <p>Txn: ${receipt.transactionId}</p>
+                    <p>${receipt.date} ${receipt.time} | Cashier: ${receipt.cashier}</p>
+                </div>
+                <div class="receipt-divider"></div>
+                ${itemsHtml}
+                <div class="receipt-divider"></div>
+                <div class="receipt-totals">
+                    <div class="receipt-item"><span>Subtotal</span><span>${formatMoney(receipt.subtotal)}</span></div>
+                    <div class="receipt-item bold"><span>TOTAL</span><span>${formatMoney(receipt.total)}</span></div>
+                    <div class="receipt-item"><span>Cash Received</span><span>${formatMoney(receipt.cashReceived)}</span></div>
+                    <div class="receipt-item"><span>Change</span><span>${formatMoney(receipt.change)}</span></div>
+                    <div class="receipt-item"><span>Method</span><span>${receipt.paymentMethod}</span></div>
+                </div>
+                <div class="receipt-divider"></div>
+                <div class="barcode-print">
+                    <svg id="receipt-barcode"></svg>
+                </div>
+                <div class="receipt-footer">
+                    <p><strong>RETURN POLICY</strong></p>
+                    <p>Valid receipt required for returns.<br>Subject to verification.</p>
+                    <p>Thank you for shopping!</p>
+                </div>
+            `;
+            document.getElementById('receipt-print-content').innerHTML = html;
+            
+            // Generate barcode for receipt
+            JsBarcode("#receipt-barcode", receipt.receiptNumber, { format: "CODE128", width: 1.5, height: 40, displayValue: false });
+
+            window.print();
+        }
+
+        /* --- 22, 23. VERIFY & RETURN SYSTEM --- */
+        function verifyReceipt() {
+            const input = document.getElementById('verify-receipt-input').value.trim();
+            const resDiv = document.getElementById('verify-results');
+            if(!db.receipts) { resDiv.innerHTML = `<div class="toast error">RECEIPT DATABASE NOT FOUND</div>`; return; }
+            
+            const rx = db.receipts.find(r => r.receiptNumber === input);
+            if(!rx) { resDiv.innerHTML = `<div class="toast error">RECEIPT NOT FOUND</div>`; return; }
+
+            let itemsHtml = '';
+            rx.items.forEach((item, idx) => {
+                itemsHtml += `
+                    <div style="display:flex; justify-content:space-between; margin: 5px 0; padding-bottom:5px; border-bottom:1px solid #eee;">
+                        <div>${item.name} (Qty: ${item.qty})<br><small>${formatMoney(item.price)}</small></div>
+                        <button class="btn btn-danger" style="padding: 5px 10px;" onclick="processReturn('${rx.receiptNumber}', ${idx})">Return 1</button>
+                    </div>
+                `;
+            });
+
+            resDiv.innerHTML = `
+                <div style="background:var(--bg); padding: 15px; border-radius: var(--radius);">
+                    <h4 style="color:var(--success); margin-bottom:10px;">✓ VALID RECEIPT</h4>
+                    <p><strong>Txn ID:</strong> ${rx.transactionId}</p>
+                    <p><strong>Date:</strong> ${rx.date} ${rx.time}</p>
+                    <p><strong>Total:</strong> ${formatMoney(rx.total)} (${rx.paymentMethod})</p>
+                    <p><strong>Status:</strong> ${rx.status}</p>
+                    <div style="margin-top:15px;">
+                        <strong>Products:</strong>
+                        ${itemsHtml}
+                    </div>
+                </div>
+            `;
+        }
+
+        function processReturn(rxNum, itemIdx) {
+            const rx = db.receipts.find(r => r.receiptNumber === rxNum);
+            if(!rx) return;
+            const item = rx.items[itemIdx];
+            if(item.qty <= 0) { showToast("Already fully returned.", "error"); return; }
+            
+            if(confirm(`Return 1x ${item.name}? This will refund ${formatMoney(item.price)} and restore 1 stock.`)) {
+                item.qty -= 1;
+                // update rx totals logically
+                rx.subtotal -= item.price;
+                rx.total -= item.price;
+                if(rx.total === 0) rx.status = 'REFUNDED';
+                
+                // restore stock
+                const dbProd = db.products.find(p => p.sku === item.sku);
+                if(dbProd) dbProd.stock += 1;
+                
+                saveDB();
+                verifyReceipt(); // refresh
+                renderProducts();
+                updateInventoryTable();
+                showToast("Return processed successfully.", "success");
+            }
+        }
+
+        /* --- 11. REAL BARCODE GENERATOR --- */
+        function populateBarcodeSelect() {
+            const sel = document.getElementById('bg-product-select');
+            sel.innerHTML = '<option value="">-- Select Product --</option>';
+            db.products.forEach(p => {
+                sel.innerHTML += `<option value="${p.sku}">${p.name} (${p.sku})</option>`;
+            });
+        }
+
+        function previewBarcode() {
+            const sel = document.getElementById('bg-product-select').value;
+            const custom = document.getElementById('bg-custom-val').value.trim();
+            const val = custom || sel;
+            if(!val) { document.getElementById('barcode-preview').innerHTML = ''; return; }
+            try {
+                JsBarcode("#barcode-preview", val, { format: "CODE128", width: 2, height: 60 });
+            } catch(e) {
+                document.getElementById('barcode-preview').innerHTML = '<text>Invalid Barcode Format</text>';
+            }
+        }
+
+        function saveGeneratedBarcode() {
+            const sel = document.getElementById('bg-product-select').value;
+            const custom = document.getElementById('bg-custom-val').value.trim();
+            const val = custom || sel;
+            if(!val || !sel) { showToast("Select product and enter valid code.", "error"); return; }
+            
+            const prod = db.products.find(p => p.sku === sel);
+            if(prod) {
+                prod.barcode = val;
+                db.barcodes.push({ productId: prod.id, productName: prod.name, barcode: val, format: 'CODE128', createdAt: new Date().toISOString() });
+                saveDB();
+                showToast("Barcode saved to product!");
+                // Optionally print just the barcode here via a special print view
+            }
+        }
+
+        /* --- 13, 14. BARCODE SCANNERS --- */
+        // Camera Scanner
+        function startScanner() {
+            openModal('scanner-modal');
+            html5QrcodeScanner = new Html5Qrcode("qr-reader");
+            html5QrcodeScanner.start({ facingMode: "environment" }, { fps: 10, qrbox: {width: 250, height: 250} },
+                (decodedText) => {
+                    handleBarcodeScanned(decodedText);
+                    stopScanner();
+                },
+                (err) => { /* ignore normal frame errors */ }
+            ).catch(err => { showToast("CAMERA ACCESS DENIED", "error"); });
+        }
+        function stopScanner() {
+            if(html5QrcodeScanner) {
+                html5QrcodeScanner.stop().catch(e => console.log(e));
+                html5QrcodeScanner = null;
+            }
+            closeModal('scanner-modal');
+        }
+
+        // USB Scanner (Keyboard Wedge)
+        let barcodeBuffer = '';
+        let barcodeTimer;
+        document.addEventListener('keypress', (e) => {
+            // Only capture if not typing in an input
+            if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+            if(e.key === 'Enter' && barcodeBuffer.length > 3) {
+                handleBarcodeScanned(barcodeBuffer);
+                barcodeBuffer = '';
+            } else {
+                barcodeBuffer += e.key;
+                clearTimeout(barcodeTimer);
+                barcodeTimer = setTimeout(() => barcodeBuffer = '', 50); // reset if slow typing
+            }
+        });
+
+        function handleBarcodeScanned(code) {
+            code = code.trim();
+            const prod = db.products.find(p => p.barcode === code || p.sku === code);
+            if(prod) {
+                addToCart(prod.sku);
+                showToast(`Added ${prod.name}`);
+            } else {
+                showToast("BARCODE NOT FOUND", "error");
+            }
+        }
+
+        /* --- 15. SAFE CALCULATOR --- */
+        let calcVal = '0', calcPrev = null, calcOp = null;
+        function updateCalcDisplay() { document.getElementById('calc-display').innerText = calcVal; }
+        function calcInput(char) {
+            if(calcVal === '0' && char !== '.') calcVal = char;
+            else calcVal += char;
+            updateCalcDisplay();
+        }
+        function calcAction(action) {
+            if(action === 'clear') { calcVal = '0'; calcPrev = null; calcOp = null; }
+            else if(action === 'backspace') { calcVal = calcVal.length > 1 ? calcVal.slice(0,-1) : '0'; }
+            else if(['add','subtract','multiply','divide'].includes(action)) {
+                calcPrev = parseFloat(calcVal); calcVal = '0'; calcOp = action;
+            }
+            else if(action === 'percent') { calcVal = String(parseFloat(calcVal)/100); }
+            else if(action === 'equals' && calcOp && calcPrev !== null) {
+                let curr = parseFloat(calcVal);
+                let res = 0;
+                if(calcOp === 'add') res = calcPrev + curr;
+                if(calcOp === 'subtract') res = calcPrev - curr;
+                if(calcOp === 'multiply') res = calcPrev * curr;
+                if(calcOp === 'divide') res = curr !== 0 ? calcPrev / curr : 0;
+                calcVal = String(res);
+                calcOp = null; calcPrev = null;
+            }
+            updateCalcDisplay();
+        }
+
+        /* --- 24, 25, 29, 30. DATA MANAGEMENT & TABLES --- */
+        function updateInventoryTable() {
+            const tbody = document.querySelector('#inventory-table tbody');
+            tbody.innerHTML = '';
+            db.products.forEach(p => {
+                const stat = p.stock > 10 ? 'IN STOCK' : (p.stock > 0 ? 'LOW STOCK' : 'OUT OF STOCK');
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${p.sku}</td>
+                        <td>${p.name}</td>
+                        <td>${formatMoney(p.price)}</td>
+                        <td>${p.stock}</td>
+                        <td><span class="${stat==='OUT OF STOCK'?'stock-out':(stat==='LOW STOCK'?'stock-low':'stock-good')}">${stat}</span></td>
+                        <td><button class="btn btn-outline" style="padding: 5px;" onclick="editProduct('${p.sku}')">Edit</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function updateHistoryTable() {
+            const tbody = document.querySelector('#history-table tbody');
+            tbody.innerHTML = '';
+            [...db.receipts].reverse().forEach(r => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${r.date} ${r.time}</td>
+                        <td>${r.receiptNumber}</td>
+                        <td>${r.transactionId}</td>
+                        <td>${formatMoney(r.total)}</td>
+                        <td>${r.paymentMethod}</td>
+                        <td>
+                            <button class="btn btn-outline" style="padding:5px;" onclick="printReceiptDiv(${JSON.stringify(r).replace(/"/g, '&quot;')})">Print</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function exportData(type) {
+            let dataStr = JSON.stringify(db[type], null, 2);
+            let blob = new Blob([dataStr], { type: "application/json" });
+            let url = URL.createObjectURL(blob);
+            let a = document.createElement('a');
+            a.href = url;
+            a.download = `wds_${type}_backup_${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if(!file) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    if(confirm("Merge imported data into database?")) {
+                        if(Array.isArray(imported)) {
+                            // Simple array merge logic depending on structure
+                            if(imported[0] && imported[0].sku) { db.products = [...db.products, ...imported]; }
+                            else if(imported[0] && imported[0].receiptNumber) { db.receipts = [...db.receipts, ...imported]; }
+                        }
+                        saveDB();
+                        window.location.reload(); // Refresh fully
+                    }
+                } catch(err) {
+                    showToast("INVALID JSON DATA", "error");
+                }
+            };
+            reader.readAsText(file);
+        }
+
+    </script>
+</body>
+</html>

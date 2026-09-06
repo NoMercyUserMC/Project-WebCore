@@ -28,7 +28,7 @@
         let active = 0;
         const layers = [layerA, layerB];
         const show = () => {
-          const next = (active + 1) % images.length;
+          const next = (active + 1 + Math.floor(Math.random() * (images.length - 1))) % images.length;
           const layer = layers[next % 2];
           layer.style.backgroundImage = `url("${images[next]}")`;
           layer.classList.add("is-active");
@@ -37,7 +37,7 @@
         };
         layerA.style.backgroundImage = `url("${images[0]}")`;
         layerA.classList.add("is-active");
-        if (images.length > 1 && !reducedMotion) window.setInterval(show, 9000);
+        if (images.length > 1) window.setInterval(show, 9000);
       })
       .catch(() => {});
   }

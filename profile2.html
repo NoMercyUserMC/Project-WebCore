@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#0a0b06"/>
+<title>Macxi'Gen · Genuineness</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@600;700&family=Share+Tech+Mono&family=Noto+Sans+SC:wght@900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --acid:#c8e02e;
+  --acid2:#93b312;
+  --ink:#0b0c07;
+  --paper:#f4f6ec;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{
+  background:radial-gradient(120% 120% at 50% 20%, #101208 0%, #050604 60%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Rajdhani',sans-serif;overflow:hidden;
+}
+.stage{animation:floaty 7s ease-in-out infinite alternate}
+@keyframes floaty{from{transform:translateY(-4px)}to{transform:translateY(4px)}}
+
+.poster{
+  --w:min(736px, 94vw, calc(94vh * .8));
+  width:var(--w);height:calc(var(--w)*1.25);
+  --u:calc(var(--w)/100);
+  position:relative;overflow:hidden;background:#0a0b06;
+  box-shadow:0 40px 90px rgba(0,0,0,.85), 0 0 0 1px rgba(200,224,46,.14);
+  cursor:crosshair;user-select:none;-webkit-user-select:none;
+}
+
+/* ============ BACKGROUND  ▼ change src below in HTML ============ */
+.bg-wrap{position:absolute;inset:0}
+.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 18%;
+  filter:saturate(1.05) contrast(1.1) brightness(.9) hue-rotate(-6deg);
+  animation:bgIn 1.8s cubic-bezier(.2,.8,.2,1) both, bgDrift 18s ease-in-out 1.8s infinite alternate;}
+@keyframes bgIn{from{transform:scale(1.15);opacity:0}60%{opacity:1}to{transform:scale(1.04)}}
+@keyframes bgDrift{from{transform:scale(1.04)}to{transform:scale(1.09) translate(-1.4%,-1.2%)}}
+.bg-fallback{display:none}
+.no-bg .bg{display:none}
+.no-bg .bg-fallback{display:block;position:absolute;inset:0;
+  background:
+   radial-gradient(60% 45% at 62% 38%, rgba(147,179,18,.5), transparent 70%),
+   radial-gradient(50% 40% at 25% 65%, rgba(70,82,20,.55), transparent 70%),
+   conic-gradient(from 40deg at 70% 20%, #141708, #0a0b06, #1a1e0a, #0a0b06), #0a0b06;}
+.no-bg .bg-fallback::after{content:"⟨ place your image as bg.jpg ⟩";position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);font:400 calc(var(--u)*2.4) 'Share Tech Mono';
+  color:rgba(200,224,46,.75);letter-spacing:.15em;text-align:center}
+
+/* ============ ATMOSPHERE FX ============ */
+.grade{position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg, rgba(5,7,2,.35), rgba(5,7,2,0) 22% 72%, rgba(4,6,1,.5)),
+             linear-gradient(115deg, rgba(200,224,46,.10), transparent 30% 62%, rgba(200,224,46,.08));}
+.tint{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;
+  background:linear-gradient(160deg, rgba(178,204,38,.22), rgba(178,204,38,.06) 45%, rgba(0,0,0,.25));}
+.scan{position:absolute;inset:0;pointer-events:none;mix-blend-mode:overlay;opacity:.5;
+  background:repeating-linear-gradient(0deg, rgba(255,255,255,.09) 0 1px, transparent 1px 3px);
+  animation:scan 1.1s linear infinite;}
+@keyframes scan{to{background-position:0 3px}}
+.sweep{position:absolute;left:0;right:0;height:24%;top:-30%;pointer-events:none;mix-blend-mode:screen;
+  background:linear-gradient(180deg, transparent, rgba(200,224,46,.12) 45%, rgba(255,255,255,.07) 52%, transparent);
+  animation:sweep 6s cubic-bezier(.45,0,.55,1) infinite;}
+@keyframes sweep{0%{transform:translateY(-40%)}100%{transform:translateY(560%)}}
+.aberr{position:absolute;left:0;right:0;height:3px;pointer-events:none;mix-blend-mode:screen;opacity:0}
+.aberr.c{background:linear-gradient(90deg,transparent,rgba(65,232,255,.5),transparent);animation:ab 7s steps(1) infinite}
+.aberr.m{background:linear-gradient(90deg,transparent,rgba(255,62,165,.45),transparent);animation:ab 7s steps(1) infinite 1.7s}
+@keyframes ab{0%,100%{top:15%;opacity:0}3%{top:22%;opacity:1}5%{top:22.4%;opacity:0}
+  31%{top:58%;opacity:0}33%{top:58.5%;opacity:1}36%{opacity:0}
+  61%{top:80%;opacity:0}63%{top:80.5%;opacity:1}66%{top:81%;opacity:0}}
+.noise{position:absolute;inset:0;pointer-events:none;opacity:.08;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='260' height='260' filter='url(%23n)'/></svg>");
+  animation:nshift .5s steps(1) infinite;}
+@keyframes nshift{0%{background-position:0 0}20%{background-position:-45px 30px}40%{background-position:32px -48px}
+  60%{background-position:-28px -36px}80%{background-position:40px 22px}100%{background-position:0 0}}
+.vign{position:absolute;inset:0;pointer-events:none;background:radial-gradient(125% 100% at 50% 42%, transparent 55%, rgba(0,0,0,.55) 100%)}
+.flashfx{position:absolute;inset:0;pointer-events:none;opacity:0;background:rgba(224,255,120,.14);
+  backdrop-filter:invert(.9) hue-rotate(50deg) saturate(1.3);transition:opacity .06s}
+.poster.flash .flashfx{opacity:1}
+.poster.flash .bg{filter:saturate(.2) contrast(1.5) brightness(1.5)}
+
+/* ============ LAYOUT LAYERS ============ */
+.layer{position:absolute;inset:0;pointer-events:none}
+.plx{will-change:transform}
+.anim{animation:rise .85s cubic-bezier(.16,.84,.3,1) var(--d,0s) backwards}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.fade{animation:fadeIn 1s var(--d,1s) backwards}
+@keyframes fadeIn{from{opacity:0}}
+.burst{animation:brst .22s steps(2,end) 1}
+@keyframes brst{
+  0%{clip-path:none;transform:translate(0)}
+  25%{transform:translate(-3px,1px);text-shadow:2px 0 var(--acid),-2px 0 #ff2e63}
+  55%{transform:translate(3px,-2px);clip-path:inset(8% 0 55% 0)}
+  80%{transform:translate(-2px,1px);clip-path:inset(45% 0 12% 0);text-shadow:-2px 0 var(--acid),2px 0 #41e8ff}
+  100%{clip-path:none;transform:translate(0);text-shadow:none}}
+
+/* ---- back deco ---- */
+.tris{position:absolute;top:3.4%;left:3.4%;display:grid;grid-template-columns:repeat(8,calc(var(--u)*1.7));gap:calc(var(--u)*.55)}
+.tris i{width:calc(var(--u)*1.7);height:calc(var(--u)*1.55);background:var(--acid);clip-path:polygon(0 0,100% 0,50% 100%);
+  animation:triIn .3s ease-out var(--fd) backwards, triBlink 9s linear calc(var(--fd) + 4s) infinite;}
+.tris i.w{background:#e8ecdb}
+.tris i.d{background:#556311}
+.tris i.r{transform:rotate(180deg)}
+@keyframes triIn{from{opacity:0}}
+@keyframes triBlink{0%,91%,95.5%,100%{opacity:1}92%,94%{opacity:.12}}
+.chip{position:absolute;top:12.8%;left:6%;font:400 calc(var(--u)*1.8) 'Share Tech Mono';color:var(--paper);
+  border:1px solid rgba(232,236,219,.55);padding:calc(var(--u)*.3) calc(var(--u)*.9);
+  background:rgba(8,10,4,.55);letter-spacing:.08em;display:inline-block}
+.rect-stack{position:absolute;top:3.6%;left:24%}
+.rect-stack i{display:block;height:calc(var(--u)*2.1);margin-bottom:calc(var(--u)*.6);background:var(--acid);
+  transform-origin:left;animation:growX .6s cubic-bezier(.2,.8,.2,1) backwards}
+.rect-stack i:nth-child(1){width:calc(var(--u)*7);animation-delay:.45s}
+.rect-stack i:nth-child(2){width:calc(var(--u)*4.4);background:#e8ecdb;animation-delay:.55s}
+.rect-stack i:nth-child(3){width:calc(var(--u)*2.6);background:var(--acid2);animation-delay:.65s}
+@keyframes growX{from{transform:scaleX(0);opacity:0}to{opacity:1}}
+.arrows{position:absolute;top:9.4%;left:24.6%;color:var(--acid);font-size:calc(var(--u)*1.8);letter-spacing:.25em}
+.edge-bar{position:absolute;left:0;top:23.5%;width:calc(var(--u)*4.2);height:calc(var(--u)*11);background:var(--acid);
+  box-shadow:0 0 24px rgba(200,224,46,.35);animation:rise .8s .5s backwards}
+.edge-bar::after{content:"ESP-0731";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%) rotate(90deg);
+  font:400 calc(var(--u)*1.6) 'Share Tech Mono';color:var(--ink);letter-spacing:.3em;white-space:nowrap}
+.corner{position:absolute;top:0;right:0;width:calc(var(--u)*20);height:calc(var(--u)*8.5);
+  background:linear-gradient(210deg, var(--acid) 30%, rgba(200,224,46,.2));
+  clip-path:polygon(0 0,100% 0,100% 100%);animation:rise .8s .35s backwards;opacity:.95}
+.line-h{position:absolute;height:2px;background:linear-gradient(90deg,var(--acid),rgba(200,224,46,.1));
+  transform-origin:left;animation:growL .8s cubic-bezier(.2,.8,.2,1) backwards}
+@keyframes growL{from{transform:scaleX(0)}}
+.l1{top:19%;left:0;width:calc(var(--u)*11);animation-delay:.9s}
+.l2{top:32%;right:0;width:calc(var(--u)*13);transform-origin:right;
+  background:linear-gradient(270deg,var(--acid),rgba(200,224,46,.1));animation-delay:1.05s}
+.l3{bottom:33.5%;left:0;width:calc(var(--u)*6);animation-delay:1.2s;opacity:.7}
+.scatter{position:absolute;font:400 calc(var(--u)*1.5) 'Share Tech Mono';color:rgba(232,236,219,.62);letter-spacing:.12em}
+.s1{right:5%;top:39%}
+.s2{left:3.6%;top:52.5%;writing-mode:vertical-rl}
+.s3{right:7.5%;bottom:29.5%}
+.tri-a{position:absolute;color:var(--acid);font-size:calc(var(--u)*2);
+  text-shadow:0 0 10px rgba(200,224,46,.5);animation:triFloat 4.5s ease-in-out infinite alternate}
+@keyframes triFloat{from{transform:translateY(-4px)}to{transform:translateY(4px)}}
+.a1{left:32%;top:19%}
+.a2{right:27%;top:63.5%;font-size:calc(var(--u)*1.6)}
+.a3{left:58%;bottom:27%}
+
+/* ---- mid ---- */
+.terminal{position:absolute;left:3.6%;top:27%;font:400 calc(var(--u)*1.9) 'Share Tech Mono';
+  color:#e6ebd8;letter-spacing:.06em;text-shadow:0 0 8px rgba(0,0,0,.8)}
+.caret{display:inline-block;width:.55em;height:1em;background:var(--acid);margin-left:3px;vertical-align:-2px;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.rhodes{position:absolute;left:61%;top:21.5%;display:flex;gap:calc(var(--u)*1.2);align-items:flex-start}
+.rhodes svg{width:calc(var(--u)*4.6);height:calc(var(--u)*4.6);color:var(--paper);filter:drop-shadow(0 0 6px rgba(0,0,0,.6))}
+.ri-text{font:600 calc(var(--u)*2.9)/0.95 'Oswald';color:var(--paper);letter-spacing:.03em;text-shadow:0 2px 8px rgba(0,0,0,.7)}
+.ri-text small{display:block;font-size:.5em;color:var(--acid);letter-spacing:.28em;margin-top:calc(var(--u)*.6)}
+.vname{position:absolute;right:2%;top:24.5%;writing-mode:vertical-rl;text-orientation:mixed}
+.vname span{font:600 calc(var(--u)*4.4) 'Oswald';color:var(--acid);letter-spacing:.32em;
+  display:inline-block;animation:vpulse 3.2s ease-in-out infinite}
+@keyframes vpulse{50%{text-shadow:0 0 26px rgba(200,224,46,.9);opacity:.92}}
+.classes{position:absolute;left:50.5%;top:44%;display:flex;flex-direction:column;gap:calc(var(--u)*2.2)}
+.cls{display:flex;align-items:center;gap:calc(var(--u)*1.3);pointer-events:auto;cursor:pointer;
+  animation:rise .7s var(--d) backwards}
+.cbox{width:calc(var(--u)*4.8);height:calc(var(--u)*4.8);border:1px solid rgba(240,244,225,.9);
+  background:rgba(8,10,4,.55);display:grid;place-items:center;position:relative;color:var(--paper);transition:.25s}
+.cbox svg{width:60%;height:60%}
+.cbox::after{content:"";position:absolute;right:-1px;bottom:-1px;width:calc(var(--u)*1);height:calc(var(--u)*1);background:var(--acid)}
+.clabel{font:600 calc(var(--u)*3.1) 'Oswald';color:var(--paper);letter-spacing:.04em;
+  display:inline-block;text-shadow:0 2px 10px rgba(0,0,0,.8);transition:.25s}
+.cls:hover .cbox{border-color:var(--acid);color:var(--acid);box-shadow:0 0 16px rgba(200,224,46,.45);transform:translateY(-2px)}
+.cls:hover .clabel{color:var(--acid)}
+.limited{position:absolute;left:9.5%;top:59%}
+.limited b{font:600 calc(var(--u)*3.4) 'Oswald';color:#fff;letter-spacing:.05em;
+  text-shadow:0 0 12px rgba(200,224,46,.35),0 2px 6px rgba(0,0,0,.8)}
+.stars{margin-top:calc(var(--u)*.8);display:flex;gap:calc(var(--u)*.5)}
+.stars i{font-style:normal;color:var(--acid);font-size:calc(var(--u)*3.8);line-height:1;
+  text-shadow:0 0 10px rgba(200,224,46,.55);
+  animation:starIn .5s cubic-bezier(.2,1.5,.4,1) calc(1.3s + var(--i)*.12s) backwards,
+            twinkle 2.8s ease-in-out calc(2.4s + var(--i)*.35s) infinite}
+@keyframes starIn{from{opacity:0;transform:scale(.2) rotate(-40deg)}}
+@keyframes twinkle{50%{transform:scale(1.14);filter:brightness(1.4)}}
+
+/* ---- top ---- */
+.logos{position:absolute;top:3.8%;right:4.5%;display:flex;align-items:center;gap:calc(var(--u)*3.4)}
+.logo{display:flex;align-items:center;gap:calc(var(--u)*.9);color:var(--paper)}
+.logo svg{width:calc(var(--u)*3.4);height:calc(var(--u)*3.4)}
+.logo .nm{font:700 calc(var(--u)*2.2)/1 'Oswald';letter-spacing:.12em;display:inline-block}
+.logo small{display:block;font:600 calc(var(--u)*1) 'Oswald';letter-spacing:.34em;color:rgba(240,244,225,.65);margin-top:3px}
+.logo.cn{flex-direction:column;align-items:flex-start;gap:3px;border-left:1px solid rgba(240,244,225,.4);padding-left:calc(var(--u)*1.4)}
+.logo.cn .cnx{font:900 calc(var(--u)*3) 'Noto Sans SC';letter-spacing:.12em;line-height:1}
+.band{position:absolute;left:-2%;right:-2%;bottom:7.5%;height:calc(var(--u)*26);
+  background:linear-gradient(90deg, rgba(5,7,2,.66), rgba(5,7,2,.28) 55%, rgba(150,180,25,.16));
+  border-top:1px solid rgba(200,224,46,.3);
+  animation:bandIn .9s cubic-bezier(.2,.8,.2,1) 1.05s backwards}
+@keyframes bandIn{from{opacity:0;transform:translateY(9%)}}
+.mini-kal{position:absolute;left:8.5%;bottom:21.8%;font:400 calc(var(--u)*2.6) 'Share Tech Mono';color:var(--paper)}
+.mini-kal b{color:var(--acid)}
+.titlewrap{position:absolute;left:8%;right:5%;bottom:9.8%}
+.title{position:relative;font:700 calc(var(--u)*13)/0.95 'Oswald';color:var(--paper);letter-spacing:.01em;
+  pointer-events:auto;cursor:pointer;text-shadow:0 4px 24px rgba(0,0,0,.6)}
+.title .base{display:block;position:relative;z-index:2}
+.title .base i{font-style:normal;background:var(--acid);color:var(--ink);padding:0 calc(var(--u)*.5);
+  margin:0 calc(var(--u)*.25);display:inline-block;transform:translateY(calc(var(--u)*-.4));
+  box-shadow:0 0 18px rgba(200,224,46,.45)}
+.title .g{position:absolute;inset:0;opacity:0;pointer-events:none;display:block;z-index:1}
+.title .g i{background:transparent;color:inherit;box-shadow:none;transform:none;padding:0;margin:0}
+.title .g1{color:#41e8ff;mix-blend-mode:screen}
+.title .g2{color:#ff3ea5;mix-blend-mode:screen}
+.title.on .base{animation:shk .16s steps(2) infinite}
+.title.on .g1{opacity:.9;animation:clpA .18s steps(2) infinite}
+.title.on .g2{opacity:.9;animation:clpB .21s steps(2) infinite}
+@keyframes shk{50%{transform:translate(2px,-2px) skewX(-1deg)}}
+@keyframes clpA{0%{clip-path:inset(0 0 80% 0);transform:translate(-5px,2px)}
+  50%{clip-path:inset(35% 0 25% 0);transform:translate(4px,-2px)}
+  100%{clip-path:inset(72% 0 2% 0);transform:translate(-3px,2px)}}
+@keyframes clpB{0%{clip-path:inset(55% 0 8% 0);transform:translate(5px,-2px)}
+  50%{clip-path:inset(6% 0 70% 0);transform:translate(-4px,2px)}
+  100%{clip-path:inset(30% 0 42% 0);transform:translate(3px,3px)}}
+.esper{margin-top:calc(var(--u)*.6);text-align:right}
+.etx{position:relative;display:inline-block;z-index:0;font:600 calc(var(--u)*6.4)/1 'Oswald';color:var(--paper);
+  letter-spacing:.08em;text-shadow:0 3px 0 rgba(0,0,0,.55), 0 0 26px rgba(0,0,0,.4)}
+.etx::after{content:attr(data-text);position:absolute;left:calc(var(--u)*.4);top:calc(var(--u)*.4);
+  color:var(--acid);z-index:-1;opacity:.55;transform:skewX(-8deg) scaleY(1.1)}
+.junk{display:block;font:400 calc(var(--u)*1.7) 'Share Tech Mono';color:var(--acid);
+  letter-spacing:.5em;opacity:.8;margin-top:calc(var(--u)*.7);padding-right:calc(var(--u)*.4);font-style:normal}
+.warn{position:absolute;right:30%;bottom:calc(var(--u)*-3.4);color:var(--acid);font-size:calc(var(--u)*2.6);
+  text-shadow:0 0 12px rgba(200,224,46,.6);animation:wpulse 2s ease-in-out infinite, fadeIn .8s 1.7s backwards}
+@keyframes wpulse{50%{opacity:.5;transform:scale(.92)}}
+.foot{position:absolute;left:4.5%;right:4.5%;bottom:2.6%;display:flex;justify-content:space-between;align-items:center;
+  border-top:1px solid rgba(240,244,225,.2);padding-top:calc(var(--u)*1.4);color:#dfe3d0}
+.foot .mono{font:400 calc(var(--u)*1.8) 'Share Tech Mono';letter-spacing:.1em;display:flex;align-items:center;gap:calc(var(--u)*1)}
+.sq{width:calc(var(--u)*1);height:calc(var(--u)*1);background:var(--acid);display:inline-block;animation:blink 2.4s steps(1) infinite}
+.bars{display:inline-block;width:calc(var(--u)*6.5);height:calc(var(--u)*1.9);
+  background:repeating-linear-gradient(90deg,#e6ebd8 0 2px,transparent 2px 4px,#e6ebd8 4px 5px,transparent 5px 7px,#e6ebd8 7px 10px,transparent 10px 11px,#e6ebd8 11px 12px,transparent 12px 15px);
+  animation:barSlide 1.3s steps(8) infinite}
+@keyframes barSlide{to{background-position:-15px 0}}
+#ver{font-size:calc(var(--u)*2.3);color:var(--paper);display:inline-block}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+<div class="poster" id="poster">
+
+  <!-- ================== BG  ▼▼ put your image here (bg.jpg) ▼▼ ================== -->
+  <div class="bg-wrap plx" data-depth="-12">
+    <img class="bg" src="macxi1.png" alt="bg">
+    <div class="bg-fallback"></div>
+  </div>
+
+  <div class="grade"></div>
+  <div class="tint"></div>
+  <div class="scan"></div>
+  <div class="sweep"></div>
+  <div class="aberr c"></div>
+  <div class="aberr m"></div>
+  <div class="noise"></div>
+  <div class="vign"></div>
+
+  <!-- BACK DECOR -->
+  <div class="layer plx" data-depth="6">
+    <div class="corner"></div>
+    <div class="tris anim" style="--d:.3s">
+      <i class="a" style="--fd:.35s"></i><i class="w" style="--fd:.4s"></i><i class="d" style="--fd:.45s"></i><i class="a" style="--fd:.5s"></i><i class="w r" style="--fd:.55s"></i><i class="a" style="--fd:.6s"></i><i class="d" style="--fd:.65s"></i><i class="a" style="--fd:.7s"></i>
+      <i class="w" style="--fd:.5s"></i><i class="a r" style="--fd:.55s"></i><i class="d" style="--fd:.6s"></i><i class="w" style="--fd:.66s"></i><i class="a" style="--fd:.73s"></i><i class="d r" style="--fd:.8s"></i><i class="w" style="--fd:.87s"></i><i class="a" style="--fd:.94s"></i>
+    </div>
+    <div class="rect-stack"><i></i><i></i><i></i></div>
+    <div class="arrows fade" style="--d:1s">▶▶</div>
+    <div class="chip anim" style="--d:.55s" data-g>TEST(45.0)</div>
+    <div class="edge-bar"></div>
+    <div class="line-h l1"></div><div class="line-h l2"></div><div class="line-h l3"></div>
+    <div class="scatter s1 fade" style="--d:1.05s" data-g>RX-03 // 07.31 23:19:13</div>
+    <div class="scatter s2 fade" style="--d:1.15s" data-g>esp_mods &gt;&gt; LO&amp;L^scn</div>
+    <div class="scatter s3 fade" style="--d:1.25s" data-g>NO.001</div>
+    <div class="tri-a a1 fade" style="--d:1.2s">▲</div>
+    <div class="tri-a a2 fade" style="--d:1.3s">▲</div>
+    <div class="tri-a a3 fade" style="--d:1.4s">▲</div>
+  </div>
+
+  <!-- MID -->
+  <div class="layer plx" data-depth="13">
+    <div class="terminal anim" style="--d:.7s"><span id="type"></span><i class="caret"></i></div>
+
+    <div class="rhodes anim" style="--d:.85s">
+      <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 1l9 5.5v7C21 18.6 12 23 12 23S3 18.6 3 13.5v-7L12 1z"/><path fill="#0a0b06" d="M10.4 6h3.2v3.2H17v3.2h-3.4V16h-3.2v-3.6H7V9.2h3.4z"/></svg>
+      <div class="ri-text"><span data-g>Web<br>Core</span><small>S I A · RIIC</small></div>
+    </div>
+
+    <div class="vname anim" style="--d:.95s"><span data-g>Macxi'Gen</span></div>
+
+    <div class="classes">
+      <div class="cls" style="--d:1.05s">
+        <span class="cbox"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2v20M3.3 7l17.4 10M20.7 7L3.3 17M12 2l-2.4 2.4M12 2l2.4 2.4M12 22l-2.4-2.4M12 22l2.4-2.4M3.3 7l3.3.6M3.3 17l3.3-.6M20.7 7l-3.3.6M20.7 17l-3.3-.6"/></svg></span>
+        <span class="clabel" data-g>Medic</span>
+      </div>
+      <div class="cls" style="--d:1.2s">
+        <span class="cbox"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5 14 9l7.5 3L14 15l-2 7.5L10 15l-7.5-3L10 9l2-7.5z"/><circle cx="12" cy="12" r="1.8" fill="#0a0b06"/></svg></span>
+        <span class="clabel" data-g>Watchman</span>
+      </div>
+    </div>
+
+    <div class="limited anim" style="--d:1.35s">
+      <b data-g>Limited</b>
+      <div class="stars">
+        <i style="--i:0">★</i><i style="--i:1">★</i><i style="--i:2">★</i><i style="--i:3">★</i><i style="--i:4">★</i><i style="--i:5">★</i>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP -->
+  <div class="layer plx" data-depth="22">
+    <div class="logos">
+      <div class="logo anim" style="--d:.5s">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 21 12 2l3 6 6-2-5 15-4-6z"/></svg>
+        <div><span class="nm" data-g>GEN COMMUNITY</span><small>MONSTER SIREN</small></div>
+      </div>
+      <div class="logo anim" style="--d:.62s">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1c1.2 4.4 3.4 6.6 7.8 7.8C15.4 10 13.2 12.2 12 16.6 10.8 12.2 8.6 10 4.2 8.8 8.6 7.6 10.8 5.4 12 1z"/><circle cx="12" cy="8.8" r="1.7" fill="#0a0b06"/></svg>
+        <span class="nm" data-g>WEBCORE</span>
+      </div>
+      <div class="logo cn anim" style="--d:.74s">
+        <span class="cnx" data-g>マクシ</span><small>WEBCOMMUNITY</small>
+      </div>
+    </div>
+
+    <div class="band"></div>
+    <div class="mini-kal anim" style="--d:1.5s">Macxi<b>.</b></div>
+
+    <div class="titlewrap">
+      <h1 class="title anim" style="--d:1.22s" id="title">
+        <span class="g g1" aria-hidden="true">Macxi<i>'</i>Gen.</span>
+        <span class="g g2" aria-hidden="true">Macxi<i>'</i>Gen.</span>
+        <span class="base">Macxi<i>'</i>Gen.</span>
+      </h1>
+      <div class="esper anim" style="--d:1.45s">
+        <span class="etx" data-g data-text="Webixe">Webixe</span>
+        <i class="junk">Especi∆·0731</i>
+      </div>
+      <div class="warn">▲</div>
+    </div>
+
+    <footer class="foot anim" style="--d:1.65s">
+      <span class="mono"><i class="sq"></i>©MarcGen /+</span>
+      <span class="mono"><span class="bars"></span>MARC/GEN.mcxi</span>
+      <span class="mono"><span id="ver" data-g>8.54</span></span>
+    </footer>
+  </div>
+
+  <div class="flashfx"></div>
+</div>
+</div>
+
+<script>
+const poster=document.getElementById('poster');
+
+/* bg fallback if image missing */
+const bgImg=document.querySelector('.bg');
+bgImg.addEventListener('error',()=>poster.classList.add('no-bg'));
+if(bgImg.complete&&bgImg.naturalWidth===0)poster.classList.add('no-bg');
+
+/* mouse parallax */
+const layers=[...document.querySelectorAll('.plx')];
+let tx=0,ty=0,cx=0,cy=0;
+poster.addEventListener('pointermove',e=>{
+  const r=poster.getBoundingClientRect();
+  tx=((e.clientX-r.left)/r.width)*2-1;
+  ty=((e.clientY-r.top)/r.height)*2-1;
+});
+poster.addEventListener('pointerleave',()=>{tx=0;ty=0;});
+(function loop(){
+  cx+=(tx-cx)*.06;cy+=(ty-cy)*.06;
+  for(const l of layers){
+    const d=+l.dataset.depth||0;
+    l.style.transform=`translate3d(${(cx*d).toFixed(2)}px,${(cy*d).toFixed(2)}px,0)`;
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* random glitch bursts on UI text */
+const glitchables=[...document.querySelectorAll('[data-g]')];
+setInterval(()=>{
+  const el=glitchables[Math.floor(Math.random()*glitchables.length)];
+  if(!el)return;
+  el.classList.add('burst');
+  setTimeout(()=>el.classList.remove('burst'),140+Math.random()*220);
+},800);
+
+/* title glitch (hover + random) */
+const title=document.getElementById('title');
+title.addEventListener('mouseenter',()=>title.classList.add('on'));
+title.addEventListener('mouseleave',()=>title.classList.remove('on'));
+setInterval(()=>{
+  if(Math.random()<.5){
+    title.classList.add('on');
+    setTimeout(()=>title.classList.remove('on'),120+Math.random()*240);
+  }
+},2400);
+
+/* glitch flash on click */
+poster.addEventListener('pointerdown',()=>{
+  poster.classList.add('flash');
+  setTimeout(()=>poster.classList.remove('flash'),160);
+});
+
+/* terminal typewriter */
+const typeEl=document.getElementById('type');
+const lines=['mods_mdi:es_','.emxga-LO&L^scn',"load kal'tsit.esp .... ok",'sync 07.31 23:19:13 ... ok'];
+let li=0;
+function typeLine(){
+  const s=lines[li];let i=0;
+  (function step(){
+    typeEl.textContent=s.slice(0,i);
+    if(i<s.length){i++;setTimeout(step,42+Math.random()*55);}
+    else setTimeout(()=>{li=(li+1)%lines.length;typeLine();},1700);
+  })();
+}
+setTimeout(typeLine,1300);
+
+/* 8.54 count-up + flicker */
+const ver=document.getElementById('ver');
+function countUp(el,end,dur){
+  const t0=performance.now();
+  (function f(t){
+    const p=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-p,3);
+    el.textContent=(end*e).toFixed(2);
+    if(p<1)requestAnimationFrame(f);
+    else setInterval(()=>{if(Math.random()<.4){el.classList.add('burst');setTimeout(()=>el.classList.remove('burst'),150);}},2400);
+  })(t0);
+}
+setTimeout(()=>countUp(ver,8.54,1300),1500);
+</script>
+</body>
+</html>

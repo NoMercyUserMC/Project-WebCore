@@ -83,30 +83,7 @@
   const endDrag = (event) => { if (event?.pointerId != null && viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId); if (!dragged && event) { const target = document.elementFromPoint(event.clientX, event.clientY)?.closest?.(".wc-carousel-card"); if (target?.dataset.htmlFile) { suppressClick = true; openFile(target.dataset.htmlFile); } } const wasDragged = dragged; dragging = false; viewport.classList.remove("is-dragging"); if (wasDragged) window.setTimeout(() => { dragged = false; }, 0); };
   viewport.addEventListener("pointerup", endDrag); viewport.addEventListener("pointercancel", endDrag); viewport.addEventListener("pointerleave", () => { if (dragging) endDrag(); });
   new ResizeObserver(refreshMeasurements).observe(viewport);
-  files = [
-    "Digital_portfolio_library_ai_made/Capilot/pos.html",
-    "Digital_portfolio_library_ai_made/Capilot/profile.html",
-    "Digital_portfolio_library_ai_made/Claude/marc-namacpacan-portfolio.html",
-    "Digital_portfolio_library_ai_made/Deepseek/Digital_profile/profile.html",
-    "Digital_portfolio_library_ai_made/Deepseek/pos.html",
-    "Digital_portfolio_library_ai_made/Gemini/profile.html",
-    "Digital_portfolio_library_ai_made/glm5.3/pos.html",
-    "Digital_portfolio_library_ai_made/Huggingface/pos.html",
-    "Digital_portfolio_library_ai_made/Huggingface/profile.html",
-    "Digital_portfolio_library_ai_made/kimi/pos.html",
-    "Digital_portfolio_library_ai_made/Qwen/pos.html",
-    "Digital_portfolio_library_ai_made/Qwen/profile.html",
-    "Digital_portfolio_library_ai_made/Replit/profile.html",
-    "Digital_portfolio_library_ai_made/Vibe/pos.html",
-    "Digital_portfolio_library_ai_made/Vibe/profile.html",
-    "example2.html",
-    "Normal.hTml",
-    "poster01.html",
-    "profile2.html",
-    "supreme.html",
-    "supremeplus.html",
-    "web3d.html"
-  ];
+  files = window.WEBCORE_EXPERIMENTS.slice();
   render();
   requestAnimationFrame(tick);
 })();

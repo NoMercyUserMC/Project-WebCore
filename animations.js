@@ -21,7 +21,7 @@
     particles.className = "wc-particles";
     document.body.prepend(spotlight, particles);
 
-    const images = ["web1.png", "web2.jpe", "web3.jpe", "web4.jpe", "web5.jpe", "web6.png", "web7.png", "web8.png"]
+    const images = window.WEBCORE_BACKGROUND_IMAGES
       .map((file) => new URL(`./webichan_images/${file}`, document.baseURI).href);
     let active = 0;
     const layers = [layerA, layerB];

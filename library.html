@@ -43,7 +43,7 @@
   <main class="page-shell">
     <section class="hero" aria-labelledby="pageTitle">
       <div>
-        <a class="wordmark" href="/">WEBCORE / LIBRARY</a>
+        <a class="wordmark" href="./index.html">WEBCORE / LIBRARY</a>
         <p class="eyebrow">Creative HTML archive</p>
         <h1 id="pageTitle">Choose a world<br>to open.</h1>
         <p class="hero-copy">Browse every HTML experiment in this workspace. Each preview is live, and every card opens the original page in a new tab.</p>
@@ -60,6 +60,31 @@
     <footer class="footer">WEBCORE · A living collection of small web experiences.</footer>
   </main>
   <script>
+    const fallbackFiles = [
+      "Digital_portfolio_library_ai_made/Capilot/pos.html",
+      "Digital_portfolio_library_ai_made/Capilot/profile.html",
+      "Digital_portfolio_library_ai_made/Claude/marc-namacpacan-portfolio.html",
+      "Digital_portfolio_library_ai_made/Deepseek/Digital_profile/profile.html",
+      "Digital_portfolio_library_ai_made/Deepseek/pos.html",
+      "Digital_portfolio_library_ai_made/Gemini/profile.html",
+      "Digital_portfolio_library_ai_made/glm5.3/pos.html",
+      "Digital_portfolio_library_ai_made/Huggingface/pos.html",
+      "Digital_portfolio_library_ai_made/Huggingface/profile.html",
+      "Digital_portfolio_library_ai_made/kimi/pos.html",
+      "Digital_portfolio_library_ai_made/Qwen/pos.html",
+      "Digital_portfolio_library_ai_made/Qwen/profile.html",
+      "Digital_portfolio_library_ai_made/Replit/profile.html",
+      "Digital_portfolio_library_ai_made/Vibe/pos.html",
+      "Digital_portfolio_library_ai_made/Vibe/profile.html",
+      "example2.html",
+      "Normal.hTml",
+      "poster01.html",
+      "profile2.html",
+      "supreme.html",
+      "supremeplus.html",
+      "web3d.html"
+    ];
+
     function readableName(file) {
       return file.split("/").pop().replace(/\.html?$/i, "").replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
     }
@@ -71,7 +96,7 @@
       preview.className = "preview";
       const frame = document.createElement("iframe");
       frame.className = "preview-frame";
-      frame.src = `/${file}`;
+      frame.src = new URL(file, document.baseURI).href;
       frame.title = `Preview of ${readableName(file)}`;
       frame.loading = "lazy";
       frame.sandbox = "allow-scripts allow-same-origin allow-forms allow-modals";
@@ -84,21 +109,21 @@
       body.className = "card-body";
       body.innerHTML = `<span class="card-name"></span><a class="card-link" target="_blank" rel="noopener">Open ↗</a>`;
       body.querySelector(".card-name").textContent = readableName(file);
-      body.querySelector(".card-link").href = `/${file}`;
+      body.querySelector(".card-link").href = new URL(file, document.baseURI).href;
       card.append(preview, body);
       return card;
     }
 
     function load() {
       const grid = document.getElementById("previewGrid");
-      fetch("/api/html-files")
-        .then((response) => response.ok ? response.json() : Promise.reject(new Error("Library request failed")))
-        .then((files) => {
-          grid.replaceChildren();
-          if (!files.length) { grid.innerHTML = '<p class="empty">No HTML experiments found.</p>'; return; }
-          files.forEach((file) => grid.append(createPreviewCard(file)));
-        })
-        .catch(() => { grid.innerHTML = '<p class="empty">The library could not be loaded. Check the server and refresh.</p>'; });
+      const files = fallbackFiles.slice();
+
+      grid.replaceChildren();
+      if (!files.length) {
+        grid.innerHTML = '<p class="empty">No HTML experiments found.</p>';
+        return;
+      }
+      files.forEach((file) => grid.append(createPreviewCard(file)));
     }
 
     load();

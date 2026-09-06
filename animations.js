@@ -21,25 +21,21 @@
     particles.className = "wc-particles";
     document.body.prepend(spotlight, particles);
 
-    fetch("/api/background-images")
-      .then((response) => response.ok ? response.json() : [])
-      .then((images) => {
-        if (!images.length) return;
-        let active = 0;
-        const layers = [layerA, layerB];
-        const show = () => {
-          const next = (active + 1 + Math.floor(Math.random() * (images.length - 1))) % images.length;
-          const layer = layers[next % 2];
-          layer.style.backgroundImage = `url("${images[next]}")`;
-          layer.classList.add("is-active");
-          layers[active % 2].classList.remove("is-active");
-          active = next;
-        };
-        layerA.style.backgroundImage = `url("${images[0]}")`;
-        layerA.classList.add("is-active");
-        if (images.length > 1) window.setInterval(show, 9000);
-      })
-      .catch(() => {});
+    const images = ["web1.png", "web2.jpe", "web3.jpe", "web4.jpe", "web5.jpe", "web6.png", "web7.png", "web8.png"]
+      .map((file) => new URL(`./webichan_images/${file}`, document.baseURI).href);
+    let active = 0;
+    const layers = [layerA, layerB];
+    const show = () => {
+      const next = (active + 1 + Math.floor(Math.random() * Math.max(images.length - 1, 1))) % images.length;
+      const layer = layers[next % 2];
+      layer.style.backgroundImage = `url("${images[next]}")`;
+      layer.classList.add("is-active");
+      layers[active % 2].classList.remove("is-active");
+      active = next;
+    };
+    layerA.style.backgroundImage = `url("${images[0]}")`;
+    layerA.classList.add("is-active");
+    if (images.length > 1) window.setInterval(show, 9000);
   }
 
   function addEntrance() {

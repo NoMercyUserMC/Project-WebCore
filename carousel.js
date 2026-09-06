@@ -19,7 +19,7 @@
   let dragOffset = 0;
 
   const readableName = (file) => file.split("/").pop().replace(/\.html?$/i, "").replace(/[-_]+/g, " ").replace(/\b\w/g, (letter) => letter.toUpperCase());
-  const openFile = (file) => { const url = file.startsWith("/") ? file : `/${file}`; console.log("Opening HTML experiment:", url); window.open(url, "_blank"); };
+  const openFile = (file) => { const url = new URL(file, document.baseURI).href; console.log("Opening HTML experiment:", url); window.open(url, "_blank"); };
   const pause = () => { pauseUntil = performance.now() + 3200; };
   const normalize = () => { if (!setWidth) return; offset = ((offset % setWidth) + setWidth) % setWidth; };
   const updateTrack = () => { normalize(); track.style.transform = `translate3d(${-setWidth + offset}px,0,0)`; };
@@ -54,7 +54,7 @@
     card.setAttribute("aria-label", `Open ${readableName(file)} HTML experiment`);
     const preview = document.createElement("div"); preview.className = "wc-carousel-preview";
     const loader = document.createElement("div"); loader.className = "wc-carousel-loader";
-    const frame = document.createElement("iframe"); frame.loading = "lazy"; frame.title = `Live preview of ${file}`; frame.sandbox = "allow-scripts allow-same-origin allow-forms allow-modals"; frame.src = `/${file}`; frame.style.pointerEvents = "none";
+    const frame = document.createElement("iframe"); frame.loading = "lazy"; frame.title = `Live preview of ${file}`; frame.sandbox = "allow-scripts allow-same-origin allow-forms allow-modals"; frame.src = new URL(file, document.baseURI).href; frame.style.pointerEvents = "none";
     frame.addEventListener("load", () => { loader.classList.add("is-hidden"); frame.classList.add("is-loaded"); }, { once: true });
     const info = document.createElement("div"); info.className = "wc-carousel-info";
     const name = document.createElement("span"); name.className = "wc-carousel-name"; name.textContent = readableName(file);
@@ -83,5 +83,30 @@
   const endDrag = (event) => { if (event?.pointerId != null && viewport.hasPointerCapture(event.pointerId)) viewport.releasePointerCapture(event.pointerId); if (!dragged && event) { const target = document.elementFromPoint(event.clientX, event.clientY)?.closest?.(".wc-carousel-card"); if (target?.dataset.htmlFile) { suppressClick = true; openFile(target.dataset.htmlFile); } } const wasDragged = dragged; dragging = false; viewport.classList.remove("is-dragging"); if (wasDragged) window.setTimeout(() => { dragged = false; }, 0); };
   viewport.addEventListener("pointerup", endDrag); viewport.addEventListener("pointercancel", endDrag); viewport.addEventListener("pointerleave", () => { if (dragging) endDrag(); });
   new ResizeObserver(refreshMeasurements).observe(viewport);
-  fetch("/api/html-files").then((response) => response.ok ? response.json() : []).then((result) => { console.log("Files received:", result); files = result; render(); requestAnimationFrame(tick); }).catch((error) => { console.error("API Error:", error); });
+  files = [
+    "Digital_portfolio_library_ai_made/Capilot/pos.html",
+    "Digital_portfolio_library_ai_made/Capilot/profile.html",
+    "Digital_portfolio_library_ai_made/Claude/marc-namacpacan-portfolio.html",
+    "Digital_portfolio_library_ai_made/Deepseek/Digital_profile/profile.html",
+    "Digital_portfolio_library_ai_made/Deepseek/pos.html",
+    "Digital_portfolio_library_ai_made/Gemini/profile.html",
+    "Digital_portfolio_library_ai_made/glm5.3/pos.html",
+    "Digital_portfolio_library_ai_made/Huggingface/pos.html",
+    "Digital_portfolio_library_ai_made/Huggingface/profile.html",
+    "Digital_portfolio_library_ai_made/kimi/pos.html",
+    "Digital_portfolio_library_ai_made/Qwen/pos.html",
+    "Digital_portfolio_library_ai_made/Qwen/profile.html",
+    "Digital_portfolio_library_ai_made/Replit/profile.html",
+    "Digital_portfolio_library_ai_made/Vibe/pos.html",
+    "Digital_portfolio_library_ai_made/Vibe/profile.html",
+    "example2.html",
+    "Normal.hTml",
+    "poster01.html",
+    "profile2.html",
+    "supreme.html",
+    "supremeplus.html",
+    "web3d.html"
+  ];
+  render();
+  requestAnimationFrame(tick);
 })();

@@ -6,11 +6,12 @@ const app = express();
 const root = __dirname;
 const port = process.env.PORT || 3000;
 const libraryFile = path.join(root, "index.html");
-const excludedHtmlFiles = new Set(["index.html", "library.html"]);
+const excludedDirectories = new Set(["node_modules", ".git", "webichan_images"]);
+const excludedHtmlFiles = new Set(["index.html", "library.html", "animation2.html"]);
 
 function findHTMLFiles(directory, relativeDirectory = "") {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
-    if (entry.isDirectory() && ["node_modules", ".git"].includes(entry.name)) {
+    if (entry.isDirectory() && excludedDirectories.has(entry.name)) {
       return [];
     }
 

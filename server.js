@@ -6,6 +6,7 @@ const app = express();
 const root = __dirname;
 const port = process.env.PORT || 3000;
 const libraryFile = path.join(root, "index.html");
+const excludedHtmlFiles = new Set(["index.html", "library.html"]);
 
 function findHTMLFiles(directory, relativeDirectory = "") {
   return fs.readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
@@ -44,7 +45,10 @@ function findBackgroundImages(directory, relativeDirectory = "") {
 app.get("/api/html-files", (_request, response) => {
   try {
     const files = findHTMLFiles(root)
-      .filter((file) => file.toLowerCase() !== "library.html")
+      .filter((file) => {
+        const name = file.split("/").pop().toLowerCase();
+        return !excludedHtmlFiles.has(name);
+      })
       .sort((first, second) => first.localeCompare(second));
     response.json(files);
   } catch (error) {
